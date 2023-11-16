@@ -135,7 +135,14 @@ window.addEventListener("load", () =>
 	const uid = StorageManager.getStoredInteger("uid")
 
 	if (uid != 0 && !AccountManager.validateAccount(email, password, uid))
-		return AccountManager.logout()
+	{
+		AccountManager.logout()
+
+		if (email.length > 0 || password.length > 0 || uid | 0)
+			location.reload()
+
+		return
+	}
 
 	AccountManager.login(email, password, true)
 })
