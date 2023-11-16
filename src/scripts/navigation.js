@@ -1,13 +1,54 @@
 let NavigationManager = new Map()
 
 /*
-*	Creates a navbar on the page
+*	Creates a navbar link
 */
-NavigationManager.createNavBar = () =>
+NavigationManager.createNavBarLink = (name, url) =>
+{
+	if (!Helper.isString(name))
+		name = String(name)
+
+	if (!Helper.isString(url))
+		url = String(url)
+
+	const li = document.createElement("li")
+	li.id = `navbar_li_${name.toLowerCase()}`
+	{
+		const a = document.createElement("a")
+		a.setAttribute("href", url)
+		a.innerHTML = name
+
+		li.appendChild(a)
+	}
+
+	return li
+}
+
+/*
+*	Creates the navbar user controls
+*/
+NavigationManager.createNavBarUserControl = () =>
+{
+	const panel = document.createElement("div")
+	panel.id = "navbar_usercontrols"
+
+	return panel
+}
+
+/*
+*	Creates a navbar on the page
+*
+*	NAVBAR_PROPERTIES is defined within the HTML file just after the <body> tag
+*	If NAVBAR_PROPERTIES is not defined, no navbar will be generated for that file
+*/
+NavigationManager.createNavBar = (NAVBAR_PROPERTIES) =>
 {
 	const navbar = document.createElement("div")
 	navbar.id = "navbar"
 	{
+		/*
+		*	Left side
+		*/
 		const navbar_left = document.createElement("div")
 		navbar_left.id = "navbar_left"
 		{
@@ -25,6 +66,9 @@ NavigationManager.createNavBar = () =>
 			navbar_left.appendChild(title)
 		}
 
+		/*
+		*	Right side
+		*/
 		const navbar_right = document.createElement("div")
 		navbar_right.id = "navbar_right"
 		{
@@ -33,42 +77,21 @@ NavigationManager.createNavBar = () =>
 			const navbar_tabs = document.createElement("ul")
 			navbar_tabs.id = "navbar_tabs"
 			{
-				const home = document.createElement("a")
-				home.setAttribute("href", "home.html")
+				/*
+				*	Link buttons
+				*/
+				const properties = Object.getOwnPropertyNames(NAVBAR_PROPERTIES)
+
+				for (const property of properties)
 				{
-					const li = document.createElement("li")
-					li.id = "navbar_li_home"
-					li.innerHTML = "Home"
-
-					home.appendChild(li)
+					const link = NavigationManager.createNavBarLink(property, NAVBAR_PROPERTIES[property])
+					navbar_tabs.appendChild(link)
 				}
-
-				const menu = document.createElement("a")
-				menu.setAttribute("href", "menu.html")
-				{
-					const li = document.createElement("li")
-					li.id = "navbar_li_menu"
-					li.innerHTML = "Menu"
-
-					menu.appendChild(li)
-				}
-
-				const contact = document.createElement("a")
-				contact.setAttribute("href", "home.html#contact")
-				{
-					const li = document.createElement("li")
-					li.id = "navbar_li_contact"
-					li.innerHTML = "Contact"
-
-					contact.appendChild(li)
-				}
-
-				navbar_tabs.appendChild(home)
-				navbar_tabs.appendChild(menu)
-				navbar_tabs.appendChild(contact)
 			}
-
 			navbar_right.appendChild(navbar_tabs)
+
+			const userControls = NavigationManager.createNavBarUserControl()
+			navbar_right.appendChild(userControls)
 		}
 
 		navbar.appendChild(navbar_left)
@@ -84,6 +107,6 @@ Helper.addLoadEvent(() =>
 	if (AccountManager.g_bLoggedIn === undefined) // Login process not yet completed
 		return false
 
-	if (HAS_NAVBAR)
-		NavigationManager.createNavBar()
+	if (NAVBAR_PROPERTIES)
+		NavigationManager.createNavBar(NAVBAR_PROPERTIES)
 })
