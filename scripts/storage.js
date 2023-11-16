@@ -26,7 +26,7 @@ StorageManager.getStoredString = (keyName) =>
 */
 StorageManager.getStoredInteger = (keyName) =>
 {
-	const value = Helper.getStoredString(keyName)
+	const value = StorageManager.getStoredString(keyName)
 	const iValue = parseInt(value)
 
 	if (Number.isNaN(iValue))
@@ -42,7 +42,7 @@ StorageManager.getStoredInteger = (keyName) =>
 */
 StorageManager.getStoredUnsignedInteger = (keyName) =>
 {
-	const value = Helper.getStoredString(keyName)
+	const value = StorageManager.getStoredString(keyName)
 	const uiValue = parseInt(value)
 
 	if (Number.isNaN(uiValue) || uiValue < 0)
@@ -59,7 +59,7 @@ StorageManager.getStoredUnsignedInteger = (keyName) =>
 */
 StorageManager.getStoredFloat = (keyName, decimals = 15) =>
 {
-	const value = Helper.getStoredString(keyName)
+	const value = StorageManager.getStoredString(keyName)
 	const flValue = parseFloat(value)
 
 	if (Number.isNaN(flValue))

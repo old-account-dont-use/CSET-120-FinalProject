@@ -5,7 +5,7 @@ let AccountManager = new Map()
 */
 AccountManager.getAccountList = () =>
 {
-	const accountList = Helper.getStoredString("accountList")
+	const accountList = StorageManager.getStoredString("accountList")
 	if (accountList.length < 1)
 		return new Map()
 
@@ -24,7 +24,7 @@ AccountManager.storeAccountList = (accountMap) =>
 		return false
 
 	const accountList = JSON.stringify(Object.fromEntries(accountMap))
-	Helper.setStoredValue("accountList", accountList)
+	StorageManager.setStoredValue("accountList", accountList)
 
 	return true
 }
@@ -85,9 +85,9 @@ AccountManager.login = (email, password) =>
 	if (accountInformation[0] !== email) return false
 	if (accountInformation[1] !== hashedPassword) return false
 
-	Helper.setStoredValue("email", accountInformation[0])
-	Helper.setStoredValue("password", accountInformation[1])
-	Helper.setStoredValue("uid", accountInformation[2])
+	StorageManager.setStoredValue("email", accountInformation[0])
+	StorageManager.setStoredValue("password", accountInformation[1])
+	StorageManager.setStoredValue("uid", accountInformation[2])
 
 	return true
 }
@@ -97,9 +97,9 @@ AccountManager.login = (email, password) =>
 */
 AccountManager.logout = () =>
 {
-	Helper.setStoredValue("email", "")
-	Helper.setStoredValue("password", "")
-	Helper.setStoredValue("uid", 0)
+	StorageManager.setStoredValue("email", "")
+	StorageManager.setStoredValue("password", "")
+	StorageManager.setStoredValue("uid", 0)
 }
 
 /*
@@ -130,9 +130,9 @@ AccountManager.signUp = (email, password) =>
 ///////////////////////////////////////////////////////////////////////////////
 window.addEventListener("load", () =>
 {
-	const email = Helper.getStoredString("email")
-	const password = Helper.getStoredString("password")
-	const uid = Helper.getStoredInteger("uid")
+	const email = StorageManager.getStoredString("email")
+	const password = StorageManager.getStoredString("password")
+	const uid = StorageManager.getStoredInteger("uid")
 
 	if (uid != 0 && !AccountManager.validateAccount(email, password, uid))
 		return AccountManager.logout()
