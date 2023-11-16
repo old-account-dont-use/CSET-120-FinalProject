@@ -1,7 +1,9 @@
+let Helper = new Map()
+
 /*
 *	Returns true if the passed in value is a string
 */
-function isString(value)
+Helper.isString = (value) =>
 {
 	return (value instanceof String) || typeof(value) == "string"
 }
@@ -9,8 +11,11 @@ function isString(value)
 /*
 *	Hashes a string
 */
-function hash(string)
+Helper.hash = (string) =>
 {
+	if (!Helper.isString(string))
+		string = String(string)
+
     for(var i = 0, h = 0xDEADBEEF; i < string.length; i++)
         h = Math.imul(h ^ string.charCodeAt(i), 2654435761)
 

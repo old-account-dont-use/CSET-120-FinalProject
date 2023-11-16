@@ -1,9 +1,11 @@
+let AccountManager = new Map()
+
 /*
 *	Returns a map of accounts that exist or an empty map on failure
 */
-function getAccountList()
+AccountManager.getAccountList = () =>
 {
-	const accountList = getStoredString("accountList")
+	const accountList = Helper.getStoredString("accountList")
 	if (accountList.length < 1)
 		return new Map()
 
@@ -16,13 +18,13 @@ function getAccountList()
 *
 *	Returns true on success, false on failure
 */
-function storeAccountList(accountMap)
+AccountManager.storeAccountList = (accountMap) =>
 {
 	if (!(accountMap instanceof Map))
 		return false
 
 	const accountList = JSON.stringify(Object.fromEntries(accountMap))
-	setStoredValue("accountList", accountList)
+	Helper.setStoredValue("accountList", accountList)
 
 	return true
 }
@@ -30,9 +32,9 @@ function storeAccountList(accountMap)
 /*
 *	Returns true if an account exists and the provided information is correct, false otherwise
 */
-function validateAccount(email, password, uid)
+AccountManager.validateAccount = (email, password, uid) =>
 {
-	const accountMap = getAccountList()
+	const accountMap = AccountManager.getAccountList()
 
 	const uidInfomration = accountMap[uid]
 	if (!uidInfomration || !(uidInfomration instanceof Array)) return false
@@ -47,9 +49,10 @@ function validateAccount(email, password, uid)
 /*
 *	Returns the account found with the provided email, null if not found
 */
-function lookupAccount(email)
+AccountManager.lookupAccount = (email, accountMap = null) =>
 {
-	const accountMap = getAccountList()
+	if (!accountMap)
+		accountMap = AccountManager.getAccountList()
 
 	let index = 1
 	while (accountMap[index])
@@ -57,7 +60,7 @@ function lookupAccount(email)
 		const currentAccount = accountMap[index]
 		if (!currentAccount) break
 
-		if (currentAccount[0] == email)
+		if (currentAccount[0] === email)
 			return currentAccount
 
 		index++
@@ -68,25 +71,35 @@ function lookupAccount(email)
 
 /*
 *	Attempts to set the current account
+*
+*	Returns true on success, false otherwise
 */
-function login(email, password)
+AccountManager.login = (email, password) =>
 {
-	const hashedPassword = hash(password)
+	const hashedPassword = Helper.hash(password)
 	password = ""
 
+	const accountInformation = AccountManager.lookupAccount(email)
+	if (!accountInformation) return false
 
+	if (accountInformation[0] !== email) return false
+	if (accountInformation[1] !== hashedPassword) return false
+
+	Helper.setStoredValue("email", accountInformation[0])
+	Helper.setStoredValue("password", accountInformation[1])
+	Helper.setStoredValue("uid", accountInformation[2])
+
+	return true
 }
 
 /*
 *	Logs the user out of the current account
 */
-function logout()
+AccountManager.logout = () =>
 {
-	setStoredValue("uid", 0)
-	setStoredValue("email", "")
-	setStoredValue("password", "")
-
-	location.reload()
+	Helper.setStoredValue("email", "")
+	Helper.setStoredValue("password", "")
+	Helper.setStoredValue("uid", 0)
 }
 
 /*
@@ -94,20 +107,35 @@ function logout()
 *
 *	Returns true on success, false on failure
 */
-function signUp(email, password)
+AccountManager.signUp = (email, password) =>
 {
-	const hashedPassword = hash(password)
+	const hashedPassword = Helper.hash(password)
 	password = ""
+
+	const accountMap = AccountManager.getAccountList()
+	if (AccountManager.lookupAccount(email, accountMap)) return false
+
+	const uid = Object.keys(accountMap).length + 1
+	if (!Number.isSafeInteger(uid)) return false
+
+	let newAccount = []
+
+	newAccount[0] = email
+	newAccount[1] = hashedPassword
+	newAccount[2] = uid
+
+	return true
 }
 
+///////////////////////////////////////////////////////////////////////////////
 window.addEventListener("load", () =>
 {
-	const email = getStoredString("email")
-	const password = getStoredString("password")
-	const uid = getStoredInteger("uid")
+	const email = Helper.getStoredString("email")
+	const password = Helper.getStoredString("password")
+	const uid = Helper.getStoredInteger("uid")
 
-	if (uid != 0 && !validateAccount(email, password, uid))
-		return logout()
+	if (uid != 0 && !AccountManager.validateAccount(email, password, uid))
+		return AccountManager.logout()
 
-	login(email, password)
+	AccountManager.login(email, password, true)
 })

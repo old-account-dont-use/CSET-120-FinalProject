@@ -1,3 +1,5 @@
+let StorageManager = new Map()
+
 /*
 *	Getters
 */
@@ -7,7 +9,7 @@
 *
 *	Returns the found string or an empty string on failure
 */
-function getStoredString(keyName)
+StorageManager.getStoredString = (keyName) =>
 {
 	const value = sessionStorage.getItem(keyName)
 
@@ -22,9 +24,9 @@ function getStoredString(keyName)
 *
 *	Returns the found integer or -1 on failure
 */
-function getStoredInteger(keyName)
+StorageManager.getStoredInteger = (keyName) =>
 {
-	const value = getStoredString(keyName)
+	const value = Helper.getStoredString(keyName)
 	const iValue = parseInt(value)
 
 	if (Number.isNaN(iValue))
@@ -38,9 +40,9 @@ function getStoredInteger(keyName)
 *
 *	Returns the found unsigned integer or 0 on failure/invalid
 */
-function getStoredUnsignedInteger(keyName)
+StorageManager.getStoredUnsignedInteger = (keyName) =>
 {
-	const value = getStoredString(keyName)
+	const value = Helper.getStoredString(keyName)
 	const uiValue = parseInt(value)
 
 	if (Number.isNaN(uiValue) || uiValue < 0)
@@ -55,9 +57,9 @@ function getStoredUnsignedInteger(keyName)
 *
 *	Returns the found float or -1 on failure
 */
-function getStoredFloat(keyName, decimals = 15)
+StorageManager.getStoredFloat = (keyName, decimals = 15) =>
 {
-	const value = getStoredString(keyName)
+	const value = Helper.getStoredString(keyName)
 	const flValue = parseFloat(value)
 
 	if (Number.isNaN(flValue))
@@ -72,9 +74,9 @@ function getStoredFloat(keyName, decimals = 15)
 *
 *	Returns the found unsigned float or 0 on failure/invalid
 */
-function getStoredUnsignedFloat(keyName, decimals = 15)
+StorageManager.getStoredUnsignedFloat = (keyName, decimals = 15) =>
 {
-	const value = getStoredString(keyName)
+	const value = StorageManager.getStoredString(keyName)
 	const flValue = parseFloat(value)
 
 	if (Number.isNaN(flValue) || flValue < 0)
@@ -92,15 +94,15 @@ function getStoredUnsignedFloat(keyName, decimals = 15)
 *
 *	Will automatically convert the data type to a string if necessary
 */
-function setStoredValue(keyName, value)
+StorageManager.setStoredValue = (keyName, value) =>
 {
 	if (!keyName)
 		throw new Error(`Invalid keyName '${keyName}' provided`)
 
-	if (!isString(keyName))
+	if (!Helper.isString(keyName))
 		keyName = String(keyName)
 
-	if (isString(value))
+	if (Helper.isString(value))
 		sessionStorage.setItem(keyName, value)
 	else
 		sessionStorage.setItem(keyName, String(value))
