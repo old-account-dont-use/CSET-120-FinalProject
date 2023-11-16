@@ -79,6 +79,8 @@ AccountManager.login = (email, password) =>
 	const hashedPassword = Helper.hash(password)
 	password = ""
 
+	AccountManager.g_bLoggedIn = false
+
 	const accountInformation = AccountManager.lookupAccount(email)
 	if (!accountInformation) return false
 
@@ -89,6 +91,7 @@ AccountManager.login = (email, password) =>
 	StorageManager.setStoredValue("password", accountInformation[1])
 	StorageManager.setStoredValue("uid", accountInformation[2])
 
+	AccountManager.g_bLoggedIn = true
 	return true
 }
 
@@ -100,6 +103,8 @@ AccountManager.logout = () =>
 	StorageManager.setStoredValue("email", "")
 	StorageManager.setStoredValue("password", "")
 	StorageManager.setStoredValue("uid", 0)
+
+	AccountManager.g_bLoggedIn = false
 }
 
 /*
@@ -128,7 +133,7 @@ AccountManager.signUp = (email, password) =>
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-window.addEventListener("load", () =>
+Helper.addLoadEvent(() =>
 {
 	const email = StorageManager.getStoredString("email")
 	const password = StorageManager.getStoredString("password")
