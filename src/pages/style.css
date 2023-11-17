@@ -241,3 +241,70 @@ html, body
 	padding-top: 100px;
 	padding-bottom: 100px
 }
+
+/*
+*	Account page
+*/
+#account_entry_container
+{
+	width: 100%;
+	height: 100%;
+
+	padding: 0;
+
+	display: flex;
+
+	align-items: center;
+	justify-content: center;
+
+	background-color: transparent;
+}
+
+#account_entry
+{
+	min-width: 600px;
+	min-height: 600px;
+	width: 35%;
+	height: 80%;
+
+	margin-top: auto;
+	margin-bottom: auto;
+	margin-left: auto;
+	margin-right: auto;
+
+	padding: 24px;
+
+	background-color: red;
+
+	overflow: hidden;
+}
+
+#account_entry_title
+{
+	margin-top: 0;
+	margin-bottom: 20px;
+}
+
+#account_entry_form
+{
+	width: 100%;
+	height: 90%;
+}
+
+#account_entry_form *
+{
+	width: 100%;
+}
+
+#account_entry_form h4
+{
+	margin-top: 10px;
+	margin-bottom: 5px;
+}
+
+#account_entry_form input
+{
+	margin-bottom: 10px;
+
+	padding: 10px;
+}
