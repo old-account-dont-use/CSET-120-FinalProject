@@ -25,9 +25,27 @@ NavigationManager.createNavBarLink = (name, url) =>
 }
 
 /*
+*	Creates a navbar user control
+*/
+NavigationManager.createNavBarUserControl = (label, callback) =>
+{
+	const panel = document.createElement("div")
+	panel.classList.add("navbar_usercontrols_dropdown_control")
+	{
+		const p = document.createElement("p")
+		p.classList.add("navbar_usercontrols_dropdown_control_label")
+		p.innerHTML = label
+
+		panel.appendChild(p)
+	}
+
+	return panel
+}
+
+/*
 *	Creates the navbar user controls
 */
-NavigationManager.createNavBarUserControl = () =>
+NavigationManager.createNavBarUserControls = () =>
 {
 	const panel = document.createElement("div")
 	panel.id = "navbar_usercontrols"
@@ -63,15 +81,41 @@ NavigationManager.createNavBarUserControl = () =>
 	const dropdown = document.createElement("div")
 	dropdown.id = "navbar_usercontrols_dropdown"
 	dropdown.setAttribute("style", "display: none;")
-
-	if (AccountManager.g_bLoggedIn)
 	{
-		const accountData = AccountManager.g_AccountData
-	}
-	else
-	{
+		if (AccountManager.g_bLoggedIn)
+		{
+			const email = AccountManager.g_AccountData[0]
+			const accountType = AccountManager.g_AccountData[3]
+			const isManager = accountData == AccountManager.ACCOUNT_TYPE_MANAGER
 
+			dropdown.appendChild(NavigationManager.createNavBarUserControl("Account", () =>
+			{
+
+			}))
+
+			if (isManager)
+			{
+				dropdown.appendChild(NavigationManager.createNavBarUserControl("Manager Menu", () =>
+				{
+
+				}))
+			}
+
+			dropdown.appendChild(NavigationManager.createNavBarUserControl("Logout", () =>
+			{
+				AccountManager.logout()
+				location.reload()
+			}))
+		}
+		else
+		{
+			dropdown.appendChild(NavigationManager.createNavBarUserControl("Login", () =>
+			{
+				window.location = "account.html"
+			}))
+		}
 	}
+
 
 	document.body.appendChild(dropdown)
 	panel.m_Dropdown = dropdown
@@ -134,7 +178,7 @@ NavigationManager.createNavBar = (NAVBAR_PROPERTIES) =>
 			}
 			navbar_right.appendChild(navbar_tabs)
 
-			const userControls = NavigationManager.createNavBarUserControl()
+			const userControls = NavigationManager.createNavBarUserControls()
 			navbar_right.appendChild(userControls)
 		}
 
