@@ -115,6 +115,9 @@ NavigationManager.createNavBarUserControls = () =>
 *
 *	NAVBAR_PROPERTIES is defined within the HTML file just after the <body> tag
 *	If NAVBAR_PROPERTIES is not defined, no navbar will be generated for that file
+*
+*	NAVBAR_PROPERTIES controls the layout of the tab buttons (links) as well as the dropdown items (user controls)
+*	The links will always be present whilst the dropdown items have optional filters that control their visibility
 */
 NavigationManager.createNavBar = (NAVBAR_PROPERTIES) =>
 {
