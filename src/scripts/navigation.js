@@ -31,6 +31,7 @@ NavigationManager.createNavBarUserControl = (label, callback) =>
 {
 	const panel = document.createElement("div")
 	panel.classList.add("navbar_usercontrols_dropdown_control")
+	panel.onclick = callback
 	{
 		const p = document.createElement("p")
 		p.classList.add("navbar_usercontrols_dropdown_control_label")
