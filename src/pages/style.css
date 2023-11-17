@@ -262,10 +262,8 @@ html, body
 
 #account_entry
 {
-	min-width: 600px;
-	min-height: 600px;
-	width: 35%;
-	height: 80%;
+	min-width: 40em;
+	min-height: 45em;
 
 	margin-top: auto;
 	margin-bottom: auto;
