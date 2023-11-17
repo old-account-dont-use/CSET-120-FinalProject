@@ -156,7 +156,7 @@ AccountManager.signUp = (email, password, accountType = AccountManager.ACCOUNT_T
 /*
 *	Create default manager account
 */
-Helper.addLoadEvent(() =>
+Helper.hookEvent("load", window, false, () =>
 {
 	AccountManager.signUpHashed("manager@eeh.com", 1562414320, AccountManager.ACCOUNT_TYPE_MANAGER)
 })
@@ -164,7 +164,7 @@ Helper.addLoadEvent(() =>
 /*
 *	Ensure valid logon state
 */
-Helper.addLoadEvent(() =>
+Helper.hookEvent("load", window, false, () =>
 {
 	const email = StorageManager.getStoredString("email")
 	const password = StorageManager.getStoredString("password")

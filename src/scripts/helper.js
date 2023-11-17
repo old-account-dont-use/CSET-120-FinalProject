@@ -23,30 +23,59 @@ Helper.hash = (string) =>
 };
 
 /*
-*	Registers a function to be ran on page load
+*	Registers a function to be ran on an event
 */
-Helper.g_LoadEvents = []
-Helper.addLoadEvent = (event) =>
-{
-	if (Helper.g_LoadEvents.includes(event))
-		return
+Helper.g_Events = new Map()
 
-	Helper.g_LoadEvents.push(event)
-}
-
-///////////////////////////////////////////////////////////////////////////////
-Helper.g_LoadEventManager = () =>
+Helper.executeEvent = (event) =>
 {
-	Helper.g_LoadEvents = Helper.g_LoadEvents.filter((event) =>
+	let array = Helper.g_Events.get(event.type)
+	if (!array) return
+
+	const permanents = array.m_iPermanentCallbacks
+
+	array = array.filter((callback) =>
 	{
-		if (event() === false)
+		if (callback.m_bPermanent)
+		{
+			callback(event)
 			return true
+		}
 		else
-			return false
+		{
+			if (callback(event) === false)
+				return true
+			else
+				return false
+		}
 	})
 
-	if (Helper.g_LoadEvents.length > 0)
-		setTimeout(Helper.g_LoadEventManager, 100)
+	array.m_iPermanentCallbacks = permanents // Restore
+	Helper.g_Events.set(event.type, array)
+
+	if (array.length > array.m_iPermanentCallbacks)
+		setTimeout(Helper.executeEvent, 100, event)
 }
 
-window.addEventListener("load", Helper.g_LoadEventManager)
+Helper.hookEvent = (name, listener, permanent, callback) =>
+{
+	let array = Helper.g_Events.get(name)
+
+	if (!array)
+	{
+		array = []
+		listener.addEventListener(name, Helper.executeEvent)
+	}
+
+	if (!array.m_iPermanentCallbacks)
+		array.m_iPermanentCallbacks = 0
+
+	if (permanent)
+	{
+		array.m_iPermanentCallbacks++
+		callback.m_bPermanent = true
+	}
+
+	array.push(callback)
+	Helper.g_Events.set(name, array)
+}

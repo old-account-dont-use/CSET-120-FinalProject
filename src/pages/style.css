@@ -145,6 +145,58 @@ html, body
 	height: 100%;
 }
 
+#navbar_usercontrols
+{
+	display: flex;
+	align-items: center;
+
+	gap: 10px;
+
+	width: 200px;
+	height: 100%;
+
+	padding-left: 5px;
+	padding-right: 5px;
+
+	cursor: pointer;
+
+	color: white;
+	background-color: black;
+}
+
+#navbar_usercontrols_img
+{
+	width: auto;
+	height: 100%;
+
+	border: 0 solid transparent;
+	border-radius: 50%;
+
+	cursor: pointer;
+	pointer-events: none;
+}
+
+#navbar_usercontrols_label
+{
+	cursor: pointer;
+	pointer-events: none;
+}
+
+#navbar_usercontrols_dropdown
+{
+	position: fixed;
+
+	width: 200px;
+	height: 200px;
+
+	top: 64px;
+	left: calc(100% - 300px);
+
+	z-index: 998;
+
+	background-color: gray;
+}
+
 #header
 {
 	position: relative;

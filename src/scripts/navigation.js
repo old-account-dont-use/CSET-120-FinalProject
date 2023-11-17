@@ -31,15 +31,50 @@ NavigationManager.createNavBarUserControl = () =>
 {
 	const panel = document.createElement("div")
 	panel.id = "navbar_usercontrols"
+	{
+		panel.onclick = () =>
+		{
+			const dropdown = document.getElementById("navbar_usercontrols_dropdown")
+			if (!dropdown) return
+
+			if (dropdown.style.length < 1)
+				dropdown.setAttribute("style", "display: none;")
+			else
+				dropdown.removeAttribute("style")
+		}
+
+		const img = document.createElement("img")
+		img.id = "navbar_usercontrols_img"
+		img.setAttribute("src", "../assets/user.jpg")
+
+		const label = document.createElement("p")
+		label.id = "navbar_usercontrols_label"
+		{
+			if (AccountManager.g_bLoggedIn)
+				label.innerHTML = AccountManager.g_AccountData[0]
+			else
+				label.innerHTML = "Not signed in"
+		}
+
+		panel.appendChild(img)
+		panel.appendChild(label)
+	}
+
+	const dropdown = document.createElement("div")
+	dropdown.id = "navbar_usercontrols_dropdown"
+	dropdown.setAttribute("style", "display: none;")
 
 	if (AccountManager.g_bLoggedIn)
 	{
-
+		const accountData = AccountManager.g_AccountData
 	}
 	else
 	{
 
 	}
+
+	document.body.appendChild(dropdown)
+	panel.m_Dropdown = dropdown
 
 	return panel
 }
@@ -111,11 +146,18 @@ NavigationManager.createNavBar = (NAVBAR_PROPERTIES) =>
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-Helper.addLoadEvent(() =>
+Helper.hookEvent("load", window, false, () =>
 {
 	if (AccountManager.g_bLoggedIn === undefined) // Login process not yet completed
 		return false
 
 	if (NAVBAR_PROPERTIES)
 		NavigationManager.createNavBar(NAVBAR_PROPERTIES)
+})
+
+Helper.hookEvent("scroll", document, true, (event) =>
+{
+	const dropdown = document.getElementById("navbar_usercontrols_dropdown") // Re-hide user control menu
+	if (dropdown && dropdown.style.length < 1)
+		dropdown.setAttribute("style", "display: none;")
 })
