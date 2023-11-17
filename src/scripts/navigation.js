@@ -32,6 +32,15 @@ NavigationManager.createNavBarUserControl = () =>
 	const panel = document.createElement("div")
 	panel.id = "navbar_usercontrols"
 
+	if (AccountManager.g_bLoggedIn)
+	{
+
+	}
+	else
+	{
+
+	}
+
 	return panel
 }
 

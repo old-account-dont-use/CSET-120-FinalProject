@@ -85,6 +85,7 @@ AccountManager.login = (email, password) =>
 	password = ""
 
 	AccountManager.g_bLoggedIn = false
+	AccountManager.g_AccountData = null
 
 	const accountInformation = AccountManager.lookupAccount(email)
 	if (!accountInformation) return false
@@ -98,6 +99,7 @@ AccountManager.login = (email, password) =>
 	StorageManager.setStoredValue("accountType", accountInformation[3])
 
 	AccountManager.g_bLoggedIn = true
+	AccountManager.g_AccountData = [accountInformation[0], accountInformation[3] ]
 	return true
 }
 
@@ -112,6 +114,7 @@ AccountManager.logout = () =>
 	StorageManager.setStoredValue("accountType", 0)
 
 	AccountManager.g_bLoggedIn = false
+	AccountManager.g_AccountData = null
 }
 
 /*
