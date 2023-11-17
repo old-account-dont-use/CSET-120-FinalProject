@@ -82,40 +82,27 @@ NavigationManager.createNavBarUserControls = () =>
 	dropdown.id = "navbar_usercontrols_dropdown"
 	dropdown.setAttribute("style", "display: none;")
 	{
+		let looped = null
 		if (AccountManager.g_bLoggedIn)
-		{
-			const email = AccountManager.g_AccountData[0]
-			const accountType = AccountManager.g_AccountData[3]
-			const isManager = accountData == AccountManager.ACCOUNT_TYPE_MANAGER
-
-			dropdown.appendChild(NavigationManager.createNavBarUserControl("Account", () =>
-			{
-
-			}))
-
-			if (isManager)
-			{
-				dropdown.appendChild(NavigationManager.createNavBarUserControl("Manager Menu", () =>
-				{
-
-				}))
-			}
-
-			dropdown.appendChild(NavigationManager.createNavBarUserControl("Logout", () =>
-			{
-				AccountManager.logout()
-				location.reload()
-			}))
-		}
+			looped = NAVBAR_PROPERTIES["Dropdown"]["Active"]
 		else
+			looped = NAVBAR_PROPERTIES["Dropdown"]["Inactive"]
+
+		const properties = Object.getOwnPropertyNames(looped)
+
+		for (const property of properties)
 		{
-			dropdown.appendChild(NavigationManager.createNavBarUserControl("Login", () =>
-			{
-				window.location = "account.html"
-			}))
+			const propertyData = looped[property]
+
+			let show = propertyData[0]
+			if (show instanceof Function)
+				show = show()
+			if (!show) continue
+
+			const control = NavigationManager.createNavBarUserControl(property, propertyData[1])
+			dropdown.appendChild(control)
 		}
 	}
-
 
 	document.body.appendChild(dropdown)
 	panel.m_Dropdown = dropdown
@@ -162,24 +149,33 @@ NavigationManager.createNavBar = (NAVBAR_PROPERTIES) =>
 		{
 			navbar_right.classList.add("float_right")
 
-			const navbar_tabs = document.createElement("ul")
-			navbar_tabs.id = "navbar_tabs"
+			/*
+			*	Link buttons
+			*/
+			if (NAVBAR_PROPERTIES["Tabs"])
 			{
-				/*
-				*	Link buttons
-				*/
-				const properties = Object.getOwnPropertyNames(NAVBAR_PROPERTIES)
-
-				for (const property of properties)
+				const navbar_tabs = document.createElement("ul")
+				navbar_tabs.id = "navbar_tabs"
 				{
-					const link = NavigationManager.createNavBarLink(property, NAVBAR_PROPERTIES[property])
-					navbar_tabs.appendChild(link)
-				}
-			}
-			navbar_right.appendChild(navbar_tabs)
+					const properties = Object.getOwnPropertyNames(NAVBAR_PROPERTIES["Tabs"])
 
-			const userControls = NavigationManager.createNavBarUserControls()
-			navbar_right.appendChild(userControls)
+					for (const property of properties)
+					{
+						const link = NavigationManager.createNavBarLink(property, NAVBAR_PROPERTIES["Tabs"][property])
+						navbar_tabs.appendChild(link)
+					}
+				}
+				navbar_right.appendChild(navbar_tabs)
+			}
+
+			/*
+			*	User controls
+			*/
+			if (NAVBAR_PROPERTIES["Dropdown"] && NAVBAR_PROPERTIES["Dropdown"]["Active"] && NAVBAR_PROPERTIES["Dropdown"]["Inactive"])
+			{
+				const userControls = NavigationManager.createNavBarUserControls()
+				navbar_right.appendChild(userControls)
+			}
 		}
 
 		navbar.appendChild(navbar_left)

@@ -22,8 +22,46 @@
 		<script type="text/javascript">
 			const NAVBAR_PROPERTIES =
 			{
-				"Home": "home.html",
-				"Contact": "#contact"
+				"Tabs":
+				{
+					"Home": "home.html#home_header",
+					"Contact": "home.html#home_contact"
+				},
+
+				"Dropdown":
+				{
+					"Active":
+					{
+						"Account": [ true, () =>
+						{
+
+						} ],
+
+						"Manager Menu": [ () =>
+						{
+							return AccountManager.g_AccountData && AccountManager.g_AccountData[3] == AccountManager.ACCOUNT_TYPE_MANAGER
+						},
+
+						() =>
+						{
+
+						} ],
+
+						"Logout": [ true, () =>
+						{
+							AccountManager.logout()
+							location.reload()
+						} ]
+					},
+
+					"Inactive":
+					{
+						"Login": [ true, () =>
+						{
+							window.location = "account.html"
+						} ]
+					}
+				}
 			}
 		</script>
 	</body>
