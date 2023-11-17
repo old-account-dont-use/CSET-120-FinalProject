@@ -16,7 +16,7 @@ Helper.hash = (string) =>
 	if (!Helper.isString(string))
 		string = String(string)
 
-    for(var i = 0, h = 0xDEADBEEF; i < string.length; i++)
+    for (var i = 0, h = 0xDEADBEEF; i < string.length; i++)
         h = Math.imul(h ^ string.charCodeAt(i), 2654435761)
 
     return (h ^ h >>> 16) >>> 0
