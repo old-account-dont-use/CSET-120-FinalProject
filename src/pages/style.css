@@ -251,6 +251,7 @@ html, body
 	height: 100%;
 
 	padding: 0;
+	padding-top: 64px;
 
 	display: flex;
 
