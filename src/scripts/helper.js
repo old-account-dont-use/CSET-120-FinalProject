@@ -57,7 +57,7 @@ Helper.executeEvent = (event) =>
 		setTimeout(Helper.executeEvent, 100, event)
 }
 
-Helper.hookEvent = (name, listener, permanent, callback) =>
+Helper.hookEvent = (listener, name, permanent, callback) =>
 {
 	let array = Helper.g_Events.get(name)
 

@@ -190,7 +190,7 @@ NavigationManager.createNavBar = (NAVBAR_PROPERTIES) =>
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-Helper.hookEvent("load", window, false, () =>
+Helper.hookEvent(window, "load", false, () =>
 {
 	if (AccountManager.g_bLoggedIn === undefined) // Login process not yet completed
 		return false
@@ -204,7 +204,7 @@ Helper.hookEvent("load", window, false, () =>
 	}
 })
 
-Helper.hookEvent("scroll", document, true, (event) =>
+Helper.hookEvent(document, "scroll", true, (event) =>
 {
 	const dropdown = document.getElementById("navbar_usercontrols_dropdown") // Re-hide user control menu
 	if (dropdown && dropdown.style.length < 1)
