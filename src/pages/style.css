@@ -289,6 +289,35 @@ html, body
 	padding-bottom: 100px
 }
 
+#home_contact_box
+{
+	background-color: red;
+
+	min-width: 40em;
+
+	padding: 30px;
+}
+
+#home_contact_box *
+{
+	display: block;
+	width: 100%;
+}
+
+#home_contact_box *:not(label)
+{
+
+}
+
+
+
+#home_contact_box textarea
+{
+	resize: none;
+
+	overflow: scroll;
+}
+
 /*
 *	Account page
 */
