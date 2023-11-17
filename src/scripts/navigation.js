@@ -186,7 +186,7 @@ NavigationManager.createNavBar = (NAVBAR_PROPERTIES) =>
 		navbar.appendChild(navbar_right)
 	}
 
-	document.body.insertAdjacentElement("afterbegin", navbar)
+	return navbar
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -196,7 +196,12 @@ Helper.hookEvent("load", window, false, () =>
 		return false
 
 	if (NAVBAR_PROPERTIES)
-		NavigationManager.createNavBar(NAVBAR_PROPERTIES)
+	{
+		const navbar = NavigationManager.createNavBar(NAVBAR_PROPERTIES)
+
+		document.body.insertAdjacentElement("afterbegin", navbar)
+		document.m_NavBar = navbar
+	}
 })
 
 Helper.hookEvent("scroll", document, true, (event) =>
