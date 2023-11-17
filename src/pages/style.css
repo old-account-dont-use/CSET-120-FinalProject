@@ -197,15 +197,17 @@ html, body
 
 	z-index: 998;
 
-	padding: 0;
-
-	background-color: gray;
+	background-color: red;
 }
 
 .navbar_usercontrols_dropdown_control
 {
 	width: 100%;
 	height: calc(64px * 0.8);
+
+	margin: 0;
+
+	padding: 0;
 
 	cursor: pointer;
 
@@ -218,6 +220,8 @@ html, body
 
 	cursor: pointer;
 	pointer-events: none;
+
+	margin: 0;
 }
 
 /*
