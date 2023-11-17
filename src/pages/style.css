@@ -207,12 +207,17 @@ html, body
 	width: 100%;
 	height: calc(64px * 0.8);
 
+	cursor: pointer;
+
 	background-color: white;
 }
 
 .navbar_usercontrols_dropdown_control_label
 {
 	color: black;
+
+	cursor: pointer;
+	pointer-events: none;
 }
 
 /*
