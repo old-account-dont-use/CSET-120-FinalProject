@@ -293,7 +293,7 @@ html, body
 	padding-top: 100px;
 	padding-bottom: 100px;
 
-	background-image: linear-gradient(rgba( 0, 127, 255, 0.8),  rgba(115, 194, 251, 0.8));
+	background-image: linear-gradient(rgba( 0, 127, 255, 0.8), rgba(115, 194, 251, 0.8));
 }
 
 #home_contact_box
@@ -342,6 +342,8 @@ html, body
 	backdrop-filter: blur(4px);
 
 	border: 1px solid rgba(255, 255, 255, 0.18);
+
+	font-size: 15px;
 }
 
 #home_contact_box textarea
@@ -349,6 +351,18 @@ html, body
 	resize: none;
 
 	overflow: scroll;
+}
+
+#home_contact_box input:hover,
+#home_contact_box textarea:hover
+{
+	background-color: rgba(173, 216, 230, 0.3);
+}
+
+#home_contact_box input:focus,
+#home_contact_box textarea:focus
+{
+	outline: none;
 }
 
 #home_contact_box input[type=submit]
@@ -359,7 +373,6 @@ html, body
 #home_contact_box input[type=submit]:hover
 {
 	background: rgba(204, 252, 188, 0.5);
-
 }
 
 /*
