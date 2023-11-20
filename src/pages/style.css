@@ -378,6 +378,35 @@ html, body
 	background: rgba(204, 252, 188, 0.5);
 }
 
+#home_about
+{
+	background: rgb(8,8,112);
+background: radial-gradient(rgba(255, 0, 60, 0.8), rgba(194, 115, 251, 0.8));
+
+}
+
+#about_content
+{
+	width: 45em;
+
+	margin: auto;
+
+	padding: 3rem;
+
+	background: rgba(255, 255, 255, 0.2);
+
+	box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+	backdrop-filter: blur(4px);
+
+	border: 1px solid rgba(255, 255, 255, 0.18);
+	border-radius: 12px;
+
+}
+
+#about_content p
+{
+	line-height: 1.5rem;
+}
 /*
 *	Account page
 */
@@ -464,5 +493,4 @@ html, body
 #account_entry_form input:hover
 {
 	background-color: rgba(255, 150, 150, 0.9);
-	color: white;
 }
