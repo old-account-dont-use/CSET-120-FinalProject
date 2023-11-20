@@ -20,7 +20,22 @@ Helper.hash = (string) =>
         h = Math.imul(h ^ string.charCodeAt(i), 2654435761)
 
     return (h ^ h >>> 16) >>> 0
-};
+}
+
+/*
+*	Converts a string or number to a price
+*/
+Helper.priceify = (data) =>
+{
+	if (Helper.isString(data))
+	{
+		data = parseFloat(data)
+		if (Number.isNaN(data))
+			throw new Error("Invalid data passed to priceify")
+	}
+
+	return data.toFixed(2)
+}
 
 /*
 *	Registers a function to be ran on an event
