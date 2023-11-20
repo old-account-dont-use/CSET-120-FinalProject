@@ -293,7 +293,7 @@ html, body
 	padding-top: 100px;
 	padding-bottom: 100px;
 
-	background-image: linear-gradient(rgba( 0, 127, 255, 0.8), rgba(115, 194, 251, 0.8));
+	background-image: linear-gradient(rgba(255, 0, 60, 0.8), rgba(194, 115, 251, 0.8));
 }
 
 #home_contact_box
@@ -311,6 +311,8 @@ html, body
 
 	border: 1px solid rgba(255, 255, 255, 0.18);
 	border-radius: 12px;
+
+	overflow: hidden;
 }
 
 #home_contact_box *
@@ -350,13 +352,14 @@ html, body
 {
 	resize: none;
 
-	overflow: scroll;
+	overflow: hidden;
+	overflow-y: auto;
 }
 
 #home_contact_box input:hover,
 #home_contact_box textarea:hover
 {
-	background-color: rgba(173, 216, 230, 0.3);
+	background-color: rgba(255, 238, 0, 0.4);
 }
 
 #home_contact_box input:focus,
@@ -391,7 +394,7 @@ html, body
 	align-items: center;
 	justify-content: center;
 
-	background-color: transparent;
+	background-image: linear-gradient(180deg, #2f6ed3 5%, #5095e4 20%, #5095e4 60%, #2f6ed3 95%);
 }
 
 #account_entry
@@ -406,7 +409,13 @@ html, body
 
 	padding: 24px;
 
-	background-color: red;
+	background: rgba(255, 255, 255, 0.2);
+
+	box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+	backdrop-filter: blur(4px);
+
+	border: 1px solid rgba(255, 255, 255, 0.18);
+	border-radius: 12px;
 
 	overflow: hidden;
 }
@@ -438,5 +447,22 @@ html, body
 {
 	margin-bottom: 10px;
 
-	padding: 10px;
+	padding: 12px;
+
+	outline: none;
+
+	border: none;
+
+	border-radius: 12px;
+}
+
+#account_entry_form input::placeholder
+{
+	color: black;
+}
+
+#account_entry_form input:hover
+{
+	background-color: rgba(255, 150, 150, 0.9);
+	color: white;
 }
