@@ -57,34 +57,34 @@ Helper.hookEvent(window, "load", false, () =>
 	Menu.addItem("Mediterranean Power Bowl", 5.00, "Mediterranean Power Bowl with Hummus", [ "hummus", "vegetable" ], "")
 
 	//Indulgence Oasis
-	Menu.addItem("Lobster", 5.00, "Truffle-infused Lobster Mac and Cheese", [ "lettuce" ], "")
-	Menu.addItem("Filet Mignon", 5.00, "Filet Mignon with Red Wine Reduction", [ "lettuce" ], "")
-	Menu.addItem("Foie Gras Crostini", 5.00, "Foie Gras Crostini with Fig Jam", [ "lettuce" ], "")
-	Menu.addItem("Risotto", 5.00, "Black Truffle Risotto with Parmesan Crisps", [ "lettuce" ], "")
+	Menu.addItem("Lobster", 5.00, "Truffle-infused Lobster Mac and Cheese", [ "" ], "")
+	Menu.addItem("Filet Mignon", 5.00, "Filet Mignon with Red Wine Reduction", [ "" ], "")
+	Menu.addItem("Foie Gras Crostini", 5.00, "Foie Gras Crostini with Fig Jam", [ "" ], "")
+	Menu.addItem("Risotto", 5.00, "Black Truffle Risotto with Parmesan Crisps", [ "" ], "")
 
 	//Fast Fusion Corner
-	Menu.addItem("Lobster", 5.00, "Gourmet Beef Burger with Chipotle Aioli", [ "lettuce" ], "")
-	Menu.addItem("Lobster", 5.00, "Pesto Chicken Panini with Sundried Tomatoes", [ "lettuce" ], "")
-	Menu.addItem("Lobster", 5.00, "Street-Style Tacos with Mango Salsa", [ "lettuce" ], "")
-	Menu.addItem("Lobster", 5.00, "BBQ Pulled Pork Sliders with Coleslaw", [ "lettuce" ], "")
+	Menu.addItem("Burger", 5.00, "Gourmet Beef Burger with Chipotle Aioli", [ "" ], "")
+	Menu.addItem("Pesto Chicken Panini", 5.00, "Pesto Chicken Panini with Sundried Tomatoes", [ "" ], "")
+	Menu.addItem("Tacos", 5.00, "Street-Style Tacos with Mango Salsa", [ "" ], "")
+	Menu.addItem("BBQ Pulled Pork Sliders", 5.00, "BBQ Pulled Pork Sliders with Coleslaw", [ "" ], "")
 
 	//Guilt-Free Delights
-	Menu.addItem("Lobster", 5.00, "Cauliflower Crust Margherita Pizza", [ "lettuce" ], "")
-	Menu.addItem("Lobster", 5.00, "Zucchini Noodles with Basil Pesto", [ "lettuce" ], "")
-	Menu.addItem("Lobster", 5.00, "Vegan Thai Coconut Curry with Tofu", [ "lettuce" ], "")
-	Menu.addItem("Lobster", 5.00, "Chia Seed Pudding Parfait with Mixed Berries", [ "lettuce" ], "")
+	Menu.addItem("Pizza", 5.00, "Cauliflower Crust Margherita Pizza", [ "" ], "")
+	Menu.addItem("Zucchini Noodles", 5.00, "Zucchini Noodles with Basil Pesto", [ "" ], "")
+	Menu.addItem("Vegan Thai Coconut Curry", 5.00, "Vegan Thai Coconut Curry with Tofu", [ "" ], "")
+	Menu.addItem("Pudding Parfait", 5.00, "Chia Seed Pudding Parfait with Mixed Berries", [ "" ], "")
 
 	//Decadent Dessert Haven
-	Menu.addItem("Lobster", 5.00, "Molten Chocolate Lava Cake with Raspberry Coulis", [ "lettuce" ], "")
-	Menu.addItem("Lobster", 5.00, "Sundae Caramelized Banana Foster ", [ "lettuce" ], "")
-	Menu.addItem("Lobster", 5.00, "Pistachio White Chocolate Mousse", [ "lettuce" ], "")
-	Menu.addItem("Lobster", 5.00, "Raspberry Almond Tart with Vanilla Bean Cream", [ "lettuce" ], "")
+	Menu.addItem("Chocolate Lava Cake", 5.00, "Molten Chocolate Lava Cake with Raspberry Coulis", [ "" ], "")
+	Menu.addItem("Lobster", 5.00, "Sundae Caramelized Banana Foster ", [ "" ], "")
+	Menu.addItem("Mousse", 5.00, "Pistachio White Chocolate Mousse", [ "" ], "")
+	Menu.addItem("Tart", 5.00, "Raspberry Almond Tart with Vanilla Bean Cream", [ "" ], "")
 
 	//Exotic Elixirs Bar
-	Menu.addItem("Lobster", 5.00, "Hibiscus Infused Detox Water", [ "lettuce" ], "")
-	Menu.addItem("Lobster", 5.00, "Mango Tango Smoothie with Chia Seeds", [ "lettuce" ], "")
-	Menu.addItem("Lobster", 5.00, "Basil Lemonade Sparkler", [ "lettuce" ], "")
-	Menu.addItem("Lobster", 5.00, "Matcha Latte with Almond Milk", [ "lettuce" ], "")
+	Menu.addItem("Detox Water", 5.00, "Hibiscus Infused Detox Water", [ "" ], "")
+	Menu.addItem("Smoothie", 5.00, "Mango Tango Smoothie with Chia Seeds", [ "" ], "")
+	Menu.addItem("Sparkler", 5.00, "Basil Lemonade Sparkler", [ "" ], "")
+	Menu.addItem("Almond Milk", 5.00, "Matcha Latte with Almond Milk", [ "" ], "")
 1
 
 })
