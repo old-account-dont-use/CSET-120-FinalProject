@@ -61,4 +61,30 @@ Helper.hookEvent(window, "load", false, () =>
 	Menu.addItem("Filet Mignon", 5.00, "Filet Mignon with Red Wine Reduction", [ "lettuce" ], "")
 	Menu.addItem("Foie Gras Crostini", 5.00, "Foie Gras Crostini with Fig Jam", [ "lettuce" ], "")
 	Menu.addItem("Risotto", 5.00, "Black Truffle Risotto with Parmesan Crisps", [ "lettuce" ], "")
+
+	//Fast Fusion Corner
+	Menu.addItem("Lobster", 5.00, "Gourmet Beef Burger with Chipotle Aioli", [ "lettuce" ], "")
+	Menu.addItem("Lobster", 5.00, "Pesto Chicken Panini with Sundried Tomatoes", [ "lettuce" ], "")
+	Menu.addItem("Lobster", 5.00, "Street-Style Tacos with Mango Salsa", [ "lettuce" ], "")
+	Menu.addItem("Lobster", 5.00, "BBQ Pulled Pork Sliders with Coleslaw", [ "lettuce" ], "")
+
+	//Guilt-Free Delights
+	Menu.addItem("Lobster", 5.00, "Cauliflower Crust Margherita Pizza", [ "lettuce" ], "")
+	Menu.addItem("Lobster", 5.00, "Zucchini Noodles with Basil Pesto", [ "lettuce" ], "")
+	Menu.addItem("Lobster", 5.00, "Vegan Thai Coconut Curry with Tofu", [ "lettuce" ], "")
+	Menu.addItem("Lobster", 5.00, "Chia Seed Pudding Parfait with Mixed Berries", [ "lettuce" ], "")
+
+	//Decadent Dessert Haven
+	Menu.addItem("Lobster", 5.00, "Molten Chocolate Lava Cake with Raspberry Coulis", [ "lettuce" ], "")
+	Menu.addItem("Lobster", 5.00, "Sundae Caramelized Banana Foster ", [ "lettuce" ], "")
+	Menu.addItem("Lobster", 5.00, "Pistachio White Chocolate Mousse", [ "lettuce" ], "")
+	Menu.addItem("Lobster", 5.00, "Raspberry Almond Tart with Vanilla Bean Cream", [ "lettuce" ], "")
+
+	//Exotic Elixirs Bar
+	Menu.addItem("Lobster", 5.00, "Hibiscus Infused Detox Water", [ "lettuce" ], "")
+	Menu.addItem("Lobster", 5.00, "Mango Tango Smoothie with Chia Seeds", [ "lettuce" ], "")
+	Menu.addItem("Lobster", 5.00, "Basil Lemonade Sparkler", [ "lettuce" ], "")
+	Menu.addItem("Lobster", 5.00, "Matcha Latte with Almond Milk", [ "lettuce" ], "")
+1
+
 })
