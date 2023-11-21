@@ -72,7 +72,7 @@ html, body
 	align-items: center;
 	justify-content: space-between;
 
-	z-index: 999;
+	z-index: 998;
 
 	overflow: hidden;
 
@@ -159,7 +159,6 @@ html, body
 	cursor: pointer;
 
 	background: rgba(255, 0, 0, 0.75);
-
 }
 
 #navbar_tabs li
@@ -204,6 +203,14 @@ html, body
 	background: rgba(255, 255, 255, 0.7);
 }
 
+#navbar_usercontrols[open=true]
+{
+	border-top-left-radius: 12px;
+	border-top-right-radius: 12px;
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
+}
+
 #navbar_usercontrols_img
 {
 	width: auto;
@@ -220,7 +227,6 @@ html, body
 {
 	cursor: pointer;
 	pointer-events: none;
-
 }
 
 #navbar_usercontrols_dropdown
@@ -230,14 +236,22 @@ html, body
 	width: 200px;
 	height: fit-content;
 
-	top: 64px;
-	left: calc(100% - 305px);
+	top: calc(64px * 0.9);
+	left: calc(100% - 305.5px);
 
-	z-index: 998;
+	z-index: 999;
+
+	overflow: hidden;
+
+	border-bottom-left-radius: 12px;
+	border-bottom-right-radius: 12px;
 }
 
 .navbar_usercontrols_dropdown_control
 {
+	display: flex;
+	align-items: center;
+
 	width: 100%;
 	height: calc(64px * 0.8);
 
@@ -399,7 +413,6 @@ html, body
 
 	border: 1px solid rgba(255, 255, 255, 0.18);
 	border-radius: 12px;
-
 }
 
 #about_content p

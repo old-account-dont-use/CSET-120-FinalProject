@@ -44,6 +44,32 @@ NavigationManager.createNavBarUserControl = (label, callback) =>
 }
 
 /*
+*	Toggles the navbar user controls
+*/
+NavigationManager.toggleNavBarUserControls = (bState) =>
+{
+	const panel = document.getElementById("navbar_usercontrols")
+	if (!panel) return
+
+	const dropdown = document.getElementById("navbar_usercontrols_dropdown")
+	if (!dropdown) return
+
+	const isVisible = dropdown.style.length < 1
+	if (bState == isVisible) return
+
+	if (isVisible)
+	{
+		panel.setAttribute("open", false)
+		dropdown.setAttribute("style", "display: none;")
+	}
+	else
+	{
+		panel.setAttribute("open", true)
+		dropdown.removeAttribute("style")
+	}
+}
+
+/*
 *	Creates the navbar user controls
 */
 NavigationManager.createNavBarUserControls = () =>
@@ -51,16 +77,8 @@ NavigationManager.createNavBarUserControls = () =>
 	const panel = document.createElement("div")
 	panel.id = "navbar_usercontrols"
 	{
-		panel.onclick = () =>
-		{
-			const dropdown = document.getElementById("navbar_usercontrols_dropdown")
-			if (!dropdown) return
-
-			if (dropdown.style.length < 1)
-				dropdown.setAttribute("style", "display: none;")
-			else
-				dropdown.removeAttribute("style")
-		}
+		panel.onclick = NavigationManager.toggleNavBarUserControls
+		panel.setAttribute("open", false)
 
 		const img = document.createElement("img")
 		img.id = "navbar_usercontrols_img"
@@ -206,7 +224,5 @@ Helper.hookEvent(window, "load", false, () =>
 
 Helper.hookEvent(document, "scroll", true, (event) =>
 {
-	const dropdown = document.getElementById("navbar_usercontrols_dropdown") // Re-hide user control menu
-	if (dropdown && dropdown.style.length < 1)
-		dropdown.setAttribute("style", "display: none;")
+	NavigationManager.toggleNavBarUserControls(false) // Re-hide user control menu
 })
