@@ -467,8 +467,10 @@ html, body
 
 #account_entry
 {
-	min-width: 40em;
-	min-height: 45em;
+	width: 50em;
+	height: 30em;
+	max-width: 50vw;
+	max-height: 60vh;
 
 	margin-top: auto;
 	margin-bottom: auto;
