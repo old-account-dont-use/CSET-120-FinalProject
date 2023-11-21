@@ -46,4 +46,48 @@ Helper.hookEvent(window, "load", false, () =>
 
 	// Add items
 	Menu.addItem("pizza", 5, "A pizza", [ "cheese", "tomatoes" ], "")
+
+	//Healthy Haven
+	Menu.addItem("Salmon Salad", 5, "Grilled Salmon Salad with Citrus Vinaigrette", [ "lettuce" ], "")
+	Menu.addItem("Salmon Salad", 5, "Quinoa and Vegetable Stuffed Bell Peppers", [ "lettuce" ], "")
+	Menu.addItem("Salmon Salad", 5, "Avocado Toast Trio with Tomato Salsa", [ "lettuce" ], "")
+	Menu.addItem("Salmon Salad", 5, "Mediterranean Power Bowl with Hummus", [ "lettuce" ], "")
+
+	//Indulgence Oasis
+	Menu.addItem("Salmon Salad", 5, "Truffle-infused Lobster Mac and Cheese", [ "lettuce" ], "")
+	Menu.addItem("Salmon Salad", 5, "Filet Mignon with Red Wine Reduction", [ "lettuce" ], "")
+	Menu.addItem("Salmon Salad", 5, "Foie Gras Crostini with Fig Jam", [ "lettuce" ], "")
+	Menu.addItem("Salmon Salad", 5, "Black Truffle Risotto with Parmesan Crisps", [ "lettuce" ], "")
+
+
+	Menu.addItem("Salmon Salad", 5, "", [ "lettuce" ], "")
+	Menu.addItem("Salmon Salad", 5, "", [ "lettuce" ], "")
+	Menu.addItem("Salmon Salad", 5, "", [ "lettuce" ], "")
+
+	Menu.addItem("Salmon Salad", 5, "", [ "lettuce" ], "")
+	Menu.addItem("Salmon Salad", 5, "", [ "lettuce" ], "")
+	Menu.addItem("Salmon Salad", 5, "", [ "lettuce" ], "")
+	Menu.addItem("Salmon Salad", 5, "", [ "lettuce" ], "")
+	Menu.addItem("Salmon Salad", 5, "", [ "lettuce" ], "")
+	Menu.addItem("Salmon Salad", 5, "", [ "lettuce" ], "")
+	Menu.addItem("Salmon Salad", 5, "", [ "lettuce" ], "")
+	Menu.addItem("Salmon Salad", 5, "", [ "lettuce" ], "")
+	Menu.addItem("Salmon Salad", 5, "", [ "lettuce" ], "")
+	Menu.addItem("Salmon Salad", 5, "", [ "lettuce" ], "")
+	Menu.addItem("Salmon Salad", 5, "", [ "lettuce" ], "")
+
+	Menu.addItem("Salmon Salad", 5, "", [ "lettuce" ], "")
+	Menu.addItem("Salmon Salad", 5, "", [ "lettuce" ], "")
+	Menu.addItem("Salmon Salad", 5, "", [ "lettuce" ], "")
+	Menu.addItem("Salmon Salad", 5, "", [ "lettuce" ], "")
+	Menu.addItem("Salmon Salad", 5, "", [ "lettuce" ], "")
+	Menu.addItem("Salmon Salad", 5, "", [ "lettuce" ], "")
+	Menu.addItem("Salmon Salad", 5, "", [ "lettuce" ], "")
+	Menu.addItem("Salmon Salad", 5, "", [ "lettuce" ], "")
+	Menu.addItem("Salmon Salad", 5, "", [ "lettuce" ], "")
+	Menu.addItem("Salmon Salad", 5, "", [ "lettuce" ], "")
+	Menu.addItem("Salmon Salad", 5, "", [ "lettuce" ], "")
+
+
+
 })
