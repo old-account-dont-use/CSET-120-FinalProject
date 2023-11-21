@@ -44,6 +44,33 @@ NavigationManager.createNavBarUserControl = (label, callback) =>
 }
 
 /*
+*	Toggles the navbar user controls dropdown position and size
+*/
+NavigationManager.fixNavBarUserControlsDropdown = (panel, dropdown) =>
+{
+	if (!panel)
+	{
+		panel = document.getElementById("navbar_usercontrols")
+		if (!panel) return
+	}
+
+	if (!dropdown)
+	{
+		dropdown = document.getElementById("navbar_usercontrols_dropdown")
+		if (!dropdown) return
+	}
+
+	const isVisible = (/true/).test(panel.getAttribute("open"))
+	if (!isVisible) return
+
+	const rect = panel.getBoundingClientRect()
+	const left = rect.left
+	const width = rect.width
+
+	dropdown.style = `left: ${left}px; width: ${width}px;`
+}
+
+/*
 *	Toggles the navbar user controls
 */
 NavigationManager.toggleNavBarUserControls = (bState) =>
@@ -54,19 +81,13 @@ NavigationManager.toggleNavBarUserControls = (bState) =>
 	const dropdown = document.getElementById("navbar_usercontrols_dropdown")
 	if (!dropdown) return
 
-	const isVisible = dropdown.style.length < 1
+	const isVisible = (/true/).test(panel.getAttribute("open"))
 	if (bState == isVisible) return
 
-	if (isVisible)
-	{
-		panel.setAttribute("open", false)
-		dropdown.setAttribute("style", "display: none;")
-	}
-	else
-	{
-		panel.setAttribute("open", true)
-		dropdown.removeAttribute("style")
-	}
+	panel.setAttribute("open", !isVisible)
+	dropdown.setAttribute("open", panel.getAttribute("open"))
+
+	NavigationManager.fixNavBarUserControlsDropdown(panel, dropdown)
 }
 
 /*
@@ -99,7 +120,7 @@ NavigationManager.createNavBarUserControls = () =>
 
 	const dropdown = document.createElement("div")
 	dropdown.id = "navbar_usercontrols_dropdown"
-	dropdown.setAttribute("style", "display: none;")
+	dropdown.setAttribute("open", false)
 	{
 		let looped = null
 		if (AccountManager.g_bLoggedIn)
@@ -225,4 +246,9 @@ Helper.hookEvent(window, "load", false, () =>
 Helper.hookEvent(document, "scroll", true, (event) =>
 {
 	NavigationManager.toggleNavBarUserControls(false) // Re-hide user control menu
+})
+
+Helper.hookEvent(window, "resize", true, () =>
+{
+	NavigationManager.fixNavBarUserControlsDropdown() // Fix the dropdown position and size
 })

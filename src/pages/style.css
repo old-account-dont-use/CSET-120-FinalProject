@@ -247,6 +247,11 @@ html, body
 	border-bottom-right-radius: 12px;
 }
 
+#navbar_usercontrols_dropdown[open=false]
+{
+	display: none;
+}
+
 .navbar_usercontrols_dropdown_control
 {
 	display: flex;
