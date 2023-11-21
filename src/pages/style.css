@@ -222,6 +222,7 @@ html, body
 
 #navbar_usercontrols[open=true]
 {
+	border-bottom: 1px solid transparent;
 	border-top-left-radius: 12px;
 	border-top-right-radius: 12px;
 	border-bottom-left-radius: 0;
@@ -260,6 +261,14 @@ html, body
 
 	overflow: hidden;
 
+	background: rgba(255, 255, 255, 0.25);
+
+	box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+	backdrop-filter: blur(4px);
+
+	border-left: 1px solid rgba(255, 255, 255, 0.5);
+	border-right: 1px solid rgba(255, 255, 255, 0.5);
+	border-bottom: 1px solid rgba(255, 255, 255, 0.5);
 	border-bottom-left-radius: 12px;
 	border-bottom-right-radius: 12px;
 }
@@ -283,17 +292,16 @@ html, body
 
 	cursor: pointer;
 
-	background: rgba(255, 255, 255, 0.2);
+	color: black;
+	background: rgba(255, 255, 255, 0.3);
 
 	box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
 	backdrop-filter: blur(4px);
-
-	border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
 .navbar_usercontrols_dropdown_control:hover
 {
-	background-color: rgba(255, 255, 255, 0.7);
+	background-color: rgba(255, 255, 255, 0.5);
 }
 
 .navbar_usercontrols_dropdown_control_label
