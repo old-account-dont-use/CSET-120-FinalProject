@@ -46,6 +46,12 @@ Helper.hookEvent(window, "load", false, () =>
 	Menu.addTopping("red onion", 0.50)
 	Menu.addTopping("asparagus", 0.50)
 	Menu.addTopping("hummus", 0.50)
+	Menu.addTopping("red pepper", 0.50)
+	Menu.addTopping("green pepper", 0.50)
+	Menu.addTopping("orange pepper", 0.50)
+	Menu.addTopping("yellow pepper", 0.50)
+	Menu.addTopping("zucchini", 0.50)
+	Menu.addTopping("cucumber", 0.50)
 
 	// Seed options
 	Menu.addTopping("pomegranate seeds", 0.50)
@@ -65,17 +71,22 @@ Helper.hookEvent(window, "load", false, () =>
 	Menu.addTopping("salt", 0.50)
 	Menu.addTopping("white pepper", 0.50)
 	Menu.addTopping("black pepper", 0.50)
+	Menu.addTopping("tomato salsa", 0.50)
 
 	// Protein options
 	Menu.addTopping("salmon", 0.50)
 	Menu.addTopping("steak", 0.50)
 	Menu.addTopping("chicken", 0.50)
+	Menu.addTopping("shrimp", 0.50)
+	Menu.addTopping("beef", 0.50)
 
 	// Fruit options
 	Menu.addTopping("ruby red grapefruit", 0.50)
 	Menu.addTopping("blood oranges", 0.50)
 	Menu.addTopping("orange", 0.50)
 	Menu.addTopping("quinoa", 0.50)
+	Menu.addTopping("apple", 0.50)
+	Menu.addTopping("avocado", 0.50)
 
 	// Dairy options
 	Menu.addTopping("blue cheese crumbles", 0.50)
@@ -105,7 +116,7 @@ Helper.hookEvent(window, "load", false, () =>
 	// Add items
 
 	// Healthy Haven
-	Menu.addItem("Salmon Salad", 5.00, "Grilled Salmon Salad with Citrus Vinaigrette", [ "lettuce", "salmon", "citrus vinaigrette" ], "")
+	Menu.addItem("Salmon Salad", 5.00, "Grilled Salmon Salad with Citrus Vinaigrette", [ "lettuce", "salmon", "" ], "")
 	Menu.addItem("Bell Peppers", 5.00, "Quinoa and Vegetable Stuffed Bell Peppers", [ "quinoa", "vegetable" ], "")
 	Menu.addItem("Avocado Toast Trio", 5.00, "Avocado Toast Trio with Tomato Salsa", [ "toasted", "tomatoes" ], "")
 	Menu.addItem("Mediterranean Power Bowl", 5.00, "Mediterranean Power Bowl with Hummus", [ "hummus", "vegetable" ], "")
