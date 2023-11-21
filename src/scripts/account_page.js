@@ -86,6 +86,14 @@ AccountPage.setupEntryForm = (form, mode) =>
 			break
 		}
 	}
+
+	const submit = document.createElement("input")
+	submit.id = "account_entry_submit"
+	{
+		submit.setAttribute("type", "submit")
+		submit.setAttribute("value", "Submit")
+	}
+	form.appendChild(submit)
 }
 
 /*
