@@ -251,11 +251,7 @@ html, body
 {
 	position: fixed;
 
-	width: 200px;
 	height: fit-content;
-
-	top: calc(64px * 0.9);
-	left: calc(100% - 305.5px);
 
 	z-index: 999;
 

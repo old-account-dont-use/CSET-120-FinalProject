@@ -64,10 +64,8 @@ NavigationManager.fixNavBarUserControlsDropdown = (panel, dropdown) =>
 	if (!isVisible) return
 
 	const rect = panel.getBoundingClientRect()
-	const left = rect.left
-	const width = rect.width
 
-	dropdown.style = `left: ${left}px; width: ${width}px;`
+	dropdown.style = `top: ${rect.top + rect.height}px; left: ${rect.left}px; width: ${rect.width}px;`
 }
 
 /*
