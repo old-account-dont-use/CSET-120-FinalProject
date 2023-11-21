@@ -91,7 +91,7 @@ AccountPage.setupEntryForm = (form, mode) =>
 	submit.id = "account_entry_submit"
 	{
 		submit.setAttribute("type", "submit")
-		submit.setAttribute("value", "Submit")
+		submit.setAttribute("value", AccountPage.getEntryText(mode))
 	}
 	form.appendChild(submit)
 }
