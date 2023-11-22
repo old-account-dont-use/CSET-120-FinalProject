@@ -44,6 +44,7 @@ Helper.hookEvent(window, "load", false, () =>
 	Menu.addTopping("tomatoes", 10.00)
 	Menu.addTopping("lettuce", 1.50)
 	Menu.addTopping("red onion", 0.50)
+	Menu.addTopping("onion", 0.50)
 	Menu.addTopping("asparagus", 0.50)
 	Menu.addTopping("hummus", 0.50)
 	Menu.addTopping("red pepper", 0.50)
@@ -52,6 +53,12 @@ Helper.hookEvent(window, "load", false, () =>
 	Menu.addTopping("yellow pepper", 0.50)
 	Menu.addTopping("zucchini", 0.50)
 	Menu.addTopping("cucumber", 0.50)
+	Menu.addTopping("egg plant", 0.50)
+	Menu.addTopping("chickpeas", 0.50)
+	Menu.addTopping("spinach", 0.50)
+	Menu.addTopping("celery", 0.50)
+	Menu.addTopping("carrots", 0.50)
+
 
 	// Seed options
 	Menu.addTopping("pomegranate seeds", 0.50)
@@ -72,6 +79,14 @@ Helper.hookEvent(window, "load", false, () =>
 	Menu.addTopping("white pepper", 0.50)
 	Menu.addTopping("black pepper", 0.50)
 	Menu.addTopping("tomato salsa", 0.50)
+	Menu.addTopping("chocolate ", 0.50)
+	Menu.addTopping("vanilla", 0.50)
+	Menu.addTopping("chicken stock", 0.50)
+	Menu.addTopping("vegetable stock", 0.50)
+	Menu.addTopping("parsely leaves", 0.50)
+	Menu.addTopping("mint leaves", 0.50)
+	Menu.addTopping("mayonnaise", 0.50)
+
 
 	// Protein options
 	Menu.addTopping("salmon", 0.50)
@@ -79,6 +94,10 @@ Helper.hookEvent(window, "load", false, () =>
 	Menu.addTopping("chicken", 0.50)
 	Menu.addTopping("shrimp", 0.50)
 	Menu.addTopping("beef", 0.50)
+	Menu.addTopping("pork", 0.50)
+
+	Menu.addTopping("eggs", 0.50)
+	Menu.addTopping("tuna", 0.50)
 
 	// Fruit options
 	Menu.addTopping("ruby red grapefruit", 0.50)
@@ -94,6 +113,7 @@ Helper.hookEvent(window, "load", false, () =>
 	Menu.addTopping("cheddar cheese", 0.50)
 	Menu.addTopping("colby jack cheese", 0.50)
 	Menu.addTopping("provolone cheese", 0.50)
+	Menu.addTopping("cream cheese", 0.50)
 
 	// Drink options
 	Menu.addTopping("coke", 0.50)
@@ -116,13 +136,13 @@ Helper.hookEvent(window, "load", false, () =>
 	// Add items
 
 	// Healthy Haven
-	Menu.addItem("Salmon Salad", 5.00, "Grilled Salmon Salad with Citrus Vinaigrette", [ "lettuce", "salmon", "" ], "")
-	Menu.addItem("Bell Peppers", 5.00, "Quinoa and Vegetable Stuffed Bell Peppers", [ "quinoa", "vegetable" ], "")
-	Menu.addItem("Avocado Toast Trio", 5.00, "Avocado Toast Trio with Tomato Salsa", [ "toasted", "tomatoes" ], "")
-	Menu.addItem("Mediterranean Power Bowl", 5.00, "Mediterranean Power Bowl with Hummus", [ "hummus", "vegetable" ], "")
+	Menu.addItem("Salmon Salad", 5.00, "Grilled Salmon Salad with Citrus Vinaigrette", [ "lettuce", "red onion", "asparagus", "red pepper", "green pepper", "orange pepper", "yellow pepper", "zucchini", "cucumber", "pomegrante seeds", "pumkpin seeds", " white sesame seeds", "quinoa seeds", "salmon", "lemon juice", "lemon zest", "white wine vinegar", "extra virgin olive oil", "dijon mustard", "honey", " minced garlic", "thyme", "salt", "white pepper", "black pepper", "ruby red grapefruit", "blood oranges", "orange" ], "")
+	Menu.addItem("Bell Peppers", 5.00, "Quinoa and Vegetable Stuffed Bell Peppers", [ "quinoa", "chicken stock", "vegetable stock", "red pepper", "orange pepper", "yellow pepper", "black pepper", "minced pepper", "egg plant", "zucchini", "red onion", "parsely leaves", "mint leaves", "tomatoes" ], "")
+	Menu.addItem("Avocado Toast Trio", 5.00, "Avocado Toast Trio with Tomato Salsa", [ "toasted", "tomatoes", "lettuce", "red onion", "asparagus", "red pepper", "green pepper", "orange pepper", "yellow pepper", "zucchini", "cucumber", "cream cheese", "eggs", "tuna", "mayonnaise", "salt", "white pepper", "black pepper", "tomato salsa" ], "")
+	Menu.addItem("Mediterranean Power Bowl", 5.00, "Mediterranean Power Bowl with Hummus", [ "hummus", "chickpeas", "chicken", "beef", "shrimp", "pork", "quinoa", "tomatoes", "cucumbers", "red onion", "spinach", "green pepper", "orange pepper", "red pepper", "yellow pepper", "salt", "white pepper", "black pepper", "american cheese", "cheddar cheese" , "provolone cheese" ], "")
 
 	// Indulgence Oasis
-	Menu.addItem("Lobster", 5.00, "Truffle-infused Lobster Mac and Cheese", [ "" ], "")
+	Menu.addItem("Lobster", 5.00, "Truffle-infused Lobster Mac and Cheese", [ "salt", "extra virgin olive oil", "onion", "red onion", "minced garlic", "carrots", "celery", "provolone cheese" ], "american cheese", "cheddar cheese")
 	Menu.addItem("Filet Mignon", 5.00, "Filet Mignon with Red Wine Reduction", [ "" ], "")
 	Menu.addItem("Foie Gras Crostini", 5.00, "Foie Gras Crostini with Fig Jam", [ "" ], "")
 	Menu.addItem("Risotto", 5.00, "Black Truffle Risotto with Parmesan Crisps", [ "" ], "")
@@ -140,8 +160,8 @@ Helper.hookEvent(window, "load", false, () =>
 	Menu.addItem("Pudding Parfait", 5.00, "Chia Seed Pudding Parfait with Mixed Berries", [ "" ], "")
 
 	// Decadent Dessert Haven
-	Menu.addItem("Chocolate Lava Cake", 5.00, "Molten Chocolate Lava Cake with Raspberry Coulis", [ "" ], "")
-	Menu.addItem("Lobster", 5.00, "Sundae Caramelized Banana Foster ", [ "" ], "")
+	Menu.addItem("Lava Cake", 5.00, "Molten Chocolate/Vanilla Lava Cake with Raspberry Coulis", [ "chocolate", "vanilla" ], "")
+	Menu.addItem("Sundae", 5.00, "Sundae Caramelized Banana Foster ", [ "" ], "")
 	Menu.addItem("Mousse", 5.00, "Pistachio White Chocolate Mousse", [ "" ], "")
 	Menu.addItem("Tart", 5.00, "Raspberry Almond Tart with Vanilla Bean Cream", [ "" ], "")
 
@@ -153,5 +173,6 @@ Helper.hookEvent(window, "load", false, () =>
 
 	// Drinks
 	Menu.addItem("Water", 5.00, "Water", [ "" ], "")
+	Menu.addItem("Milk", 5.00, "Milk", [ "chocolate milk", "white milk" ], "")
 	Menu.addItem("Fountain Drink", 5.00, "Coke/Pepsi product", [ "coke", "cherry coke", "pepsi", "root beer", "hi c", "sprite", "ginger ale", "grape fanta", "orange fanta", "powerade", "lemonade brisk", "7up", "dr pepper", "minaute maid lemonade" ], "")
 })
