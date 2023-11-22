@@ -1,15 +1,108 @@
 let AccountPage = new Map()
 
+/*
+*
+*	Entry page
+*
+*/
 AccountPage.ENTRY_MODE_NEW = 1
 AccountPage.ENTRY_MODE_EXISTING = 2
 AccountPage.ENTRY_MODE_FORGOT = 3
+
+/*
+*	Handles the submit
+*/
+AccountPage.onEntrySubmit = () =>
+{
+	const form = document.getElementById("account_entry_form")
+	if (!form) return true
+
+	const mode = form.m_EntryMode
+	if (!mode) return true
+
+	const email_input = document.getElementById("account_entry_email")
+	if (!email_input) return true
+
+	const email = email_input.value
+
+	const accountData = AccountManager.lookupAccount(email)
+	if (!accountData && mode != AccountPage.ENTRY_MODE_NEW)
+	{
+		alert(`Account ${email} not found`)
+		return false
+	}
+
+	switch (mode)
+	{
+		default:
+		case AccountPage.ENTRY_MODE_NEW:
+		{
+			if (accountData)
+			{
+				alert(`Account with email ${email} already exists`)
+				return false
+			}
+
+			const password_input = document.getElementById("account_entry_password")
+			if (!password_input) break
+
+			const password_input_confirm = document.getElementById("account_entry_password_confirm")
+			if (!password_input_confirm) break
+
+			const password = Helper.hash(password_input.value)
+			const password_confirm = Helper.hash(password_input_confirm.value)
+
+			if (password !== password_confirm)
+			{
+				alert("Passwords don't match")
+				return false
+			}
+
+			if (AccountManager.signUpHashed(email, password) && AccountManager.loginHashed(email, password))
+				alert("Account created")
+			else
+				alert("Failed to create account (???)")
+
+			break
+		}
+
+		case AccountPage.ENTRY_MODE_EXISTING:
+		{
+			const password_input = document.getElementById("account_entry_password")
+			if (!password_input) break
+
+			if (!AccountManager.loginHashed(email, Helper.hash(password_input.value)))
+			{
+				alert("Failed to log in")
+				return false
+			}
+			else
+				alert("Welcome back")
+
+			break
+		}
+
+		case AccountPage.ENTRY_MODE_FORGOT:
+		{
+			accountData[1] = Helper.hash("12345678")
+			if (AccountManager.updateAccount(email, accountData))
+				alert("Password reset to '12345678'")
+			else
+				alert("Failed to update password (???)")
+
+			break
+		}
+	}
+
+	return true
+}
 
 /*
 *   Gets the text corresponding to the entry mode
 */
 AccountPage.getEntryText = (mode) =>
 {
-    switch(mode)
+    switch (mode)
     {
         default:
         case AccountPage.ENTRY_MODE_NEW:
@@ -56,6 +149,8 @@ AccountPage.createSubText = (preText, linkText, mode, secondary) =>
 */
 AccountPage.setupEntryForm = (form, mode) =>
 {
+	form.m_EntryMode = mode
+
 	const email = document.createElement("h4")
 	email.innerHTML = "Email Address"
 
@@ -70,7 +165,7 @@ AccountPage.setupEntryForm = (form, mode) =>
 	form.appendChild(email)
 	form.appendChild(email_input)
 
-	switch(mode)
+	switch (mode)
 	{
 		default:
 		case AccountPage.ENTRY_MODE_NEW:
@@ -160,7 +255,7 @@ AccountPage.createEntryPanel = (mode) =>
 
             const form = document.createElement("form")
             form.id = "account_entry_form"
-            form.setAttribute("onsubmit", "") // TODO: On form submit action
+            form.setAttribute("onsubmit", "return AccountPage.onEntrySubmit()")
             AccountPage.setupEntryForm(form, mode)
 
             panel.appendChild(title)
@@ -195,6 +290,12 @@ AccountPage.setupEntryPanel = (mode) =>
 	const entryPanel = AccountPage.createEntryPanel(mode)
 	document.body.appendChild(entryPanel)
 }
+
+/*
+*
+*	Account page
+*
+*/
 
 ///////////////////////////////////////////////////////////////////////////////
 Helper.hookEvent(window, "load", false, () =>

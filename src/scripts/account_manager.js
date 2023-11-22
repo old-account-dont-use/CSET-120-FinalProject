@@ -37,15 +37,13 @@ AccountManager.storeAccountList = (accountMap) =>
 */
 AccountManager.validateAccount = (email, password, uid, accountType) =>
 {
-	const accountMap = AccountManager.getAccountList()
+	const accountData = AccountManager.lookupAccount(email)
+	if (!accountData) return false
 
-	const uidInfomration = accountMap[uid]
-	if (!uidInfomration || !(uidInfomration instanceof Array)) return false
-
-	if (uidInfomration[0] !== email) return false
-	if (uidInfomration[1] !== password) return false
-	if (uidInfomration[2] !== uid) return false
-	if (uidInfomration[3] !== accountType) return false
+	if (accountData[0] !== email) return false
+	if (accountData[1] !== password) return false
+	if (accountData[2] !== uid) return false
+	if (accountData[3] !== accountType) return false
 
 	return true
 }
@@ -75,15 +73,12 @@ AccountManager.lookupAccount = (email, accountMap = null) =>
 }
 
 /*
-*	Attempts to set the current account
+*	Attempts to set the current account with a hashed password
 *
 *	Returns true on success, false otherwise
 */
-AccountManager.login = (email, password) =>
+AccountManager.loginHashed = (email, hashedPassword) =>
 {
-	const hashedPassword = Helper.hash(password)
-	password = ""
-
 	AccountManager.g_bLoggedIn = false
 	AccountManager.g_AccountData = null
 
@@ -104,6 +99,19 @@ AccountManager.login = (email, password) =>
 }
 
 /*
+*	Attempts to set the current account
+*
+*	Returns true on success, false otherwise
+*/
+AccountManager.login = (email, password) =>
+{
+	const hashedPassword = Helper.hash(password)
+	password = ""
+
+	return AccountManager.loginHashed(email, hashedPassword)
+}
+
+/*
 *	Logs the user out of the current account
 */
 AccountManager.logout = () =>
@@ -118,11 +126,43 @@ AccountManager.logout = () =>
 }
 
 /*
+*	Updates the provided account
+*	This function would usually have a lot of security. But, seeing as this is not a serious account, it's no big deal
+*
+*	Returns true on success, false otherwise
+*/
+AccountManager.updateAccount = (email, accountData) =>
+{
+	const currentAccountData = AccountManager.lookupAccount(email)
+	if (!currentAccountData) return false
+
+	const accountMap = AccountManager.getAccountList()
+
+	const keys = Array.from(accountMap.keys())
+	for (const index of keys)
+	{
+		const currentAccount = accountMap.get(index)
+		if (!currentAccount) continue
+
+		if (currentAccount[0] === email)
+		{
+			accountMap.set(index, accountData)
+			AccountManager.storeAccountList(accountMap)
+
+			return true
+		}
+	}
+
+	// HOW is it not found when lookupAccount returns the data???
+	return false
+}
+
+/*
 *	Signs up with a hashed password
 */
 AccountManager.signUpHashed = (email, hashedPassword, accountType = AccountManager.ACCOUNT_TYPE_USER) =>
 {
-	let accountMap = AccountManager.getAccountList()
+	const accountMap = AccountManager.getAccountList()
 	if (AccountManager.lookupAccount(email, accountMap)) return false
 
 	const uid = Array.from(accountMap.keys()).length + 1
@@ -181,5 +221,5 @@ Helper.hookEvent(window, "load", false, () =>
 		return
 	}
 
-	AccountManager.login(email, password, true)
+	AccountManager.loginHashed(email, password)
 })
