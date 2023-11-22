@@ -78,11 +78,112 @@ AccountPage.setupEntryForm = (form, mode) =>
 				form.appendChild(password_input_confirm)
 			}
 
+			const directOne = document.createElement("p")
+			directOne.id = "account_entry_subtext"
+			{
+				const a = document.createElement("a")
+				a.classList.add("account_entry_subtext_link")
+				{
+					a.onclick = (event) =>
+					{
+						AccountPage.setupEntryPanel(event.target.m_SetupMode)
+					}
+				}
+
+				switch(mode)
+				{
+					default:
+					case AccountPage.ENTRY_MODE_NEW:
+					{
+						directOne.innerHTML = "Already have an account? "
+						a.innerHTML = "Login"
+						a.m_SetupMode = AccountPage.ENTRY_MODE_EXISTING
+
+						break
+					}
+
+					case AccountPage.ENTRY_MODE_EXISTING:
+					{
+						directOne.innerHTML = "Don't remember your password? "
+						a.innerHTML = "Forgot Password"
+						a.m_SetupMode = AccountPage.ENTRY_MODE_FORGOT
+
+						break
+					}
+				}
+
+				directOne.appendChild(a)
+			}
+			form.appendChild(directOne)
+
+			if (mode == AccountPage.ENTRY_MODE_EXISTING)
+			{
+				const directTwo = document.createElement("p")
+				directTwo.id = "account_entry_subtext_2"
+				{
+					directTwo.innerHTML = "Don't have an account? "
+
+					const a = document.createElement("a")
+					a.classList.add("account_entry_subtext_link")
+					{
+						a.onclick = (event) =>
+						{
+							AccountPage.setupEntryPanel(AccountPage.ENTRY_MODE_NEW)
+						}
+
+						a.innerHTML = "Sign up"
+					}
+
+					directTwo.appendChild(a)
+				}
+				form.appendChild(directTwo)
+			}
+
 			break
 		}
 
         case AccountPage.ENTRY_MODE_FORGOT:
         {
+			const directOne = document.createElement("p")
+			directOne.id = "account_entry_subtext_2"
+			{
+				directOne.innerHTML = "Don't have an account? "
+
+				const a = document.createElement("a")
+				a.classList.add("account_entry_subtext_link")
+				{
+					a.onclick = (event) =>
+					{
+						AccountPage.setupEntryPanel(AccountPage.ENTRY_MODE_NEW)
+					}
+
+					a.innerHTML = "Sign up"
+				}
+
+				directOne.appendChild(a)
+			}
+			form.appendChild(directOne)
+
+			const directTwo = document.createElement("p")
+			directTwo.id = "account_entry_subtext"
+			{
+				directTwo.innerHTML = "Already have an account? "
+
+				const a = document.createElement("a")
+				a.classList.add("account_entry_subtext_link")
+				{
+					a.onclick = (event) =>
+					{
+						AccountPage.setupEntryPanel(AccountPage.ENTRY_MODE_EXISTING)
+					}
+
+					a.innerHTML = "Login"
+				}
+
+				directTwo.appendChild(a)
+			}
+			form.appendChild(directTwo)
+
 			break
 		}
 	}
@@ -126,6 +227,29 @@ AccountPage.createEntryPanel = (mode) =>
     return container
 }
 
+/*
+*   Delete the sign up / login / forgot password page
+*/
+AccountPage.deleteEntryPanel = () =>
+{
+	const container = document.getElementById("account_entry_container")
+	if (container)
+	{
+		container.remove()
+	}
+}
+
+/*
+*   Setup the sign up / login / forgot password page
+*/
+AccountPage.setupEntryPanel = (mode) =>
+{
+	AccountPage.deleteEntryPanel()
+
+	const entryPanel = AccountPage.createEntryPanel(mode)
+	document.body.appendChild(entryPanel)
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 Helper.hookEvent(window, "load", false, () =>
 {
@@ -137,8 +261,5 @@ Helper.hookEvent(window, "load", false, () =>
         // Show normal account page
     }
     else
-    {
-        const entryPanel = AccountPage.createEntryPanel(AccountPage.ENTRY_MODE_EXISTING)
-        document.body.appendChild(entryPanel)
-    }
+		AccountPage.setupEntryPanel(AccountPage.ENTRY_MODE_EXISTING)
 })
