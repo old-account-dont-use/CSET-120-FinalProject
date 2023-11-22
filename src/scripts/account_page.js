@@ -124,45 +124,11 @@ AccountPage.setupEntryForm = (form, mode) =>
 
         case AccountPage.ENTRY_MODE_FORGOT:
         {
-			const directOne = document.createElement("p")
-			directOne.id = "account_entry_subtext_2"
-			{
-				directOne.innerHTML = "Don't have an account? "
+			const subText = AccountPage.createSubText("Already have an account? ", "Login", AccountPage.ENTRY_MODE_EXISTING, false)
+			const secondaryText = AccountPage.createSubText("Don't have an account? ", "Sign Up", AccountPage.ENTRY_MODE_NEW, true)
 
-				const a = document.createElement("a")
-				a.classList.add("account_entry_subtext_link")
-				{
-					a.onclick = (event) =>
-					{
-						AccountPage.setupEntryPanel(AccountPage.ENTRY_MODE_NEW)
-					}
-
-					a.innerHTML = "Sign up"
-				}
-
-				directOne.appendChild(a)
-			}
-			form.appendChild(directOne)
-
-			const directTwo = document.createElement("p")
-			directTwo.id = "account_entry_subtext"
-			{
-				directTwo.innerHTML = "Already have an account? "
-
-				const a = document.createElement("a")
-				a.classList.add("account_entry_subtext_link")
-				{
-					a.onclick = (event) =>
-					{
-						AccountPage.setupEntryPanel(AccountPage.ENTRY_MODE_EXISTING)
-					}
-
-					a.innerHTML = "Login"
-				}
-
-				directTwo.appendChild(a)
-			}
-			form.appendChild(directTwo)
+			form.appendChild(secondaryText)
+			form.appendChild(subText)
 
 			break
 		}
