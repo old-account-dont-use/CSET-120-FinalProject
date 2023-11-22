@@ -24,6 +24,34 @@ AccountPage.getEntryText = (mode) =>
 }
 
 /*
+*   Creates a sub text
+*/
+AccountPage.createSubText = (preText, linkText, mode, secondary) =>
+{
+	const subText = document.createElement("p")
+	subText.id = secondary ? "account_entry_subtext_2" : "account_entry_subtext"
+	{
+		subText.innerHTML = preText
+
+		const a = document.createElement("a")
+		a.classList.add("account_entry_subtext_link")
+		a.m_SetupMode = mode
+		{
+			a.onclick = (event) =>
+			{
+				AccountPage.setupEntryPanel(event.target.m_SetupMode)
+			}
+
+			a.innerHTML = linkText
+		}
+
+		subText.appendChild(a)
+	}
+
+	return subText
+}
+
+/*
 *   Sets up the form corresponding to the entry mode
 */
 AccountPage.setupEntryForm = (form, mode) =>
@@ -78,65 +106,17 @@ AccountPage.setupEntryForm = (form, mode) =>
 				form.appendChild(password_input_confirm)
 			}
 
-			const directOne = document.createElement("p")
-			directOne.id = "account_entry_subtext"
-			{
-				const a = document.createElement("a")
-				a.classList.add("account_entry_subtext_link")
-				{
-					a.onclick = (event) =>
-					{
-						AccountPage.setupEntryPanel(event.target.m_SetupMode)
-					}
-				}
+			const preText = mode == AccountPage.ENTRY_MODE_NEW ? "Already have an account? " : "Don't remember your password? "
+			const linkText = mode == AccountPage.ENTRY_MODE_NEW ? "Login" : "Forgot Password"
+			const subMode = mode ==AccountPage.ENTRY_MODE_NEW ? AccountPage.ENTRY_MODE_EXISTING : AccountPage.ENTRY_MODE_FORGOT
+			const subText = AccountPage.createSubText(preText, linkText, subMode, false)
 
-				switch(mode)
-				{
-					default:
-					case AccountPage.ENTRY_MODE_NEW:
-					{
-						directOne.innerHTML = "Already have an account? "
-						a.innerHTML = "Login"
-						a.m_SetupMode = AccountPage.ENTRY_MODE_EXISTING
-
-						break
-					}
-
-					case AccountPage.ENTRY_MODE_EXISTING:
-					{
-						directOne.innerHTML = "Don't remember your password? "
-						a.innerHTML = "Forgot Password"
-						a.m_SetupMode = AccountPage.ENTRY_MODE_FORGOT
-
-						break
-					}
-				}
-
-				directOne.appendChild(a)
-			}
-			form.appendChild(directOne)
+			form.appendChild(subText)
 
 			if (mode == AccountPage.ENTRY_MODE_EXISTING)
 			{
-				const directTwo = document.createElement("p")
-				directTwo.id = "account_entry_subtext_2"
-				{
-					directTwo.innerHTML = "Don't have an account? "
-
-					const a = document.createElement("a")
-					a.classList.add("account_entry_subtext_link")
-					{
-						a.onclick = (event) =>
-						{
-							AccountPage.setupEntryPanel(AccountPage.ENTRY_MODE_NEW)
-						}
-
-						a.innerHTML = "Sign up"
-					}
-
-					directTwo.appendChild(a)
-				}
-				form.appendChild(directTwo)
+				const secondaryText = AccountPage.createSubText("Don't have an account? ", "Sign Up", AccountPage.ENTRY_MODE_NEW, true)
+				form.appendChild(secondaryText)
 			}
 
 			break
