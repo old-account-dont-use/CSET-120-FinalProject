@@ -58,6 +58,7 @@ Helper.hookEvent(window, "load", false, () =>
 	Menu.addTopping("spinach", 0.50)
 	Menu.addTopping("celery", 0.50)
 	Menu.addTopping("carrots", 0.50)
+	Menu.addTopping("pickle", 0.50)
 
 
 	// Seed options
@@ -69,6 +70,7 @@ Helper.hookEvent(window, "load", false, () =>
 	// Condiments
 	Menu.addTopping("lemon juice", 0.50)
 	Menu.addTopping("lemon zest", 0.50)
+	Menu.addTopping("orange zest", 0.50)
 	Menu.addTopping("white wine vinegar", 0.50)
 	Menu.addTopping("extra virgin olive oil", 0.50)
 	Menu.addTopping("dijon mustard", 0.50)
@@ -85,8 +87,25 @@ Helper.hookEvent(window, "load", false, () =>
 	Menu.addTopping("vegetable stock", 0.50)
 	Menu.addTopping("parsely leaves", 0.50)
 	Menu.addTopping("mint leaves", 0.50)
+	Menu.addTopping("basil leaves", 0.50)
 	Menu.addTopping("mayonnaise", 0.50)
-
+	Menu.addTopping("red wine", 0.50)
+	Menu.addTopping("white wine", 0.50)
+	Menu.addTopping("chives", 0.50)
+	Menu.addTopping("cilantro", 0.50)
+	Menu.addTopping("worcestershire sauce", 0.50)
+	Menu.addTopping("paprika", 0.50)
+	Menu.addTopping("cumin", 0.50)
+	Menu.addTopping("onion powder", 0.50)
+	Menu.addTopping("garlic powder", 0.50)
+	Menu.addTopping("lime juice", 0.50)
+	Menu.addTopping("chiles", 0.50)
+	Menu.addTopping("cjili powder", 0.50)
+	Menu.addTopping("jalapeño ", 0.50)
+	Menu.addTopping("brown sugar", 0.50)
+	Menu.addTopping("white sugar", 0.50)
+	Menu.addTopping("cane sugar", 0.50)
+	Menu.addTopping("beans", 0.50)
 
 	// Protein options
 	Menu.addTopping("salmon", 0.50)
@@ -95,9 +114,10 @@ Helper.hookEvent(window, "load", false, () =>
 	Menu.addTopping("shrimp", 0.50)
 	Menu.addTopping("beef", 0.50)
 	Menu.addTopping("pork", 0.50)
-
 	Menu.addTopping("eggs", 0.50)
 	Menu.addTopping("tuna", 0.50)
+	Menu.addTopping("white fish", 0.50)
+	Menu.addTopping("bacon", 0.50)
 
 	// Fruit options
 	Menu.addTopping("ruby red grapefruit", 0.50)
@@ -114,6 +134,29 @@ Helper.hookEvent(window, "load", false, () =>
 	Menu.addTopping("colby jack cheese", 0.50)
 	Menu.addTopping("provolone cheese", 0.50)
 	Menu.addTopping("cream cheese", 0.50)
+	Menu.addTopping("parmesan cheese", 0.50)
+	Menu.addTopping("mozzarella cheese", 0.50)
+	Menu.addTopping("sour cream", 0.50)
+
+	// Other
+	Menu.addTopping("sourdough bread", 0.50)
+	Menu.addTopping("raisin bread", 0.50)
+	Menu.addTopping("french bread", 0.50)
+	Menu.addTopping("tortilla", 0.50)
+	Menu.addTopping("fig jam", 0.50)
+	Menu.addTopping("foie gras", 0.50)
+	Menu.addTopping("arborio rice", 0.50)
+	Menu.addTopping("white rice", 0.50)
+	Menu.addTopping("brown rice", 0.50)
+	Menu.addTopping("vegetable broth", 0.50)
+	Menu.addTopping("chicken broth", 0.50)
+	Menu.addTopping("shallot", 0.50)
+	Menu.addTopping("truffle oil", 0.50)
+	Menu.addTopping("canola oil", 0.50)
+	Menu.addTopping("hamburger bun", 0.50)
+	Menu.addTopping("pine nuts", 0.50)
+	Menu.addTopping("cashew nuts", 0.50)
+	Menu.addTopping("peanuts", 0.50)
 
 	// Drink options
 	Menu.addTopping("coke", 0.50)
@@ -142,15 +185,15 @@ Helper.hookEvent(window, "load", false, () =>
 	Menu.addItem("Mediterranean Power Bowl", 5.00, "Mediterranean Power Bowl with Hummus", [ "hummus", "chickpeas", "chicken", "beef", "shrimp", "pork", "quinoa", "tomatoes", "cucumbers", "red onion", "spinach", "green pepper", "orange pepper", "red pepper", "yellow pepper", "salt", "white pepper", "black pepper", "american cheese", "cheddar cheese" , "provolone cheese" ], "")
 
 	// Indulgence Oasis
-	Menu.addItem("Lobster", 5.00, "Truffle-infused Lobster Mac and Cheese", [ "salt", "extra virgin olive oil", "onion", "red onion", "minced garlic", "carrots", "celery", "provolone cheese" ], "american cheese", "cheddar cheese")
-	Menu.addItem("Filet Mignon", 5.00, "Filet Mignon with Red Wine Reduction", [ "" ], "")
-	Menu.addItem("Foie Gras Crostini", 5.00, "Foie Gras Crostini with Fig Jam", [ "" ], "")
-	Menu.addItem("Risotto", 5.00, "Black Truffle Risotto with Parmesan Crisps", [ "" ], "")
+	Menu.addItem("Lobster", 5.00, "Truffle-infused Lobster Mac and Cheese", [ "salt", "white pepper", "black pepper", "extra virgin olive oil", "onion", "red onion", "minced garlic", "carrots", "celery", "provolone cheese", "american cheese", "cheddar cheese" ], )
+	Menu.addItem("Filet Mignon", 5.00, "Filet Mignon with Red Wine Reduction", [ "beef", "extra virgin olive oil", "black pepper", "white pepper", "red wine"], "")
+	Menu.addItem("Foie Gras Crostini", 5.00, "Foie Gras Crostini with Fig Jam", [ "orange zest", "extra virgin olive oil", "canola oil", "vegetable oil", "chives", "salt", "white pepper", "black pepper", "sourdough bread", "raisin bread", "fig jam", "foie gras" ], "")
+	Menu.addItem("Risotto", 5.00, "Black Truffle Risotto with Parmesan Crisps", [ "arborio rice", "white rice", "brown rice", "minced garlic", "vegetable broth", "chicken broth", "extra virgin olive oil", "canola oil", "truffle oil", "white wine", "red wine", "parmesan cheese", "cheddar cheese", "provolone cheese", "colby jack cheese" ,"american cheese", "salt", "white pepper", "black pepper", "chives" ], "")
 
 	// Fast Fusion Corner
-	Menu.addItem("Burger", 5.00, "Gourmet Beef Burger with Chipotle Aioli", [ "" ], "")
-	Menu.addItem("Pesto Chicken Panini", 5.00, "Pesto Chicken Panini with Sundried Tomatoes", [ "" ], "")
-	Menu.addItem("Tacos", 5.00, "Street-Style Tacos with Mango Salsa", [ "" ], "")
+	Menu.addItem("Burger", 5.00, "Gourmet Beef Burger with Chipotle Aioli", [ "cilantro", "minced garlic", "worcestershire sauce", "egg", "paprika", "cumin", "onion powder", "garlic powder", "salt", "white pepper", "black pepper", "beef", "chicken", "pork", "mayonnaise", "lime juice", "lemon juice", "chiles", "hamburger bun", "colby jack", "american cheese", "cheddar cheese", "provolone cheese", "red onion", "jalapeño", "pickle", "lettuce" ], "")
+	Menu.addItem("Pesto Chicken Panini", 5.00, "Pesto Chicken Panini with Sundried Tomatoes", [ "basil leaves", "pine nuts", "cashew nuts", "peanuts", "parmesan cheese", "extra virgin olive oil", "minced garlic", "salt", "white pepper", "black pepper", "chicken", "beef", "pork", "mozzarella cheese", "tomatoes", "sourdough bread", "raisin bread", "french bread" ], "")
+	Menu.addItem("Tacos", 5.00, "Street-Style Tacos with Mango Salsa", [ "mango", "lime juice", "red pepper", "yellow pepper", "orange pepper", "green pepper", "red onion", "jalapeño", "cilantro", "avocado", "sour cream", "garlic powder", "salt", "brown sugar", "white sugar", "cane sugar", "white fish", "chili powder", "beans", "tortilla", "sourdough bread", "" ], "")
 	Menu.addItem("BBQ Pulled Pork Sliders", 5.00, "BBQ Pulled Pork Sliders with Coleslaw", [ "" ], "")
 
 	// Guilt-Free Delights
