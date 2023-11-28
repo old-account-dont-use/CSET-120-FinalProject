@@ -16,6 +16,7 @@ NavigationManager.createNavBarLink = (name, url) =>
 	{
 		const a = document.createElement("a")
 		a.setAttribute("href", url)
+		a.classList.add("glass_morphism_weak")
 		a.innerHTML = name
 
 		li.appendChild(a)
@@ -31,6 +32,7 @@ NavigationManager.createNavBarUserControl = (label, callback) =>
 {
 	const panel = document.createElement("div")
 	panel.classList.add("navbar_usercontrols_dropdown_control")
+	panel.classList.add("glass_morphism_weak")
 	panel.onclick = callback
 	{
 		const p = document.createElement("p")
@@ -95,6 +97,7 @@ NavigationManager.createNavBarUserControls = () =>
 {
 	const panel = document.createElement("div")
 	panel.id = "navbar_usercontrols"
+	panel.classList.add("glass_morphism_weak")
 	{
 		panel.onclick = NavigationManager.toggleNavBarUserControls
 		panel.setAttribute("open", false)
@@ -161,6 +164,7 @@ NavigationManager.createNavBar = (NAVBAR_PROPERTIES) =>
 {
 	const navbar = document.createElement("div")
 	navbar.id = "navbar"
+	navbar.classList.add("glass_morphism")
 	{
 		/*
 		*	Left side

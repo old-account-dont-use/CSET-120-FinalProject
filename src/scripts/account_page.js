@@ -156,6 +156,7 @@ AccountPage.setupEntryForm = (form, mode) =>
 
 	const email_input = document.createElement("input")
 	email_input.id = "account_entry_email"
+	email_input.classList.add("glass_morphism_weak")
 	{
 		email_input.setAttribute("type", "text")
 		email_input.setAttribute("placeholder", "Enter your email address")
@@ -176,6 +177,7 @@ AccountPage.setupEntryForm = (form, mode) =>
 
 			const password_input = document.createElement("input")
 			password_input.id = "account_entry_password"
+			password_input.classList.add("glass_morphism_weak")
 			{
 				password_input.setAttribute("type", "password")
 				password_input.setAttribute("minlength", 8)
@@ -191,6 +193,7 @@ AccountPage.setupEntryForm = (form, mode) =>
 			{
 				const password_input_confirm = document.createElement("input")
 				password_input_confirm.id = "account_entry_password_confirm"
+				password_input_confirm.classList.add("glass_morphism_weak")
 				{
 					password_input_confirm.setAttribute("type", "password")
 					password_input_confirm.setAttribute("minlength", 8)
@@ -231,6 +234,7 @@ AccountPage.setupEntryForm = (form, mode) =>
 
 	const submit = document.createElement("input")
 	submit.id = "account_entry_submit"
+	submit.classList.add("glass_morphism_weak")
 	{
 		submit.setAttribute("type", "submit")
 		submit.setAttribute("value", AccountPage.getEntryText(mode))
@@ -248,6 +252,7 @@ AccountPage.createEntryPanel = (mode) =>
 	{
 		const panel = document.createElement("div")
 		panel.id = "account_entry"
+		panel.classList.add("glass_morphism_weak")
 		{
 			const title = document.createElement("h1")
 			title.id = "account_entry_title"
@@ -300,10 +305,24 @@ AccountPage.setupEntryPanel = (mode) =>
 /*
 *	Sets up the view that will be seen when logged in
 */
+AccountPage.setupAccountSidebar = (container) =>
+{
+	const sidebar = document.createElement("div")
+	sidebar.id = "account_page_sidebar"
+	sidebar.classList.add("glass_morphism")
+	{
+
+	}
+
+	container.appendChild(sidebar)
+}
+
 AccountPage.setupAccountPage = () =>
 {
 	const container = document.createElement("div")
 	container.id = "account_page_container"
+
+	AccountPage.setupAccountSidebar(container)
 
 	document.body.appendChild(container)
 }
