@@ -78,6 +78,9 @@ Helper.executeEvent = (event) =>
 
 Helper.hookEvent = (listener, name, permanent, callback) =>
 {
+	if (typeof(listener.addEventListener) !== "function")
+		throw new Error(`Listener '${listener}' does not have method 'addEventListener'`)
+
 	let array = Helper.g_Events.get(name)
 
 	if (!array)
