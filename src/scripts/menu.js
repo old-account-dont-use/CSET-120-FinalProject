@@ -179,43 +179,43 @@ Helper.hookEvent(window, "load", false, () =>
 	// Add items
 
 	// Healthy Haven
-	Menu.addItem("Salmon Salad", 5.00, "Grilled Salmon Salad with Citrus Vinaigrette", [ "lettuce", "red onion", "asparagus", "red pepper", "green pepper", "orange pepper", "yellow pepper", "zucchini", "cucumber", "pomegrante seeds", "pumkpin seeds", " white sesame seeds", "quinoa seeds", "salmon", "lemon juice", "lemon zest", "white wine vinegar", "extra virgin olive oil", "dijon mustard", "honey", " minced garlic", "thyme", "salt", "white pepper", "black pepper", "ruby red grapefruit", "blood oranges", "orange" ], "")
-	Menu.addItem("Bell Peppers", 5.00, "Quinoa and Vegetable Stuffed Bell Peppers", [ "quinoa", "chicken stock", "vegetable stock", "red pepper", "orange pepper", "yellow pepper", "black pepper", "minced pepper", "egg plant", "zucchini", "red onion", "parsely leaves", "mint leaves", "tomatoes" ], "")
-	Menu.addItem("Avocado Toast Trio", 5.00, "Avocado Toast Trio with Tomato Salsa", [ "toasted", "tomatoes", "lettuce", "red onion", "asparagus", "red pepper", "green pepper", "orange pepper", "yellow pepper", "zucchini", "cucumber", "cream cheese", "eggs", "tuna", "mayonnaise", "salt", "white pepper", "black pepper", "tomato salsa" ], "")
-	Menu.addItem("Mediterranean Power Bowl", 5.00, "Mediterranean Power Bowl with Hummus", [ "hummus", "chickpeas", "chicken", "beef", "shrimp", "pork", "quinoa", "tomatoes", "cucumbers", "red onion", "spinach", "green pepper", "orange pepper", "red pepper", "yellow pepper", "salt", "white pepper", "black pepper", "american cheese", "cheddar cheese" , "provolone cheese" ], "")
+	Menu.addItem("Salmon Salad", 5.00, "Grilled Salmon Salad with Citrus Vinaigrette", [ "lettuce", "red onion", "asparagus", "red pepper", "green pepper", "orange pepper", "yellow pepper", "zucchini", "cucumber", "pomegrante seeds", "pumkpin seeds", " white sesame seeds", "quinoa seeds", "salmon", "lemon juice", "lemon zest", "white wine vinegar", "extra virgin olive oil", "dijon mustard", "honey", " minced garlic", "thyme", "salt", "white pepper", "black pepper", "ruby red grapefruit", "blood oranges", "orange" ], "../assets/menu/Grilled_Salmon_Salad_with_Citrus_Vinaigrette_2.jpg")
+	Menu.addItem("Bell Peppers", 5.00, "Quinoa and Vegetable Stuffed Bell Peppers", [ "quinoa", "chicken stock", "vegetable stock", "red pepper", "orange pepper", "yellow pepper", "black pepper", "minced pepper", "egg plant", "zucchini", "red onion", "parsely leaves", "mint leaves", "tomatoes" ], "../assets/menu/")
+	Menu.addItem("Avocado Toast Trio", 5.00, "Avocado Toast Trio with Tomato Salsa", [ "toasted", "tomatoes", "lettuce", "red onion", "asparagus", "red pepper", "green pepper", "orange pepper", "yellow pepper", "zucchini", "cucumber", "cream cheese", "eggs", "tuna", "mayonnaise", "salt", "white pepper", "black pepper", "tomato salsa" ], "../assets/menu/")
+	Menu.addItem("Mediterranean Power Bowl", 5.00, "Mediterranean Power Bowl with Hummus", [ "hummus", "chickpeas", "chicken", "beef", "shrimp", "pork", "quinoa", "tomatoes", "cucumbers", "red onion", "spinach", "green pepper", "orange pepper", "red pepper", "yellow pepper", "salt", "white pepper", "black pepper", "american cheese", "cheddar cheese" , "provolone cheese" ], "../assets/menu/")
 
 	// Indulgence Oasis
-	Menu.addItem("Lobster", 5.00, "Truffle-infused Lobster Mac and Cheese", [ "salt", "white pepper", "black pepper", "extra virgin olive oil", "onion", "red onion", "minced garlic", "carrots", "celery", "provolone cheese", "american cheese", "cheddar cheese" ], )
-	Menu.addItem("Filet Mignon", 5.00, "Filet Mignon with Red Wine Reduction", [ "beef", "extra virgin olive oil", "black pepper", "white pepper", "red wine"], "")
-	Menu.addItem("Foie Gras Crostini", 5.00, "Foie Gras Crostini with Fig Jam", [ "orange zest", "extra virgin olive oil", "canola oil", "vegetable oil", "chives", "salt", "white pepper", "black pepper", "sourdough bread", "raisin bread", "fig jam", "foie gras" ], "")
-	Menu.addItem("Risotto", 5.00, "Black Truffle Risotto with Parmesan Crisps", [ "arborio rice", "white rice", "brown rice", "minced garlic", "vegetable broth", "chicken broth", "extra virgin olive oil", "canola oil", "truffle oil", "white wine", "red wine", "parmesan cheese", "cheddar cheese", "provolone cheese", "colby jack cheese" ,"american cheese", "salt", "white pepper", "black pepper", "chives" ], "")
+	Menu.addItem("Lobster", 5.00, "Truffle-infused Lobster Mac and Cheese", [ "salt", "white pepper", "black pepper", "extra virgin olive oil", "onion", "red onion", "minced garlic", "carrots", "celery", "provolone cheese", "american cheese", "cheddar cheese" ], "../assets/menu/")
+	Menu.addItem("Filet Mignon", 5.00, "Filet Mignon with Red Wine Reduction", [ "beef", "extra virgin olive oil", "black pepper", "white pepper", "red wine"], "../assets/menu/")
+	Menu.addItem("Foie Gras Crostini", 5.00, "Foie Gras Crostini with Fig Jam", [ "orange zest", "extra virgin olive oil", "canola oil", "vegetable oil", "chives", "salt", "white pepper", "black pepper", "sourdough bread", "raisin bread", "fig jam", "foie gras" ], "../assets/menu/")
+	Menu.addItem("Risotto", 5.00, "Black Truffle Risotto with Parmesan Crisps", [ "arborio rice", "white rice", "brown rice", "minced garlic", "vegetable broth", "chicken broth", "extra virgin olive oil", "canola oil", "truffle oil", "white wine", "red wine", "parmesan cheese", "cheddar cheese", "provolone cheese", "colby jack cheese" ,"american cheese", "salt", "white pepper", "black pepper", "chives" ], "../assets/menu/")
 
 	// Fast Fusion Corner
-	Menu.addItem("Burger", 5.00, "Gourmet Beef Burger with Chipotle Aioli", [ "cilantro", "minced garlic", "worcestershire sauce", "egg", "paprika", "cumin", "onion powder", "garlic powder", "salt", "white pepper", "black pepper", "beef", "chicken", "pork", "mayonnaise", "lime juice", "lemon juice", "chiles", "hamburger bun", "colby jack", "american cheese", "cheddar cheese", "provolone cheese", "red onion", "jalapeño", "pickle", "lettuce" ], "")
-	Menu.addItem("Pesto Chicken Panini", 5.00, "Pesto Chicken Panini with Sundried Tomatoes", [ "basil leaves", "pine nuts", "cashew nuts", "peanuts", "parmesan cheese", "extra virgin olive oil", "minced garlic", "salt", "white pepper", "black pepper", "chicken", "beef", "pork", "mozzarella cheese", "tomatoes", "sourdough bread", "raisin bread", "french bread" ], "")
-	Menu.addItem("Tacos", 5.00, "Street-Style Tacos with Mango Salsa", [ "mango", "lime juice", "red pepper", "yellow pepper", "orange pepper", "green pepper", "red onion", "jalapeño", "cilantro", "avocado", "sour cream", "garlic powder", "salt", "brown sugar", "white sugar", "cane sugar", "white fish", "chili powder", "beans", "tortilla", "sourdough bread", "" ], "")
-	Menu.addItem("BBQ Pulled Pork Sliders", 5.00, "BBQ Pulled Pork Sliders with Coleslaw", [ "" ], "")
+	Menu.addItem("Burger", 5.00, "Gourmet Beef Burger with Chipotle Aioli", [ "cilantro", "minced garlic", "worcestershire sauce", "egg", "paprika", "cumin", "onion powder", "garlic powder", "salt", "white pepper", "black pepper", "beef", "chicken", "pork", "mayonnaise", "lime juice", "lemon juice", "chiles", "hamburger bun", "colby jack", "american cheese", "cheddar cheese", "provolone cheese", "red onion", "jalapeño", "pickle", "lettuce" ], "../assets/menu/")
+	Menu.addItem("Pesto Chicken Panini", 5.00, "Pesto Chicken Panini with Sundried Tomatoes", [ "basil leaves", "pine nuts", "cashew nuts", "peanuts", "parmesan cheese", "extra virgin olive oil", "minced garlic", "salt", "white pepper", "black pepper", "chicken", "beef", "pork", "mozzarella cheese", "tomatoes", "sourdough bread", "raisin bread", "french bread" ], "../assets/menu/")
+	Menu.addItem("Tacos", 5.00, "Street-Style Tacos with Mango Salsa", [ "mango", "lime juice", "red pepper", "yellow pepper", "orange pepper", "green pepper", "red onion", "jalapeño", "cilantro", "avocado", "sour cream", "garlic powder", "salt", "brown sugar", "white sugar", "cane sugar", "white fish", "chili powder", "beans", "tortilla", "sourdough bread", "" ], "../assets/menu/")
+	Menu.addItem("BBQ Pulled Pork Sliders", 5.00, "BBQ Pulled Pork Sliders with Coleslaw", [ "" ], "../assets/menu/")
 
 	// Guilt-Free Delights
-	Menu.addItem("Pizza", 5.00, "Cauliflower Crust Margherita Pizza", [ "" ], "")
-	Menu.addItem("Zucchini Noodles", 5.00, "Zucchini Noodles with Basil Pesto", [ "" ], "")
-	Menu.addItem("Vegan Thai Coconut Curry", 5.00, "Vegan Thai Coconut Curry with Tofu", [ "" ], "")
-	Menu.addItem("Pudding Parfait", 5.00, "Chia Seed Pudding Parfait with Mixed Berries", [ "" ], "")
+	Menu.addItem("Pizza", 5.00, "Cauliflower Crust Margherita Pizza", [ "" ], "../assets/menu/")
+	Menu.addItem("Zucchini Noodles", 5.00, "Zucchini Noodles with Basil Pesto", [ "" ], "../assets/menu/")
+	Menu.addItem("Vegan Thai Coconut Curry", 5.00, "Vegan Thai Coconut Curry with Tofu", [ "" ], "../assets/menu/")
+	Menu.addItem("Pudding Parfait", 5.00, "Chia Seed Pudding Parfait with Mixed Berries", [ "" ], "../assets/menu/")
 
 	// Decadent Dessert Haven
-	Menu.addItem("Lava Cake", 5.00, "Molten Chocolate/Vanilla Lava Cake with Raspberry Coulis", [ "chocolate", "vanilla" ], "")
-	Menu.addItem("Sundae", 5.00, "Sundae Caramelized Banana Foster ", [ "" ], "")
-	Menu.addItem("Mousse", 5.00, "Pistachio White Chocolate Mousse", [ "" ], "")
-	Menu.addItem("Tart", 5.00, "Raspberry Almond Tart with Vanilla Bean Cream", [ "" ], "")
+	Menu.addItem("Lava Cake", 5.00, "Molten Chocolate/Vanilla Lava Cake with Raspberry Coulis", [ "chocolate", "vanilla" ], "../assets/menu/")
+	Menu.addItem("Sundae", 5.00, "Sundae Caramelized Banana Foster ", [ "" ], "../assets/menu/")
+	Menu.addItem("Mousse", 5.00, "Pistachio White Chocolate Mousse", [ "" ], "../assets/menu/")
+	Menu.addItem("Tart", 5.00, "Raspberry Almond Tart with Vanilla Bean Cream", [ "" ], "../assets/menu/")
 
 	// Exotic Elixirs Bar
-	Menu.addItem("Detox Water", 5.00, "Hibiscus Infused Detox Water", [ "" ], "")
-	Menu.addItem("Smoothie", 5.00, "Mango Tango Smoothie with Chia Seeds", [ "" ], "")
-	Menu.addItem("Sparkler", 5.00, "Basil Lemonade Sparkler", [ "" ], "")
-	Menu.addItem("Almond Milk", 5.00, "Matcha Latte with Almond Milk", [ "" ], "")
+	Menu.addItem("Detox Water", 5.00, "Hibiscus Infused Detox Water", [ "" ], "../assets/menu/")
+	Menu.addItem("Smoothie", 5.00, "Mango Tango Smoothie with Chia Seeds", [ "" ], "../assets/menu/")
+	Menu.addItem("Sparkler", 5.00, "Basil Lemonade Sparkler", [ "" ], "../assets/menu/")
+	Menu.addItem("Almond Milk", 5.00, "Matcha Latte with Almond Milk", [ "" ], "../assets/menu/")
 
 	// Drinks
-	Menu.addItem("Water", 5.00, "Water", [ "" ], "")
-	Menu.addItem("Milk", 5.00, "Milk", [ "chocolate milk", "white milk" ], "")
-	Menu.addItem("Fountain Drink", 5.00, "Coke/Pepsi product", [ "coke", "cherry coke", "pepsi", "root beer", "hi c", "sprite", "ginger ale", "grape fanta", "orange fanta", "powerade", "lemonade brisk", "7up", "dr pepper", "minaute maid lemonade" ], "")
+	Menu.addItem("Water", 5.00, "Water", [ "" ], "../assets/menu/")
+	Menu.addItem("Milk", 5.00, "Milk", [ "chocolate milk", "white milk" ], "../assets/menu/")
+	Menu.addItem("Fountain Drink", 5.00, "Coke/Pepsi product", [ "coke", "cherry coke", "pepsi", "root beer", "hi c", "sprite", "ginger ale", "grape fanta", "orange fanta", "powerade", "lemonade brisk", "7up", "dr pepper", "minaute maid lemonade" ], "../assets/menu/")
 })
