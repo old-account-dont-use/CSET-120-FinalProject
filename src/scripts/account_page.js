@@ -302,7 +302,10 @@ AccountPage.setupEntryPanel = (mode) =>
 */
 AccountPage.setupAccountPage = () =>
 {
+	const container = document.createElement("div")
+	container.id = "account_page_container"
 
+	document.body.appendChild(container)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
