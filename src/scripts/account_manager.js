@@ -195,10 +195,12 @@ AccountManager.signUp = (email, password, accountType = AccountManager.ACCOUNT_T
 
 /*
 *	Create default manager account
+*
+*	Default manager password is 'abcd1234' (Hashes to '2416706371')
 */
 Helper.hookEvent(window, "load", false, () =>
 {
-	AccountManager.signUpHashed("manager@eeh.com", 1562414320, AccountManager.ACCOUNT_TYPE_MANAGER)
+	AccountManager.signUpHashed("manager@eeh.com", "2416706371", AccountManager.ACCOUNT_TYPE_MANAGER)
 })
 
 /*
