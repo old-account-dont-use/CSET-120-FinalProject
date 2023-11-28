@@ -297,6 +297,14 @@ AccountPage.setupEntryPanel = (mode) =>
 *
 */
 
+/*
+*	Sets up the view that will be seen when logged in
+*/
+AccountPage.setupAccountPage = () =>
+{
+
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 Helper.hookEvent(window, "load", false, () =>
 {
@@ -304,9 +312,7 @@ Helper.hookEvent(window, "load", false, () =>
         return false
 
     if (AccountManager.g_bLoggedIn)
-    {
-        // Show normal account page
-    }
+		AccountPage.setupAccountPage()
     else
 		AccountPage.setupEntryPanel(AccountPage.ENTRY_MODE_EXISTING)
 })
