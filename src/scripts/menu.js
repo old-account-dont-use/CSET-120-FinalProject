@@ -68,11 +68,14 @@ Helper.hookEvent(window, "load", false, () =>
 	Menu.addTopping("pumpkin seeds", 0.50)
 	Menu.addTopping("white sesame seeds", 0.50)
 	Menu.addTopping("quinoa seeds", 0.50)
+	Menu.addTopping("chia seeds", 0.50)
 
 	// Condiments
 	Menu.addTopping("lemon juice", 0.50)
 	Menu.addTopping("lemon zest", 0.50)
 	Menu.addTopping("orange zest", 0.50)
+	Menu.addTopping("ginger jucie", 0.50)
+	Menu.addTopping("ginger puree", 0.50)
 	Menu.addTopping("white wine vinegar", 0.50)
 	Menu.addTopping("cider vinegar", 0.50)
 	Menu.addTopping("extra virgin olive oil", 0.50)
@@ -89,6 +92,7 @@ Helper.hookEvent(window, "load", false, () =>
 	Menu.addTopping("chicken stock", 0.50)
 	Menu.addTopping("vegetable stock", 0.50)
 	Menu.addTopping("parsely leaves", 0.50)
+	Menu.addTopping("hibiscus flowers", 0.50)
 	Menu.addTopping("mint leaves", 0.50)
 	Menu.addTopping("basil leaves", 0.50)
 	Menu.addTopping("mayonnaise", 0.50)
@@ -110,6 +114,8 @@ Helper.hookEvent(window, "load", false, () =>
 	Menu.addTopping("cane sugar", 0.50)
 	Menu.addTopping("confectioners’ sugar", 0.50)
 	Menu.addTopping("powdered sugar", 0.50)
+	Menu.addTopping("icing sugar", 0.50)
+	Menu.addTopping("sweetener", 0.50)
 	Menu.addTopping("beans", 0.50)
 	Menu.addTopping("ketchup", 0.50)
 	Menu.addTopping("mustard", 0.50)
@@ -135,6 +141,7 @@ Helper.hookEvent(window, "load", false, () =>
 	Menu.addTopping("quinoa", 0.50)
 	Menu.addTopping("apple", 0.50)
 	Menu.addTopping("banana", 0.50)
+	Menu.addTopping("mango", 0.50)
 	Menu.addTopping("avocado", 0.50)
 	Menu.addTopping("raspberries", 0.50)
 	Menu.addTopping("black berries", 0.50)
@@ -152,6 +159,8 @@ Helper.hookEvent(window, "load", false, () =>
 	Menu.addTopping("sour cream", 0.50)
 	Menu.addTopping("coconut milk", 0.50)
 	Menu.addTopping("pistachio milk", 0.50)
+	Menu.addTopping("whole milk", 0.50)
+	Menu.addTopping("almond milk", 0.50)
 	Menu.addTopping("tofu", 0.50)
 	Menu.addTopping("yogurt", 0.50)
 	Menu.addTopping("unsalted butter", 0.50)
@@ -184,7 +193,6 @@ Helper.hookEvent(window, "load", false, () =>
 	Menu.addTopping("red curry paste", 0.50)
 	Menu.addTopping("yellow curry paste", 0.50)
 	Menu.addTopping("sriracha", 0.50)
-	Menu.addTopping("chia seeds", 0.50)
 	Menu.addTopping("honey", 0.50)
 	Menu.addTopping("vanilla extract", 0.50)
 	Menu.addTopping("whipped cream", 0.50)
@@ -194,7 +202,13 @@ Helper.hookEvent(window, "load", false, () =>
 	Menu.addTopping("dark chocolate", 0.50)
 	Menu.addTopping("milk chocolate", 0.50)
 	Menu.addTopping("pistachio paste", 0.50)
-
+	Menu.addTopping("vanilla bean", 0.50)
+	Menu.addTopping("vanilla", 0.50)
+	Menu.addTopping("ice", 0.50)
+	Menu.addTopping("maple syrup", 0.50)
+	Menu.addTopping("torani sugar-free coconut syrup", 0.50)
+	Menu.addTopping("carbonated water", 0.50)
+	Menu.addTopping("matcha powder", 0.50)
 
 	// Drink options
 	Menu.addTopping("coke", 0.50)
@@ -213,7 +227,6 @@ Helper.hookEvent(window, "load", false, () =>
 	Menu.addTopping("minute maid lemonade", 0.50)
 	Menu.addTopping("chocolate milk", 0.50)
 	Menu.addTopping("white milk", 0.50)
-	Menu.addTopping("pistachio milk", 0.50)
 
 	// Add items
 
@@ -245,16 +258,16 @@ Helper.hookEvent(window, "load", false, () =>
 	Menu.addItem("Lava Cake", 5.00, "Molten Chocolate/Vanilla Lava Cake with Raspberry Coulis", ["chocolate", "vanilla", "unsalted butter", "salted butter", "salt", "vanilla extract", "eggs", "confectioners’ sugar", "brown sugar", "white sugar", "cane sugar", "whipped cream", "ice cream", "raspberries", "blue berries", "black berries"], "../assets/menu/food/Molten_Chocolate_Lava_Cake_with_Raspberry_Coulis.jpg")
 	Menu.addItem("Sundae", 5.00, "Sundae Caramelized Banana Foster", ["salted butter", "unsalted butter", "brown sugar", "white sugar", "cane sugar", "banana", "rum", "vanilla ice cream", "whipped cream", "pecans", "cashew nuts", "peanuts"], "../assets/menu/food/Sundae_Caramelized_Banana_Foster.jpg")
 	Menu.addItem("Mousse", 5.00, "Pistachio White Chocolate Mousse", ["white chocolate", "dark chocolate", "milk chocolate", "pistachio milk", "whipped cream", "cream cheese", "powdered sugar", "white sugar", "brown sugar", "cane sugar", "confectioners’ sugar", "pistachio paste"], "../assets/menu/food/Pistachio_White_Chocolate_Mousse.jpg")
-	Menu.addItem("Tart", 5.00, "Raspberry Almond Tart with Vanilla Bean Cream", [""], "../assets/menu/food/Raspberry_Almond_Tart_with_Vanilla_Bean_Cream.jpg")
+	Menu.addItem("Tart", 5.00, "Raspberry Almond Tart with Vanilla Bean Cream", ["white sugar", "brown sugar", "cane sugar", "confectioners’ sugar", "powdered sugar", "salt", "unsalted butter", "salted butter", "eggs", "cornstarch", "whole milk", "coconut milk", "almond milk", "pistchio milk", "vanilla bean", "vanilla", "raspberries", "blue berries", "black berries", "icing sugar"], "../assets/menu/food/Raspberry_Almond_Tart_with_Vanilla_Bean_Cream.jpg")
 
 	// Exotic Elixirs Bar
-	Menu.addItem("Detox Water", 5.00, "Hibiscus Infused Detox Water", [""], "../assets/menu/drinks/Hibiscus_Infused_Detox_Water.jpg")
-	Menu.addItem("Smoothie", 5.00, "Mango Tango Smoothie with Chia Seeds", [""], "../assets/menu/drinks/Mango_Tango_Smoothie_with_Chia_Seeds.jpg")
-	Menu.addItem("Sparkler", 5.00, "Basil Lemonade Sparkler", [""], "../assets/menu/drinks/Basil_Lemonade_Sparkler.jpg")
-	Menu.addItem("Almond Milk", 5.00, "Matcha Latte with Almond Milk", [""], "../assets/menu/drinks/Matcha_Latte_with_Almond_Milk.jpg")
+	Menu.addItem("Detox Water", 5.00, "Hibiscus Infused Detox Water", ["water", "hibiscus flowers", "sweetener", "ice"], "../assets/menu/drinks/Hibiscus_Infused_Detox_Water.jpg")
+	Menu.addItem("Smoothie", 5.00, "Mango Tango Smoothie with Chia Seeds", ["banana", "mango", "spinach", "ginger juice", "ginger puree", "water", "chia seeds", "ice"], "../assets/menu/drinks/Mango_Tango_Smoothie_with_Chia_Seeds.jpg")
+	Menu.addItem("Sparkler", 5.00, "Basil Lemonade Sparkler", ["lemon juice", "basil leaves", "carbonated water", "maple syrup", "ice"], "../assets/menu/drinks/Basil_Lemonade_Sparkler.jpg")
+	Menu.addItem("Almond Milk", 5.00, "Matcha Latte with Almond Milk", ["matcha powder", "water", "almond milk", "coconut milk", "torani sugar-free coconut syrup"], "../assets/menu/drinks/Matcha_Latte_with_Almond_Milk.jpg")
 
 	// Drinks
 	Menu.addItem("Water", 5.00, "Water", [""], "../assets/menu/drinks/Water.jpg")
-	Menu.addItem("Milk", 5.00, "Milk", ["chocolate milk", "white milk"], "../assets/menu/drinks/Milk.jpg")
-	Menu.addItem("Fountain Drink", 5.00, "Coke/Pepsi product", ["coke", "cherry coke", "pepsi", "root beer", "hi c", "sprite", "ginger ale", "grape fanta", "orange fanta", "powerade", "lemonade brisk", "7up", "dr pepper", "minaute maid lemonade"], "../assets/menu/drinks/Fountain_Drink.jpg")
+	Menu.addItem("Milk", 5.00, "Milk", ["chocolate milk", "white milk", "whole milk", "coconut milk", "almond milk", "pistachio milk"], "../assets/menu/drinks/Milk.jpg")
+	Menu.addItem("Fountain Drink", 5.00, "Coke/Pepsi product", ["coke", "cherry coke", "pepsi", "root beer", "hi c", "sprite", "ginger ale", "grape fanta", "orange fanta", "powerade", "lemonade brisk", "7up", "dr pepper", "minute maid lemonade"], "../assets/menu/drinks/Fountain_Drink.jpg")
 })
