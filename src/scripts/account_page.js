@@ -102,18 +102,18 @@ AccountPage.onEntrySubmit = () =>
 */
 AccountPage.getEntryText = (mode) =>
 {
-    switch (mode)
-    {
-        default:
-        case AccountPage.ENTRY_MODE_NEW:
-            return "Sign up"
+	switch (mode)
+	{
+		default:
+		case AccountPage.ENTRY_MODE_NEW:
+			return "Sign up"
 
-        case AccountPage.ENTRY_MODE_EXISTING:
-            return "Login"
+		case AccountPage.ENTRY_MODE_EXISTING:
+			return "Login"
 
-        case AccountPage.ENTRY_MODE_FORGOT:
-            return "Forgot Password"
-    }
+		case AccountPage.ENTRY_MODE_FORGOT:
+			return "Forgot Password"
+	}
 }
 
 /*
@@ -169,8 +169,8 @@ AccountPage.setupEntryForm = (form, mode) =>
 	{
 		default:
 		case AccountPage.ENTRY_MODE_NEW:
-        case AccountPage.ENTRY_MODE_EXISTING:
-        {
+		case AccountPage.ENTRY_MODE_EXISTING:
+		{
 			const password = document.createElement("h4")
 			password.innerHTML = "Password"
 
@@ -217,8 +217,8 @@ AccountPage.setupEntryForm = (form, mode) =>
 			break
 		}
 
-        case AccountPage.ENTRY_MODE_FORGOT:
-        {
+		case AccountPage.ENTRY_MODE_FORGOT:
+		{
 			const subText = AccountPage.createSubText("Already have an account? ", "Login", AccountPage.ENTRY_MODE_EXISTING, false)
 			const secondaryText = AccountPage.createSubText("Don't have an account? ", "Sign Up", AccountPage.ENTRY_MODE_NEW, true)
 
@@ -243,29 +243,29 @@ AccountPage.setupEntryForm = (form, mode) =>
 */
 AccountPage.createEntryPanel = (mode) =>
 {
-    const container = document.createElement("div")
-    container.id = "account_entry_container"
-    {
-        const panel = document.createElement("div")
-        panel.id = "account_entry"
-        {
-            const title = document.createElement("h1")
-            title.id = "account_entry_title"
-            title.innerHTML = AccountPage.getEntryText(mode)
+	const container = document.createElement("div")
+	container.id = "account_entry_container"
+	{
+		const panel = document.createElement("div")
+		panel.id = "account_entry"
+		{
+			const title = document.createElement("h1")
+			title.id = "account_entry_title"
+			title.innerHTML = AccountPage.getEntryText(mode)
 
-            const form = document.createElement("form")
-            form.id = "account_entry_form"
-            form.setAttribute("onsubmit", "return AccountPage.onEntrySubmit()")
-            AccountPage.setupEntryForm(form, mode)
+			const form = document.createElement("form")
+			form.id = "account_entry_form"
+			form.setAttribute("onsubmit", "return AccountPage.onEntrySubmit()")
+			AccountPage.setupEntryForm(form, mode)
 
-            panel.appendChild(title)
-            panel.appendChild(form)
-        }
+			panel.appendChild(title)
+			panel.appendChild(form)
+		}
 
-        container.appendChild(panel)
-    }
+		container.appendChild(panel)
+	}
 
-    return container
+	return container
 }
 
 /*
@@ -308,11 +308,11 @@ AccountPage.setupAccountPage = () =>
 ///////////////////////////////////////////////////////////////////////////////
 Helper.hookEvent(window, "load", false, () =>
 {
-    if (AccountManager.g_bLoggedIn === undefined) // Login process not yet completed
-        return false
+	if (AccountManager.g_bLoggedIn === undefined) // Login process not yet completed
+		return false
 
-    if (AccountManager.g_bLoggedIn)
+	if (AccountManager.g_bLoggedIn)
 		AccountPage.setupAccountPage()
-    else
+	else
 		AccountPage.setupEntryPanel(AccountPage.ENTRY_MODE_EXISTING)
 })
