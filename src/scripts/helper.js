@@ -25,7 +25,7 @@ Helper.hash = (string) =>
 }
 
 /*
-*	Converts a string or number to a price
+*	Converts a string or number to a price, throws an error if parsing failed
 */
 Helper.priceify = (data) =>
 {
@@ -35,6 +35,8 @@ Helper.priceify = (data) =>
 		if (Number.isNaN(data))
 			throw new Error("Invalid data passed to priceify")
 	}
+	else if (typeof(data) !== "number")
+		throw new Error("Invalid data passed to priceify")
 
 	return data.toFixed(2)
 }
