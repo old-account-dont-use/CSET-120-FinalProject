@@ -10,6 +10,8 @@ Helper.isString = (value) =>
 
 /*
 *	Hashes a string
+*
+*	https://gist.github.com/iperelivskiy/4110988
 */
 Helper.hash = (string) =>
 {
