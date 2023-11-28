@@ -17,7 +17,7 @@ Helper.hash = (string) =>
 		string = String(string)
 
 	for (var i = 0, h = 0xDEADBEEF; i < string.length; i++)
-		h = Math.imul(h ^ string.charCodeAt(i), 2654435761)
+		h = Math.imul(h ^ string.charCodeAt(i), 0x9E3779B1) // 0x9E3779B1 (2654435761) is the closest prime number to (2 ^ 32) * GOLDEN_RATIO
 
 	return String((h ^ h >>> 16) >>> 0)
 }
