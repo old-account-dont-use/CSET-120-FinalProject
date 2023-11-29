@@ -121,6 +121,7 @@ NavigationManager.createNavBarUserControls = () =>
 
 	const dropdown = document.createElement("div")
 	dropdown.id = "navbar_usercontrols_dropdown"
+	dropdown.classList.add("glass_morphism")
 	dropdown.setAttribute("open", false)
 	{
 		let looped = null
