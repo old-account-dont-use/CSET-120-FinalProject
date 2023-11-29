@@ -341,7 +341,9 @@ html, body
 	width: 100%;
 	height: 100vh;
 
-	background: linear-gradient(180deg, rgb(47, 110, 211) 0%, rgb(80, 149, 228) 55%, rgb(47, 110, 211) 100%);
+	background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4) ), url("../assets/restaurant.png");
+	background-size: cover;
+	background-attachment: fixed;
 }
 
 .home_section
