@@ -689,6 +689,7 @@ html, body
 .account_page_account_information
 {
 	width: 50%;
+	height: 50px;
 
 	gap: 20px;
 
@@ -698,9 +699,17 @@ html, body
 .account_page_account_information h1
 {
 	font-size: 1em;
+
+	margin-top: 0;
+	margin-bottom: 0;
 }
 
 .account_page_account_information p
 {
-	margin-left: 20px;
+	position: absolute;
+
+	left: 10em;
+
+	margin-top: 0;
+	margin-bottom: 0;
 }
