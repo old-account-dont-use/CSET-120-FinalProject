@@ -303,26 +303,97 @@ AccountPage.setupEntryPanel = (mode) =>
 */
 
 /*
-*	Sets up the view that will be seen when logged in
+*	Sets up a specific page
 */
-AccountPage.setupAccountSidebar = (container) =>
+AccountPage.setupPage = (name) =>
+{
+	switch (name)
+	{
+		default:
+		case "Account":
+		{
+			const subbers = Array.from(document.querySelectorAll(".account_page_account_information p"))
+
+			for (const subber of subbers)
+			{
+				const index = parseInt(subber.getAttribute("index"))
+				if (Number.isNaN(index)) continue
+
+				if (subber.getAttribute("setup"))
+				{
+					eval(`var setup = () => { ${subber.getAttribute("setup")} }`)
+					subber.innerHTML = setup()
+				}
+				else
+					subber.innerHTML = AccountManager.g_AccountData[index]
+			}
+
+			break
+		}
+	}
+}
+
+/*
+*	Shows a specific page
+*/
+AccountPage.showPage = (name) =>
+{
+	const pages = Array.from(document.querySelectorAll(".account_page"))
+
+	for (const page of pages)
+	{
+		const active = page.getAttribute("tabname") == name
+		page.setAttribute("active", active)
+
+		if (active)
+			AccountPage.setupPage(name)
+	}
+}
+
+/*
+*	Sets up the sidebar
+*/
+AccountPage.setupAccountSidebar = (container, SIDEBAR_PROPERTIES) =>
 {
 	const sidebar = document.createElement("div")
 	sidebar.id = "account_page_sidebar"
 	sidebar.classList.add("glass_morphism")
 	{
-
+		for (const property of SIDEBAR_PROPERTIES)
+		{
+			const button = document.createElement("button")
+			button.m_SectionName = property
+			button.innerHTML = property
+			{
+				button.onclick = (event) =>
+				{
+					AccountPage.showPage(event.target.m_SectionName)
+				}
+			}
+			sidebar.appendChild(button)
+		}
 	}
 
 	container.appendChild(sidebar)
+	AccountPage.showPage(SIDEBAR_PROPERTIES[0])
 }
 
-AccountPage.setupAccountPage = () =>
+/*
+*	Sets up the view that will be seen when logged in
+*/
+AccountPage.setupAccountPage = (SIDEBAR_PROPERTIES) =>
 {
+	if (!SIDEBAR_PROPERTIES)
+		throw new Error("SIDEBAR_PROPERTIES not defined")
+
 	const container = document.createElement("div")
 	container.id = "account_page_container"
 
-	AccountPage.setupAccountSidebar(container)
+	AccountPage.setupAccountSidebar(container, SIDEBAR_PROPERTIES)
+
+	const pages = Array.from(document.querySelectorAll(".account_page"))
+	for (const page of pages)
+		container.appendChild(page)
 
 	document.body.appendChild(container)
 }
@@ -334,7 +405,7 @@ Helper.hookEvent(window, "load", false, () =>
 		return false
 
 	if (AccountManager.g_bLoggedIn)
-		AccountPage.setupAccountPage()
+		AccountPage.setupAccountPage(SIDEBAR_PROPERTIES)
 	else
 		AccountPage.setupEntryPanel(AccountPage.ENTRY_MODE_EXISTING)
 })

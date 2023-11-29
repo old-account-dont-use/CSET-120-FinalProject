@@ -22,6 +22,16 @@ html, body
 	scroll-behavior: smooth;
 }
 
+.blockbox
+{
+	display: inline-block;
+}
+
+.flexbox
+{
+	display: flex;
+}
+
 .float_left
 {
 	float: left;
@@ -267,7 +277,7 @@ html, body
 	background: rgba(255, 255, 255, 0.25);
 
 	box-shadow: none;
-	
+
 	border-left: 1px solid rgba(255, 255, 255, 0.5);
 	border-right: 1px solid rgba(255, 255, 255, 0.5);
 	border-bottom: 1px solid rgba(255, 255, 255, 0.5);
@@ -583,6 +593,8 @@ html, body
 {
 	position: relative;
 
+	overflow: hidden;
+
 	top: 0;
 	left: 0;
 
@@ -590,6 +602,16 @@ html, body
 	height: 100vh;
 
 	background-color: rgb(171, 168, 227);
+}
+
+@media only screen and (max-device-width: 1090px)
+{
+	#account_page_container
+	{
+		overflow-y: auto;
+
+		padding-bottom: 100px;
+	}
 }
 
 #account_page_sidebar
@@ -610,6 +632,8 @@ html, body
 	overflow: hidden;
 
 	border-radius: 12px;
+
+	padding: 12px;
 }
 
 @media only screen and (max-device-width: 1090px)
@@ -624,4 +648,59 @@ html, body
 		width: calc(100% - 40px);
 		height: 64px;
 	}
+}
+
+.account_page
+{
+	position: absolute;
+
+	top: calc((50% + 32px) - 20em);
+	right: 100px;
+
+	width: 55em;
+	height: 40em;
+
+	overflow: hidden;
+
+	border-radius: 12px;
+
+	padding: 12px;
+}
+
+@media only screen and (max-device-width: 1090px)
+{
+	.account_page
+	{
+		position: relative;
+
+		top: 80px;
+		left: 20px;
+
+		width: calc(100% - 40px);
+		height: 100%;
+	}
+}
+
+.account_page[active=false]
+{
+	display: none;
+}
+
+.account_page_account_information
+{
+	width: 50%;
+
+	gap: 20px;
+
+	margin-bottom: 5px;
+}
+
+.account_page_account_information h1
+{
+	font-size: 1em;
+}
+
+.account_page_account_information p
+{
+	margin-left: 20px;
 }

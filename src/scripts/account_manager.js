@@ -4,6 +4,22 @@ AccountManager.ACCOUNT_TYPE_USER = 1
 AccountManager.ACCOUNT_TYPE_MANAGER = 2
 
 /*
+*	Returns the string representation of an account type
+*/
+AccountManager.stringifyAccountType = (type) =>
+{
+	switch (type)
+	{
+		default:
+		case AccountManager.ACCOUNT_TYPE_USER:
+			return "User"
+
+		case AccountManager.ACCOUNT_TYPE_MANAGER:
+			return "Manager"
+	}
+}
+
+/*
 *	Returns a map of accounts that exist or an empty map on failure
 */
 AccountManager.getAccountList = () =>
@@ -94,7 +110,7 @@ AccountManager.loginHashed = (email, hashedPassword) =>
 	StorageManager.setStoredValue("accountType", accountInformation[3])
 
 	AccountManager.g_bLoggedIn = true
-	AccountManager.g_AccountData = [accountInformation[0], accountInformation[3] ]
+	AccountManager.g_AccountData = [ accountInformation[0], accountInformation[2], accountInformation[3] ]
 	return true
 }
 
