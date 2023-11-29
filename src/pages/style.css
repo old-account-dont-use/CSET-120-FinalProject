@@ -331,7 +331,7 @@ html, body
 	width: 100%;
 	height: 100vh;
 
-	background-image: linear-gradient(180deg, #2f6ed3 5%, #5095e4 20%, #5095e4 60%, #2f6ed3 95%);
+	background: linear-gradient(180deg, rgb(47, 110, 211) 0%, rgb(80, 149, 228) 55%, rgb(47, 110, 211) 100%);
 }
 
 .home_section
