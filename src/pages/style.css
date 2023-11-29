@@ -595,10 +595,12 @@ html, body
 	display: flex;
 	flex-direction: column;
 
+	justify-content: space-evenly;
+
 	position: relative;
 
 	top: calc((50% + 32px) - 15em);
-	left: 16px;
+	left: 100px;
 
 	width: 20em;
 	height: 30em;
@@ -606,4 +608,18 @@ html, body
 	overflow: hidden;
 
 	border-radius: 12px;
+}
+
+@media only screen and (max-device-width: 1090px)
+{
+	#account_page_sidebar
+	{
+		flex-direction: row;
+
+		top: 72px;
+		left: 20px;
+
+		width: calc(100% - 40px);
+		height: 64px;
+	}
 }
