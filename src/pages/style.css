@@ -455,8 +455,8 @@ html, body
 
 /*
 *
-*
 *	Account page
+*
 */
 
 /*
@@ -714,4 +714,70 @@ html, body
 
 	margin-top: 0;
 	margin-bottom: 0;
+}
+
+/*
+*
+*	Menu page
+*
+*/
+
+#menu_container
+{
+	padding: 20px;
+	padding-top: 72px;
+
+	top: 0;
+	left: 0;
+
+	width: 100%;
+	height: 100vh;
+
+	overflow-y: auto;
+
+	display: grid;
+	grid-template-columns: auto auto auto;
+	justify-content: space-evenly;
+
+	background-color: #2f6ed3;
+}
+
+.menu_item_section
+{
+	text-align: center;
+
+	width: 20em;
+	height: 20em;
+
+	margin-bottom: 24px;
+
+	padding: 12px;
+
+	border-radius: 12px;;
+}
+
+@media only screen and (max-device-width: 1090px)
+{
+	.menu_item_section
+	{
+		width: 15em;
+		height: 15em;
+	}
+}
+
+.menu_item_image
+{
+	width: 200px;
+	height: auto;
+}
+
+.menu_item_name
+{
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+.menu_item_price
+{
+	margin-top: 0;
 }

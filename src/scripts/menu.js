@@ -43,6 +43,7 @@ Menu.createItemDisplay = (itemName, item, menuContainer) =>
 {
 	const section = document.createElement("div")
 	section.classList.add("menu_item_section")
+	section.classList.add("glass_morphism_weak")
 
 	const image = document.createElement("img")
 	image.classList.add("menu_item_image")
@@ -53,11 +54,11 @@ Menu.createItemDisplay = (itemName, item, menuContainer) =>
 	name.innerHTML = itemName
 
 	const price = document.createElement("h3")
-	name.classList.add("menu_item_price")
+	price.classList.add("menu_item_price")
 	price.innerHTML = `$${Helper.priceify(item.price)}`
 
 	const description = document.createElement("p")
-	name.classList.add("menu_item_description")
+	description.classList.add("menu_item_description")
 	description.innerHTML = item.description
 
 	const itemToppings = item.toppings
@@ -98,7 +99,7 @@ Menu.createItemDisplay = (itemName, item, menuContainer) =>
 	section.appendChild(price)
 	section.appendChild(description)
 
-	document.body.appendChild(section)
+	menuContainer.appendChild(section)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -340,6 +341,7 @@ Helper.hookEvent(window, "load", false, () =>
 	Menu.addItem("Fountain Drink", 0.50, "Coke/Pepsi product", ["coke", "cherry coke", "pepsi", "root beer", "hi c", "sprite", "ginger ale", "grape fanta", "orange fanta", "powerade", "lemonade brisk", "7up", "dr pepper", "minute maid lemonade"], "../assets/menu/drinks/Fountain_Drink.jpg")
 
 	const menuContainer = document.createElement("div")
+	menuContainer.id = "menu_container"
 
 	const menuArray = Array.from(Menu.items.keys())
 
