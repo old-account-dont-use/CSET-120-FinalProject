@@ -42,19 +42,6 @@ Helper.isBool = (value) =>
 /*
 *	Class to help tell if a string is hashed or not
 */
-class EEHHashedString
-{
-	constructor(value)
-	{
-		this.m_strValue = Helper.getString(value)
-	}
-
-	static getValue()
-	{
-		return this.m_strValue
-	}
-}
-
 Helper.hash = (string) =>
 {
 	if (!Helper.isString(string))
