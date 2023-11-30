@@ -125,10 +125,44 @@ Helper.priceify = (data) =>
 Helper.copyArray = (array) =>
 {
 	const newArray = []
+
 	for (const entry of array)
 		newArray.push(entry)
 
 	return newArray
+}
+
+/*
+*	Serializes object properties
+*/
+Helper.serializeObject = (object) =>
+{
+	const serializedArray = []
+
+	const properties = Object.getOwnPropertyNames(object)
+	for (const property of properties)
+	{
+		let propertyData = object[property]
+
+		if (propertyData instanceof Array)
+			propertyData = `[${propertyData.join(",")}]`
+		else if (typeof(propertyData) == "object")
+			propertyData = Helper.serializeObject(propertyData)
+
+		serializedArray.push(`${property}:${propertyData}`)
+	}
+
+	return `(${object.constructor.name}:[{${serializedArray.join('},{')}}])`
+}
+
+/*
+*	De-serializes object properties
+*/
+Helper.deSerializeObject = (data, classType) =>
+{
+	const classInstantiator = {}
+
+
 }
 
 /*

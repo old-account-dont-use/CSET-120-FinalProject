@@ -8,9 +8,15 @@ class EEHHashedString
 {
 	constructor(value)
 	{
+		if (typeof(value) == "object")
+			value = value.m_strValue
+
 		this.m_strValue = Helper.getString(value)
 	}
 
+	/*
+	*	Getters
+	*/
 	static getValue()
 	{
 		return this.m_strValue
@@ -21,9 +27,9 @@ class EEHMenuTopping
 {
 	constructor(toppingData)
 	{
-		this.m_strName = Helper.getString(toppingData.name)
-		this.m_bAvailable = Helper.getBool(toppingData.available)
-		this.m_flPrice = Helper.priceify(Helper.getNumber(toppingData.price, true, 0))
+		this.m_strName = Helper.getString(toppingData.m_strName)
+		this.m_bAvailable = Helper.getBool(toppingData.m_bAvailable)
+		this.m_flPrice = Helper.priceify(Helper.getNumber(toppingData.m_flPrice, true, 0))
 	}
 
 	/*
@@ -62,18 +68,18 @@ class EEHMenuItem
 {
 	constructor(itemData)
 	{
-		for (const topping of itemData.toppings)
+		for (const topping of itemData.m_arrToppings)
 		{
 			if ((!topping instanceof EEHMenuTopping))
 				throw new Error("Invalid topping")
 		}
 
-		this.m_strName = Helper.getString(itemData.name)
-		this.m_strDescription = Helper.getString(itemData.description)
-		this.m_strImage = Helper.getString(itemData.image)
-		this.m_bAvailable = Helper.getBool(itemData.available)
-		this.m_arrToppings = Helper.copyArray(itemData.toppings)
-		this.m_flPrice = Helper.getnumber(itemData.price, true, 0)
+		this.m_strName = Helper.getString(itemData.m_strName)
+		this.m_strDescription = Helper.getString(itemData.m_strDescription)
+		this.m_strImage = Helper.getString(itemData.m_strImage)
+		this.m_bAvailable = Helper.getBool(itemData.m_bAvailable)
+		this.m_arrToppings = Helper.copyArray(itemData.m_arrToppings)
+		this.m_flPrice = Helper.getnumber(itemData.m_flPrice, true, 0)
 	}
 
 	/*
@@ -127,14 +133,14 @@ class EEHOrder
 {
 	constructor(orderData)
 	{
-		for (const item of orderData.items)
+		for (const item of orderData.m_arrItems)
 		{
 			if ((!item instanceof EEHMenuItem))
 				throw new Error("Invalid MenuItem")
 		}
 
-		this.m_iDate = Helper.getNumber(orderData.date)
-		this.m_arrItems = Helper.copyArray(orderData.items)
+		this.m_iDate = Helper.getNumber(orderData.m_iDate)
+		this.m_arrItems = Helper.copyArray(orderData.m_arrItems)
 
 		this.updatePrice()
 	}
@@ -154,7 +160,7 @@ class EEHOrder
 	*/
 	static getDate()
 	{
-		return new Date(this.m_iDate * 1000)
+		return new Date(this.m_iDate)
 	}
 
 	static getItems()
@@ -184,36 +190,36 @@ class EEHAccount
 {
 	constructor(accountData)
 	{
-		this.m_strEmail = Helper.getString(accountData[0])
+		this.m_strEmail = Helper.getString(accountData.m_strEmail)
 
-		this.m_strPassword = Helper.getString(accountData[1])
+		this.m_strPassword = Helper.getString(accountData.m_strPassword)
 		this.m_hPassword = new EEHHashedString(this.m_strPassword)
 
-		this.m_iUserID = Helper.getNumber(accountData[2], false, -1)
+		this.m_iUserID = Helper.getNumber(accountData.m_iUserID, false, -1)
 		if (this.m_iUserID < 0) throw new Error("Invalid account User ID")
 
-		this.m_iAccountType = Helper.getNumber(accountData[3], false, -1)
+		this.m_iAccountType = Helper.getNumber(accountData.m_iAccountType, false, -1)
 		if (this.m_iAccountType < 0) throw new Error("Invalid account Type")
 
-		for (const order of accountData[4])
+		for (const order of accountData.m_arrOrderHistory)
 		{
 			if (!(order instanceof EEHOrder))
 				throw new Error("Invalid Order")
 		}
 
-		for (const paymentMethod of accountData[5])
+		for (const paymentMethod of accountData.m_arrPaymentMethods)
 		{
 
 		}
 
-		for (const notification of accountData[6])
+		for (const notification of accountData.m_arrNotifications)
 		{
 
 		}
 
-		this.m_arrOrderHistory = Helper.copyArray(accountData[4])
-		this.m_arrPaymentMethods = Helper.copyArray(accountData[5])
-		this.m_arrNotifications = Helper.copyArray(accountData[6])
+		this.m_arrOrderHistory = Helper.copyArray(accountData.m_arrOrderHistory)
+		this.m_arrPaymentMethods = Helper.copyArray(accountData.m_arrPaymentMethods)
+		this.m_arrNotifications = Helper.copyArray(accountData.m_arrNotifications)
 	}
 
 	/*
