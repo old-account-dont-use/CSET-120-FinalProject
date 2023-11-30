@@ -1,5 +1,6 @@
 let AccountManager = new Map()
 
+AccountManager.ACCOUNT_TYPE_INVALID = 0
 AccountManager.ACCOUNT_TYPE_USER = 1
 AccountManager.ACCOUNT_TYPE_MANAGER = 2
 
@@ -11,6 +12,9 @@ AccountManager.stringifyAccountType = (type) =>
 	switch (type)
 	{
 		default:
+		case AccountManager.ACCOUNT_TYPE_INVALID:
+			return "INVALID"
+
 		case AccountManager.ACCOUNT_TYPE_USER:
 			return "User"
 
@@ -46,6 +50,42 @@ AccountManager.storeAccountList = (accountMap) =>
 	StorageManager.setStoredValue("accountList", accountList)
 
 	return true
+}
+
+/*
+*	Sets the current active account
+*/
+AccountManager.setActiveAccount = (accountData) =>
+{
+	if (!accountData)
+	{
+		StorageManager.setStoredValue("email", "")
+		StorageManager.setStoredValue("password", "")
+		StorageManager.setStoredValue("uid", 0)
+		StorageManager.setStoredValue("accountType", 0)
+		StorageManager.setStoredValue("orderHistory", "")
+		StorageManager.setStoredValue("paymentMethods", "")
+	}
+	else
+	{
+		StorageManager.setStoredValue("email", accountData[0])
+		StorageManager.setStoredValue("password", accountData[1])
+		StorageManager.setStoredValue("uid", accountData[2])
+		StorageManager.setStoredValue("accountType", accountData[3])
+		StorageManager.setStoredValue("orderHistory", accountData[4])
+		StorageManager.setStoredValue("paymentMethods", accountData[5])
+	}
+
+	AccountManager.g_bLoggedIn = accountData != null
+
+	AccountManager.g_AccountData =
+	[
+		accountData[0],
+		accountData[2],
+		accountData[3],
+		accountData[4],
+		accountData[5]
+	]
 }
 
 /*
@@ -104,13 +144,8 @@ AccountManager.loginHashed = (email, hashedPassword) =>
 	if (accountInformation[0] !== email) return false
 	if (accountInformation[1] !== hashedPassword) return false
 
-	StorageManager.setStoredValue("email", accountInformation[0])
-	StorageManager.setStoredValue("password", accountInformation[1])
-	StorageManager.setStoredValue("uid", accountInformation[2])
-	StorageManager.setStoredValue("accountType", accountInformation[3])
+	AccountManager.setActiveAccount(accountInformation)
 
-	AccountManager.g_bLoggedIn = true
-	AccountManager.g_AccountData = [ accountInformation[0], accountInformation[2], accountInformation[3] ]
 	return true
 }
 
@@ -132,13 +167,7 @@ AccountManager.login = (email, password) =>
 */
 AccountManager.logout = (refresh) =>
 {
-	StorageManager.setStoredValue("email", "")
-	StorageManager.setStoredValue("password", "")
-	StorageManager.setStoredValue("uid", 0)
-	StorageManager.setStoredValue("accountType", 0)
-
-	AccountManager.g_bLoggedIn = false
-	AccountManager.g_AccountData = null
+	AccountManager.setActiveAccount(null)
 
 	if (refresh)
 		location.reload()

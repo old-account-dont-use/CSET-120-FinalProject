@@ -9,10 +9,41 @@ Helper.isString = (value) =>
 }
 
 /*
+*	Returns true if the passed in value is a number
+*/
+Helper.isNumber = (value) =>
+{
+	if (Number.isNaN(value)) return false
+	if (typeof(value) != "number") return false
+
+	if (value > Number.MAX_SAFE_INTEGER) return false
+	if (value < Number.MIN_SAFE_INTEGER) return false
+
+	return false
+}
+
+/*
 *	Hashes a string
 *
 *	https://gist.github.com/iperelivskiy/4110988
 */
+
+/*
+*	Class to help tell if a string is hashed or not
+*/
+class EEHHashedString
+{
+	constructor(value)
+	{
+		this.m_strValue = Helper.getString(value)
+	}
+
+	static getValue()
+	{
+		return this.m_strValue
+	}
+}
+
 Helper.hash = (string) =>
 {
 	if (!Helper.isString(string))
@@ -21,7 +52,41 @@ Helper.hash = (string) =>
 	for (var i = 0, h = 0xDEADBEEF; i < string.length; i++)
 		h = Math.imul(h ^ string.charCodeAt(i), 0x9E3779B1) // 0x9E3779B1 (2654435761) is the closest prime number to (2 ^ 32) * GOLDEN_RATIO
 
-	return String((h ^ h >>> 16) >>> 0)
+	return new EEHHashedString((h ^ h >>> 16) >>> 0)
+}
+
+/*
+*	Safely access a string when it's unknown if it's hashed or not
+*/
+Helper.getString = (data) =>
+{
+	if (data instanceof EEHHashedString)
+		return data.getVaue()
+
+	if (!Helper.isString(data))
+		return String(data)
+
+	return data
+}
+
+/*
+*	Safely access a number
+*/
+
+Helper.getNumber = (number, isFloat, fallback = 0) =>
+{
+	if (!Helper.isNumber(number))
+	{
+		if (isFloat)
+			number = parseFloat(number)
+		else
+			number = parseInt(number)
+
+		if (!Helper.isNumber(number))
+			return fallback
+	}
+
+	return number
 }
 
 /*
@@ -32,13 +97,25 @@ Helper.priceify = (data) =>
 	if (Helper.isString(data))
 	{
 		data = parseFloat(data)
-		if (Number.isNaN(data))
+		if (!Helper.isNumber(data))
 			throw new Error("Invalid data passed to priceify")
 	}
 	else if (typeof(data) !== "number")
 		throw new Error("Invalid data passed to priceify")
 
 	return data.toFixed(2)
+}
+
+/*
+*	Copies an array
+*/
+Helper.copyArray = (array) =>
+{
+	const newArray = []
+	for (const entry of array)
+		newArray.push(entry)
+
+	return newArray
 }
 
 /*
