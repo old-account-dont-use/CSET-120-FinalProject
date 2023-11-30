@@ -37,7 +37,7 @@ Menu.addItem = (name, price, description, toppingList, image) =>
 }
 
 /*
-*	Adddrddrdr
+*	Creates the display of the item and topping
 */
 Menu.createItemDisplay = (itemName, item, menuContainer) =>
 {
@@ -62,17 +62,17 @@ Menu.createItemDisplay = (itemName, item, menuContainer) =>
 	description.innerHTML = item.description
 
 	const itemToppings = item.toppings
+
 	const toppingList = document.createElement("div")
+	toppingList.classList.add("menu_item_topping_list")
+	toppingList.classList.add("glass_morphism")
 	toppingList.setAttribute("isShown", false)
 
-	const viewToppingsButton = document.createElement("button")
-	viewToppingsButton.classList.add("menu_item_toppings_view_button")
-	viewToppingsButton.m_ToppingList = toppingList
-	viewToppingsButton.onclick = (event) =>
-	{
+	const toppingListItemLabel = document.createElement("h3")
+	toppingListItemLabel.classList.add("item_menu_topping_list_item_label")
+	toppingListItemLabel.innerHTML = itemName
 
-		event.target.m_ToppingList.setAttribute("isShown", !event.target.m_ToppingList.getAttribute("isShown"))
-	}
+	toppingList.appendChild(toppingListItemLabel)
 
 	for (const topping of itemToppings)
 	{
@@ -84,20 +84,67 @@ Menu.createItemDisplay = (itemName, item, menuContainer) =>
 		}
 
 		const toppingCheckbox = document.createElement("input")
+		toppingCheckbox.type = "checkbox"
 		toppingCheckbox.classList.add("menu_item_topping_checkbox")
+		toppingCheckbox.id = `topping_checkbox_${topping}`
 
 		const toppingLabel = document.createElement("label")
 		toppingLabel.classList.add("menu_item_topping_label")
-		toppingLabel.innerHTML = topping
+		toppingLabel.innerHTML = `${topping} $${toppingData.price}`
+		toppingLabel.setAttribute("for", `topping_checkbox_${topping}`)
+
+		const lineBreak = document.createElement("br")
 
 		toppingList.appendChild(toppingCheckbox)
 		toppingList.appendChild(toppingLabel)
+		toppingList.appendChild(lineBreak)
 	}
+
+	const viewToppingsButton = document.createElement("button")
+	viewToppingsButton.classList.add("menu_item_toppings_view_button")
+	viewToppingsButton.innerHTML = "Select Toppings"
+	viewToppingsButton.m_ToppingList = toppingList
+
+
+	viewToppingsButton.onclick = (event) =>
+	{
+		const toppingList = event.target.m_ToppingList
+
+		const isShown = (/true/).test(toppingList.getAttribute("isShown"))
+
+		const toppingLists = document.querySelectorAll(".menu_item_topping_list")
+
+		//hides the already displayed list if applicable so that only one list displays at a time
+		for(const list of toppingLists)
+		{
+			if ((/true/).test(list.getAttribute("isShown")))
+			{
+				list.setAttribute("isShown", false)
+				break
+			}
+		}
+
+		//toggles list of toppings when "Select Toppings" button is clicked
+		toppingList.setAttribute("isShown", !isShown)
+	}
+
+	const addToCartButton = document.createElement("button")
+	addToCartButton.classList.add("menu_item_cart_button")
+	addToCartButton.innerHTML = "Add to cart"
+	//add item to cart along with selected toppings
+	addToCartButton.onclick = (event) =>
+	{
+
+	}
+
 
 	section.appendChild(image)
 	section.appendChild(name)
 	section.appendChild(price)
 	section.appendChild(description)
+	section.appendChild(viewToppingsButton)
+	section.appendChild(addToCartButton)
+	menuContainer.appendChild(toppingList)
 
 	menuContainer.appendChild(section)
 }

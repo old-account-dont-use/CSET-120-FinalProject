@@ -751,16 +751,18 @@ html, body
 
 .menu_item_section
 {
-	text-align: center;
-
-	width: 20em;
-	height: 20em;
+	width: 25em;
+	height: 25em;
 
 	margin-bottom: 24px;
 
 	padding: 12px;
 
 	border-radius: 12px;;
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
 @media only screen and (max-device-width: 1090px)
@@ -776,15 +778,88 @@ html, body
 {
 	width: 200px;
 	height: auto;
+
+	border-radius: 5px;
 }
 
 .menu_item_name
 {
 	margin-top: 0;
 	margin-bottom: 0;
+
+	text-transform: capitalize;
 }
 
 .menu_item_price
 {
 	margin-top: 0;
+}
+
+.menu_item_toppings_view_button,
+.menu_item_cart_button
+{
+	width: 80%;
+
+	padding: 7px;
+
+	margin-bottom: 8px;
+
+	border-radius: 5px;
+
+	border: none;
+
+	display: block;
+}
+
+.menu_item_toppings_view_button:hover,
+.menu_item_cart_button:hover
+{
+	background-color: rgb(137, 240, 180);
+}
+
+.menu_item_topping_list
+{
+	position: absolute;
+
+	z-index: 998;
+
+	padding: 10px;
+
+	border-radius: 5px;
+
+	overflow: scroll;
+
+	width: 20em;
+	height: 30em;
+
+	/* background-color: white; */
+
+	font-size: large;
+}
+
+.menu_item_topping_list[isShown=false]
+{
+	display: none;
+}
+
+.item_menu_topping_list_item_label
+{
+	display: block;
+
+	text-transform: capitalize;
+	text-align: center;
+
+	margin-top: 0;
+	padding-top: 0;
+
+}
+
+.menu_item_topping_label
+{
+	line-height: 25px;
+}
+
+.menu_item_topping_label
+{
+	text-transform: capitalize;
 }
