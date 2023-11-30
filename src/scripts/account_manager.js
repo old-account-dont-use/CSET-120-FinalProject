@@ -130,7 +130,7 @@ AccountManager.login = (email, password) =>
 /*
 *	Logs the user out of the current account
 */
-AccountManager.logout = () =>
+AccountManager.logout = (refresh) =>
 {
 	StorageManager.setStoredValue("email", "")
 	StorageManager.setStoredValue("password", "")
@@ -139,6 +139,9 @@ AccountManager.logout = () =>
 
 	AccountManager.g_bLoggedIn = false
 	AccountManager.g_AccountData = null
+
+	if (refresh)
+		location.reload()
 }
 
 /*
@@ -171,6 +174,43 @@ AccountManager.updateAccount = (email, accountData) =>
 
 	// HOW is it not found when lookupAccount returns the data???
 	return false
+}
+
+/*
+*	Resets the password on an account
+*/
+AccountManager.resetAccountPassword = (email) =>
+{
+	const currentAccountData = AccountManager.lookupAccount(email)
+	if (!currentAccountData) return false
+
+	currentAccountData[1] = Helper.hash("12345678")
+	return AccountManager.updateAccount(email, currentAccountData)
+}
+
+/*
+*	Resets the password on an account with a prompt
+*/
+AccountManager.resetAccountPasswordPrompt = (email) =>
+{
+	const currentAccountData = AccountManager.lookupAccount(email)
+	if (!currentAccountData) return false
+
+	let response = ""
+	while (response.length < 8)
+		response = prompt("Enter your new password (Minimum of 8 characters)")
+
+	currentAccountData[1] = Helper.hash(response)
+	if (AccountManager.updateAccount(email, currentAccountData))
+	{
+		alert("Password changed. Please login again")
+		return true
+	}
+	else
+	{
+		alert("Failed to change password")
+		return false
+	}
 }
 
 /*
@@ -231,7 +271,7 @@ Helper.hookEvent(window, "load", false, () =>
 
 	if (uid != 0 && !AccountManager.validateAccount(email, password, uid, accountType))
 	{
-		AccountManager.logout()
+		AccountManager.logout(false)
 
 		if (email.length > 0 || password.length > 0 || uid > 0 || accountType > 0)
 			location.reload()

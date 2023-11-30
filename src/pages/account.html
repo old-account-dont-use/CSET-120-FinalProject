@@ -89,7 +89,8 @@
 					<h1>Password:</h1>
 					<p>********</p>
 				</div>
-				<button>Reset Password</button>
+
+				<button onclick="if (AccountManager.resetAccountPasswordPrompt(AccountManager.g_AccountData[0])) AccountManager.logout(true)">Reset Password</button>
 			</div>
 		</div>
 

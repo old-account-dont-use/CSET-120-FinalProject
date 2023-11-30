@@ -84,8 +84,7 @@ AccountPage.onEntrySubmit = () =>
 
 		case AccountPage.ENTRY_MODE_FORGOT:
 		{
-			accountData[1] = Helper.hash("12345678")
-			if (AccountManager.updateAccount(email, accountData))
+			if (AccountManager.resetAccountPassword(email))
 				alert("Password reset to '12345678'")
 			else
 				alert("Failed to update password (???)")
@@ -365,6 +364,9 @@ AccountPage.setupAccountSidebar = (container, SIDEBAR_PROPERTIES) =>
 			button.m_SectionName = property
 			button.innerHTML = property
 			{
+				button.classList.add("account_page_sidebar_link")
+				button.classList.add("glass_morphism_weak")
+
 				button.onclick = (event) =>
 				{
 					AccountPage.showPage(event.target.m_SectionName)
