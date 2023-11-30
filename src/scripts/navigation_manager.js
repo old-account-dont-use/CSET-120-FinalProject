@@ -110,7 +110,7 @@ NavigationManager.createNavBarUserControls = () =>
 		label.id = "navbar_usercontrols_label"
 		{
 			if (AccountManager.g_bLoggedIn)
-				label.innerHTML = AccountManager.g_AccountData[0]
+				label.innerHTML = AccountManager.g_AccountData.email
 			else
 				label.innerHTML = "Not signed in"
 		}

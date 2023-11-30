@@ -14,7 +14,6 @@
 		<script src="../scripts/helper.js"></script>
 		<script src="../scripts/navigation_manager.js"></script>
 		<script src="../scripts/storage.js"></script>
-		<script src="../scripts/classes.js"></script>
 		<script src="../scripts/account_manager.js"></script>
 		<script src="../scripts/menu.js"></script>
 	</head>
@@ -40,7 +39,7 @@
 
 						"Manager Menu": [ () =>
 						{
-							return AccountManager.g_AccountData && AccountManager.g_AccountData[2] == AccountManager.ACCOUNT_TYPE_MANAGER
+							return AccountManager.g_AccountData && AccountManager.g_AccountData.type == AccountManager.ACCOUNT_TYPE_MANAGER
 						},
 
 						() =>

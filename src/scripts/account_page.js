@@ -315,16 +315,16 @@ AccountPage.setupPage = (name) =>
 
 			for (const subber of subbers)
 			{
-				const index = parseInt(subber.getAttribute("index"))
-				if (Number.isNaN(index)) continue
-
 				if (subber.getAttribute("setup"))
 				{
 					eval(`var setup = () => { ${subber.getAttribute("setup")} }`)
 					subber.innerHTML = setup()
+
+					continue
 				}
-				else
-					subber.innerHTML = AccountManager.g_AccountData[index]
+
+				if (!subber.getAttribute("index")) continue
+				subber.innerHTML = AccountManager.g_AccountData[subber.getAttribute("index")]
 			}
 
 			break

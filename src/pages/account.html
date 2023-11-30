@@ -14,7 +14,6 @@
 		<script src="../scripts/helper.js"></script>
 		<script src="../scripts/navigation_manager.js"></script>
 		<script src="../scripts/storage.js"></script>
-		<script src="../scripts/classes.js"></script>
 		<script src="../scripts/account_manager.js"></script>
 		<script src="../scripts/account_page.js"></script>
 	</head>
@@ -41,7 +40,7 @@
 
 						"Manager Menu": [ () =>
 						{
-							return AccountManager.g_AccountData && AccountManager.g_AccountData[2] == AccountManager.ACCOUNT_TYPE_MANAGER
+							return AccountManager.g_AccountData && AccountManager.g_AccountData.type == AccountManager.ACCOUNT_TYPE_MANAGER
 						},
 
 						() =>
@@ -72,17 +71,17 @@
 		<div id="account_page_account" class="account_page glass_morphism_weak" tabname="Account" active=false>
 			<div class="flexbox account_page_account_information">
 				<h1>Email Address:</h1>
-				<p index=0></p>
+				<p index="email"></p>
 			</div>
 
 			<div class="flexbox account_page_account_information">
 				<h1>User ID:</h1>
-				<p index=1></p>
+				<p index="userID"></p>
 			</div>
 
 			<div class="flexbox account_page_account_information">
 				<h1>Account Type:</h1>
-				<p index=2 setup="return AccountManager.stringifyAccountType(AccountManager.g_AccountData[2])"></p>
+				<p index="type" setup="return AccountManager.stringifyAccountType(AccountManager.g_AccountData.type)"></p>
 			</div>
 
 			<div class="blockbox account_page_account_information">
@@ -91,7 +90,7 @@
 					<p>********</p>
 				</div>
 
-				<button onclick="if (AccountManager.resetAccountPasswordPrompt(AccountManager.g_AccountData[0])) AccountManager.logout(true)">Reset Password</button>
+				<button onclick="if (AccountManager.resetAccountPasswordPrompt(AccountManager.g_AccountData.email)) AccountManager.logout(true)">Reset Password</button>
 			</div>
 		</div>
 

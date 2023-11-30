@@ -50,7 +50,7 @@ Helper.hash = (string) =>
 	for (var i = 0, h = 0xDEADBEEF; i < string.length; i++)
 		h = Math.imul(h ^ string.charCodeAt(i), 0x9E3779B1) // 0x9E3779B1 (2654435761) is the closest prime number to (2 ^ 32) * GOLDEN_RATIO
 
-	return new EEHHashedString((h ^ h >>> 16) >>> 0)
+	return String((h ^ h >>> 16) >>> 0)
 }
 
 /*
@@ -58,9 +58,6 @@ Helper.hash = (string) =>
 */
 Helper.getString = (data) =>
 {
-	if (data instanceof EEHHashedString)
-		return data.getVaue()
-
 	if (!Helper.isString(data))
 		return String(data)
 
@@ -130,39 +127,6 @@ Helper.copyArray = (array) =>
 		newArray.push(entry)
 
 	return newArray
-}
-
-/*
-*	Serializes object properties
-*/
-Helper.serializeObject = (object) =>
-{
-	const serializedArray = []
-
-	const properties = Object.getOwnPropertyNames(object)
-	for (const property of properties)
-	{
-		let propertyData = object[property]
-
-		if (propertyData instanceof Array)
-			propertyData = `[${propertyData.join(",")}]`
-		else if (typeof(propertyData) == "object")
-			propertyData = Helper.serializeObject(propertyData)
-
-		serializedArray.push(`${property}:${propertyData}`)
-	}
-
-	return `(${object.constructor.name}:[{${serializedArray.join('},{')}}])`
-}
-
-/*
-*	De-serializes object properties
-*/
-Helper.deSerializeObject = (data, classType) =>
-{
-	const classInstantiator = {}
-
-
 }
 
 /*

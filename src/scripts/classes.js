@@ -4,25 +4,6 @@
 *
 */
 
-class EEHHashedString
-{
-	constructor(value)
-	{
-		if (typeof(value) == "object")
-			value = value.m_strValue
-
-		this.m_strValue = Helper.getString(value)
-	}
-
-	/*
-	*	Getters
-	*/
-	static getValue()
-	{
-		return this.m_strValue
-	}
-}
-
 class EEHMenuTopping
 {
 	constructor(toppingData)

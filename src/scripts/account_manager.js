@@ -65,27 +65,21 @@ AccountManager.setActiveAccount = (accountData) =>
 		StorageManager.setStoredValue("accountType", 0)
 		StorageManager.setStoredValue("orderHistory", "")
 		StorageManager.setStoredValue("paymentMethods", "")
+		StorageManager.setStoredValue("notifications", "")
 	}
 	else
 	{
-		StorageManager.setStoredValue("email", accountData[0])
-		StorageManager.setStoredValue("password", accountData[1])
-		StorageManager.setStoredValue("uid", accountData[2])
-		StorageManager.setStoredValue("accountType", accountData[3])
-		StorageManager.setStoredValue("orderHistory", accountData[4])
-		StorageManager.setStoredValue("paymentMethods", accountData[5])
+		StorageManager.setStoredValue("email", accountData.email)
+		StorageManager.setStoredValue("password", accountData.password)
+		StorageManager.setStoredValue("uid", accountData.userID)
+		StorageManager.setStoredValue("accountType", accountData.type)
+		StorageManager.setStoredValue("orderHistory", accountData.orderHistory)
+		StorageManager.setStoredValue("paymentMethods", accountData.paymentMethods)
+		StorageManager.setStoredValue("notifications", accountData.notifications)
 	}
 
 	AccountManager.g_bLoggedIn = accountData != null
-
-	AccountManager.g_AccountData =
-	[
-		accountData[0],
-		accountData[2],
-		accountData[3],
-		accountData[4],
-		accountData[5]
-	]
+	AccountManager.g_AccountData = AccountManager.g_bLoggedIn ? accountData : null
 }
 
 /*
@@ -96,10 +90,10 @@ AccountManager.validateAccount = (email, password, uid, accountType) =>
 	const accountData = AccountManager.lookupAccount(email)
 	if (!accountData) return false
 
-	if (accountData[0] !== email) return false
-	if (accountData[1] !== password) return false
-	if (accountData[2] !== uid) return false
-	if (accountData[3] !== accountType) return false
+	if (accountData.email !== email) return false
+	if (accountData.password !== password) return false
+	if (accountData.userID !== uid) return false
+	if (accountData.type !== accountType) return false
 
 	return true
 }
@@ -121,7 +115,7 @@ AccountManager.lookupAccount = (email, accountMap = null) =>
 		const currentAccount = accountMap.get(index)
 		if (!currentAccount) continue
 
-		if (currentAccount[0] === email)
+		if (currentAccount.email === email)
 			return currentAccount
 	}
 
@@ -141,8 +135,8 @@ AccountManager.loginHashed = (email, hashedPassword) =>
 	const accountInformation = AccountManager.lookupAccount(email)
 	if (!accountInformation) return false
 
-	if (accountInformation[0] !== email) return false
-	if (accountInformation[1] !== hashedPassword) return false
+	if (accountInformation.email !== email) return false
+	if (accountInformation.password !== hashedPassword) return false
 
 	AccountManager.setActiveAccount(accountInformation)
 
@@ -192,7 +186,7 @@ AccountManager.updateAccount = (email, accountData) =>
 		const currentAccount = accountMap.get(index)
 		if (!currentAccount) continue
 
-		if (currentAccount[0] === email)
+		if (currentAccount.email === email)
 		{
 			accountMap.set(index, accountData)
 			AccountManager.storeAccountList(accountMap)
@@ -213,7 +207,7 @@ AccountManager.resetAccountPassword = (email) =>
 	const currentAccountData = AccountManager.lookupAccount(email)
 	if (!currentAccountData) return false
 
-	currentAccountData[1] = Helper.hash("12345678")
+	currentAccountData.password = Helper.hash("12345678")
 	return AccountManager.updateAccount(email, currentAccountData)
 }
 
@@ -229,7 +223,7 @@ AccountManager.resetAccountPasswordPrompt = (email) =>
 	while (response.length < 8)
 		response = prompt("Enter your new password (Minimum of 8 characters)")
 
-	currentAccountData[1] = Helper.hash(response)
+	currentAccountData.password = Helper.hash(response)
 	if (AccountManager.updateAccount(email, currentAccountData))
 	{
 		alert("Password changed. Please login again")
@@ -253,12 +247,15 @@ AccountManager.signUpHashed = (email, hashedPassword, accountType = AccountManag
 	const uid = Array.from(accountMap.keys()).length + 1
 	if (!Number.isSafeInteger(uid)) return false
 
-	let newAccount = []
+	let newAccount = {}
 
-	newAccount[0] = email
-	newAccount[1] = hashedPassword
-	newAccount[2] = uid
-	newAccount[3] = accountType
+	newAccount.email = email
+	newAccount.password = hashedPassword
+	newAccount.userID = uid
+	newAccount.type = accountType
+	newAccount.orderHistory = []
+	newAccount.paymentMethods = []
+	newAccount.notifications = []
 
 	accountMap.set(uid, newAccount)
 
