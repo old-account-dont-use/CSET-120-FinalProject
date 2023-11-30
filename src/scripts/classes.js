@@ -4,11 +4,103 @@
 *
 */
 
+class EEHMenuTopping
+{
+	constructor(toppingData)
+	{
+		this.m_strName = Helper.getString(toppingData.name)
+		this.m_bAvailable = Helper.getBool(toppingData.available)
+		this.m_flPrice = Helper.priceify(Helper.getNumber(toppingData.price, true, 0))
+	}
+
+	/*
+	*	Getters
+	*/
+	static getName()
+	{
+		return this.m_strName
+	}
+
+	static getAvailable()
+	{
+		return this.m_bAvailable
+	}
+
+	static getPrice()
+	{
+		return this.m_flPrice
+	}
+
+	/*
+	*	Setters
+	*/
+	static setAvailable(available)
+	{
+		this.m_bAvailable = Helper.getBool(available)
+	}
+
+	static setPrice(price)
+	{
+		this.m_flPrice = Helper.priceify(Helper.getNumber(price, true, 0))
+	}
+}
+
 class EEHMenuItem
 {
 	constructor(itemData)
 	{
+		this.m_strName = Helper.getString(itemData.name)
+		this.m_strDescription = Helper.getString(itemData.description)
+		this.m_strImage = Helper.getString(itemData.image)
+		this.m_bAvailable = Helper.getBool(itemData.available)
+		this.m_arrToppings = itemData.m_arrToppings
+		this.m_flPrice = Helper.getnumber(itemData.price, true, 0)
+	}
 
+	/*
+	*	Getters
+	*/
+	static getName()
+	{
+		return this.m_strName
+	}
+
+	static getDescription()
+	{
+		return this.m_strDescription
+	}
+
+	static getImage()
+	{
+		return this.m_strImage
+	}
+
+	static getAvailable()
+	{
+		return this.m_bAvailable
+	}
+
+	static getToppings()
+	{
+		return Helper.copyArray(this.m_arrToppings)
+	}
+
+	static getPrice()
+	{
+		return this.m_flPrice
+	}
+
+	/*
+	*	Setters
+	*/
+	static setAvailable(available)
+	{
+		this.m_bAvailable = Helper.getBool(available)
+	}
+
+	static setPrice(price)
+	{
+		this.m_flPrice = Helper.priceify(Helper.getNumber(price, true, 0))
 	}
 }
 

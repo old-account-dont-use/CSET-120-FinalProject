@@ -19,6 +19,17 @@ Helper.isNumber = (value) =>
 	if (value > Number.MAX_SAFE_INTEGER) return false
 	if (value < Number.MIN_SAFE_INTEGER) return false
 
+	return true
+}
+
+/*
+*	Returns true if the passed in value is a boolean
+*/
+Helper.isBool = (value) =>
+{
+	if (value === true || value === false) return true
+	if ((value instanceof Boolean) || typeof(value) == "boolean") return true
+
 	return false
 }
 
@@ -72,7 +83,6 @@ Helper.getString = (data) =>
 /*
 *	Safely access a number
 */
-
 Helper.getNumber = (number, isFloat, fallback = 0) =>
 {
 	if (!Helper.isNumber(number))
@@ -87,6 +97,22 @@ Helper.getNumber = (number, isFloat, fallback = 0) =>
 	}
 
 	return number
+}
+
+/*
+*	Safely access a boolean
+*/
+Helper.getBool = (bool, fallback = false) =>
+{
+	if (Helper.isBool(bool)) return bool
+
+	if (Helper.isString(bool))
+	{
+		if ((/true/).test(bool)) return true
+		if ((/false/).test(bool)) return false
+	}
+
+	return fallback
 }
 
 /*
