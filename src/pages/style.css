@@ -367,6 +367,71 @@ html, body
 	color: white;
 }
 
+.home_header_title_row div
+{
+	opacity: 100%;
+
+	animation: fade_in_home_header_title 3s;
+}
+
+@keyframes fade_in_home_header_title
+{
+	0%
+	{
+		opacity: 0%;
+	}
+
+	10%
+	{
+		opacity: 10%;
+	}
+
+	20%
+	{
+		opacity: 20%;
+	}
+
+	30%
+	{
+		opacity: 30%;
+	}
+
+	40%
+	{
+		opacity: 40%;
+	}
+
+	50%
+	{
+		opacity: 50%;
+	}
+
+	60%
+	{
+		opacity: 60%;
+	}
+
+	70%
+	{
+		opacity: 70%;
+	}
+
+	80%
+	{
+		opacity: 80%;
+	}
+
+	90%
+	{
+		opacity: 90%;
+	}
+
+	100%
+	{
+		opacity: 100%;
+	}
+}
+
 .home_section
 {
 	padding-top: 100px;
@@ -664,6 +729,7 @@ html, body
 	#account_page_sidebar
 	{
 		flex-direction: row;
+		align-items: center;
 
 		top: 72px;
 		left: 20px;
@@ -680,6 +746,13 @@ html, body
 
 	width: 100%;
 	height: 3em;
+
+	box-shadow: 1px 1px 5px rgba(255, 255, 255, 0.9), 1px 1px 5px rgba(255, 255, 255, 0.9) inset;
+}
+
+.account_page_sidebar_link:hover
+{
+	background-color: white;
 }
 
 .account_page
@@ -696,7 +769,7 @@ html, body
 
 	border-radius: 12px;
 
-	padding: 12px;
+	padding: 30px;
 }
 
 @media only screen and (max-device-width: 1090px)
@@ -744,6 +817,26 @@ html, body
 
 	margin-top: 0;
 	margin-bottom: 0;
+}
+
+#account_page_reset_password_button
+{
+	margin-top: 15px;
+
+	padding: 10px;
+
+	width: 15em;
+
+	border-radius: 10px;
+	border: none;
+
+	box-shadow: 1px 1px 5px rgba(255, 255, 255, 0.9), 1px 1px 5px rgba(255, 255, 255, 0.9) inset;
+}
+
+#account_page_reset_password_button:hover
+{
+	/* background-color: white; */
+	background-color: rgba(255, 255, 204, 0.8);
 }
 
 /*
