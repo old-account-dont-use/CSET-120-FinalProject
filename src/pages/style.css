@@ -568,8 +568,8 @@ html, body
 {
 	width: 50em;
 	height: 30em;
-	max-width: 50vw;
-	max-height: 60vh;
+	/* max-width: 50vw;
+	max-height: 60vh; */
 
 	margin-top: auto;
 	margin-bottom: auto;
@@ -753,6 +753,7 @@ html, body
 .account_page_sidebar_link:hover
 {
 	background-color: white;
+	cursor: pointer;
 }
 
 .account_page
@@ -837,6 +838,7 @@ html, body
 {
 	/* background-color: white; */
 	background-color: rgba(255, 255, 204, 0.8);
+	cursor: pointer;
 }
 
 /*
@@ -865,10 +867,19 @@ html, body
 	background-color: #2f6ed3;
 }
 
+@media only screen and (max-device-width: 480px) {
+	#menu_container
+	{
+		grid-template-columns: auto;
+	}
+}
+
 .menu_item_section
 {
-	width: 25em;
-	height: 25em;
+	width: 23em;
+	height: 27em;
+
+	font-size: 15px;
 
 	margin-bottom: 24px;
 
@@ -881,12 +892,11 @@ html, body
 	align-items: center;
 }
 
-@media only screen and (max-device-width: 1090px)
+@media only screen and (max-device-width: 480px)
 {
 	.menu_item_section
 	{
-		width: 15em;
-		height: 15em;
+		width: 60vw;
 	}
 }
 

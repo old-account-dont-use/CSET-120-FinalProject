@@ -41,80 +41,102 @@ Menu.addItem = (name, price, description, toppingList, image) =>
 */
 Menu.createItemDisplay = (itemName, item, menuContainer) =>
 {
+	//creates a container for the item
 	const section = document.createElement("div")
 	section.classList.add("menu_item_section")
 	section.classList.add("glass_morphism_weak")
 
+	//creates the image of the item
 	const image = document.createElement("img")
 	image.classList.add("menu_item_image")
 	image.src = item.image
 
+	//creates the item name
 	const name = document.createElement("h3")
 	name.classList.add("menu_item_name")
 	name.innerHTML = itemName
 
+	//creates the item price tag
 	const price = document.createElement("h3")
 	price.classList.add("menu_item_price")
 	price.innerHTML = `$${Helper.priceify(item.price)}`
 
+	//creates the item description
 	const description = document.createElement("p")
 	description.classList.add("menu_item_description")
 	description.innerHTML = item.description
 
-	const itemToppings = item.toppings
+	const itemToppings = item.toppings //object form of the toppings for the item
+	const itemToppingsArray = Object.getOwnPropertyNames(itemToppings) //string array form of the toppings name
 
+	/*
+	* creates the display of the list of toppings
+	* hidden on default
+	*/
 	const toppingList = document.createElement("div")
 	toppingList.classList.add("menu_item_topping_list")
 	toppingList.classList.add("glass_morphism")
 	toppingList.setAttribute("isShown", false)
 
+	//creates the item name on the display of list of toppings
 	const toppingListItemLabel = document.createElement("h3")
 	toppingListItemLabel.classList.add("item_menu_topping_list_item_label")
 	toppingListItemLabel.innerHTML = itemName
 
 	toppingList.appendChild(toppingListItemLabel)
 
-	for (const topping of itemToppings)
+	for (const topping of itemToppingsArray)
 	{
-		const toppingData = Menu.toppings.get(topping.toLowerCase())
+		const toppingData = Menu.toppings.get(topping.toLowerCase()) //object form of the topping
+
+		//checks for whether the item topping exists in the list of possible toppings
 		if (!toppingData)
 		{
 			console.error(`Item ${itemName} has invalid topping ${topping}`)
 			continue
 		}
 
+		/*
+		* creates the checkbox for the topping
+		* checkbox checking based on whether topping is on item by default
+		*/
 		const toppingCheckbox = document.createElement("input")
 		toppingCheckbox.type = "checkbox"
 		toppingCheckbox.classList.add("menu_item_topping_checkbox")
 		toppingCheckbox.id = `topping_checkbox_${topping}`
+		toppingCheckbox.checked = itemToppings[topping]
 
+		//creates the label/name of the topping
 		const toppingLabel = document.createElement("label")
 		toppingLabel.classList.add("menu_item_topping_label")
 		toppingLabel.innerHTML = `${topping} $${toppingData.price}`
 		toppingLabel.setAttribute("for", `topping_checkbox_${topping}`)
 
+		//creates a line break for after each topping
 		const lineBreak = document.createElement("br")
 
+		//adding topping checkbox, name, and line break to the display of list of toppings
 		toppingList.appendChild(toppingCheckbox)
 		toppingList.appendChild(toppingLabel)
 		toppingList.appendChild(lineBreak)
 	}
 
+	//creates a button for viewing display of list of toppings
 	const viewToppingsButton = document.createElement("button")
 	viewToppingsButton.classList.add("menu_item_toppings_view_button")
 	viewToppingsButton.innerHTML = "Select Toppings"
-	viewToppingsButton.m_ToppingList = toppingList
+	viewToppingsButton.m_ToppingList = toppingList //stores div for displaying list of toppings
 
 
 	viewToppingsButton.onclick = (event) =>
 	{
 		const toppingList = event.target.m_ToppingList
 
-		const isShown = (/true/).test(toppingList.getAttribute("isShown"))
+		const isShown = (/true/).test(toppingList.getAttribute("isShown")) //converts string to boolean form
 
-		const toppingLists = document.querySelectorAll(".menu_item_topping_list")
+		const toppingLists = document.querySelectorAll(".menu_item_topping_list") //gets all the divs containing list of toppings
 
-		//hides the already displayed list if applicable so that only one list displays at a time
+		//hides the already displayed list of toppings if applicable so that only one list displays at a time
 		for(const list of toppingLists)
 		{
 			if ((/true/).test(list.getAttribute("isShown")))
@@ -124,10 +146,11 @@ Menu.createItemDisplay = (itemName, item, menuContainer) =>
 			}
 		}
 
-		//toggles list of toppings when "Select Toppings" button is clicked
+		//toggles visibility of the display of list of toppings when "Select Toppings" button is clicked
 		toppingList.setAttribute("isShown", !isShown)
 	}
 
+	//creates the button for adding item to the cart
 	const addToCartButton = document.createElement("button")
 	addToCartButton.classList.add("menu_item_cart_button")
 	addToCartButton.innerHTML = "Add to cart"
@@ -147,8 +170,8 @@ Menu.createItemDisplay = (itemName, item, menuContainer) =>
 	section.appendChild(description)
 	section.appendChild(viewToppingsButton)
 	section.appendChild(addToCartButton)
-	menuContainer.appendChild(toppingList)
 
+	menuContainer.appendChild(toppingList)
 	menuContainer.appendChild(section)
 }
 
@@ -286,6 +309,7 @@ Helper.hookEvent(window, "load", false, () =>
 	Menu.addTopping("raspberries", 0.10)
 	Menu.addTopping("black berries", 0.10)
 	Menu.addTopping("blue berries", 0.10)
+	Menu.addTopping("strawberries", 0.10)
 
 	// Dairy options
 	Menu.addTopping("blue cheese crumbles", 0.15)
@@ -349,65 +373,493 @@ Helper.hookEvent(window, "load", false, () =>
 	Menu.addTopping("rum", 0.05)
 
 	// Drink options
-	Menu.addTopping("coke", 0.50)
-	Menu.addTopping("cherry coke", 0.50)
-	Menu.addTopping("pepsi", 0.50)
-	Menu.addTopping("root beer", 0.50)
-	Menu.addTopping("hi c", 0.50)
-	Menu.addTopping("sprite", 0.50)
-	Menu.addTopping("ginger ale", 0.50)
-	Menu.addTopping("grape fanta", 0.50)
-	Menu.addTopping("orange fanta", 0.50)
-	Menu.addTopping("powerade", 0.50)
-	Menu.addTopping("lemonade brisk", 0.50)
-	Menu.addTopping("7up", 0.50)
-	Menu.addTopping("dr pepper", 0.50)
-	Menu.addTopping("minute maid lemonade", 0.50)
-	Menu.addTopping("chocolate milk", 0.50)
-	Menu.addTopping("white milk", 0.50)
+	Menu.addTopping("coke", 0.00)
+	Menu.addTopping("cherry coke", 0.00)
+	Menu.addTopping("pepsi", 0.00)
+	Menu.addTopping("root beer", 0.00)
+	Menu.addTopping("hi c", 0.00)
+	Menu.addTopping("sprite", 0.00)
+	Menu.addTopping("ginger ale", 0.00)
+	Menu.addTopping("grape fanta", 0.00)
+	Menu.addTopping("orange fanta", 0.00)
+	Menu.addTopping("powerade", 0.00)
+	Menu.addTopping("lemonade brisk", 0.00)
+	Menu.addTopping("7up", 0.00)
+	Menu.addTopping("dr pepper", 0.00)
+	Menu.addTopping("minute maid lemonade", 0.00)
+	Menu.addTopping("chocolate milk", 0.00)
+	Menu.addTopping("white milk", 0.00)
 
 	// Add items
 
 	// Healthy Haven
-	Menu.addItem("Salmon Salad", 12.00, "Grilled Salmon Salad with Citrus Vinaigrette", ["lettuce", "red onion", "asparagus", "red pepper", "green pepper", "orange pepper", "yellow pepper", "zucchini", "cucumber", "pomegranate seeds", "pumpkin seeds", "white sesame seeds", "quinoa seeds", "salmon", "lemon juice", "lemon zest", "white wine vinegar", "extra virgin olive oil", "dijon mustard", "honey", "minced garlic", "thyme", "salt", "white pepper", "black pepper", "ruby red grapefruit", "blood oranges", "orange"], "../assets/menu/food/Grilled_Salmon_Salad_with_Citrus_Vinaigrette.jpg")
-	Menu.addItem("Bell Peppers", 4.00, "Quinoa and Vegetable Stuffed Bell Peppers", ["quinoa", "chicken stock", "vegetable stock", "red pepper", "orange pepper", "yellow pepper", "black pepper", "minced garlic", "egg plant", "zucchini", "red onion", "parsely leaves", "mint leaves", "tomatoes"], "../assets/menu/food/Quinoa_and_Vegetable_Stuffed_Bell_Peppers.jpg")
-	Menu.addItem("Avocado Toast Trio", 4.00, "Avocado Toast Trio with Tomato Salsa", ["toasted", "tomatoes", "lettuce", "red onion", "asparagus", "red pepper", "green pepper", "orange pepper", "yellow pepper", "zucchini", "cucumber", "cream cheese", "eggs", "tuna", "mayonnaise", "salt", "white pepper", "black pepper", "tomato salsa"], "../assets/menu/food/Avocado_Toast_Trio_with_Tomato_Salsa.jpg")
-	Menu.addItem("Mediterranean Power Bowl", 4.00, "Mediterranean Power Bowl with Hummus", ["hummus", "chickpeas", "chicken", "beef", "shrimp", "pork", "quinoa", "tomatoes", "cucumber", "red onion", "spinach", "green pepper", "orange pepper", "red pepper", "yellow pepper", "salt", "white pepper", "black pepper", "american cheese", "cheddar cheese", "provolone cheese"], "../assets/menu/food/Mediterranean_Power_Bowl_with_Hummus.jpg")
+	Menu.addItem("Salmon Salad", 12.00, "Grilled Salmon Salad with Citrus Vinaigrette", {
+		"lettuce": true,
+		"red onion": true,
+		"asparagus": true,
+		"red pepper": true,
+		"green pepper": true,
+		"orange pepper": true,
+		"yellow pepper": true,
+		"zucchini": true,
+		"cucumber": false,
+		"pomegranate seeds": true,
+		"pumpkin seeds": false,
+		"white sesame seeds": false,
+		"quinoa seeds": false,
+		"salmon": true,
+		"lemon juice": true,
+		"lemon zest": true,
+		"white wine vinegar": true,
+		"extra virgin olive oil": true,
+		"dijon mustard": true,
+		"honey": true,
+		"minced garlic": true,
+		"thyme": true,
+		"salt": true,
+		"white pepper": true,
+		"black pepper": false,
+		"ruby red grapefruit": true,
+		"blood oranges": true,
+		"orange": false
+	}, "../assets/menu/food/Grilled_Salmon_Salad_with_Citrus_Vinaigrette.jpg")
+
+	Menu.addItem("Bell Peppers", 4.00, "Quinoa and Vegetable Stuffed Bell Peppers", {
+		"quinoa": true,
+		"chicken stock": true,
+		"vegetable stock": false,
+		"red pepper": true,
+		"orange pepper": false,
+		"yellow pepper": false,
+		"black pepper": true,
+		"minced garlic": true,
+		"egg plant": true,
+		"zucchini": true,
+		"red onion": true,
+		"parsely leaves": true,
+		"mint leaves": true,
+		"tomatoes": true
+	} , "../assets/menu/food/Quinoa_and_Vegetable_Stuffed_Bell_Peppers.jpg")
+
+	Menu.addItem("Avocado Toast Trio", 4.00, "Avocado Toast Trio with Tomato Salsa", {
+		"toasted": true,
+		"tomatoes": true,
+		"lettuce": true,
+		"red onion": true,
+		"asparagus": true,
+		"red pepper": true,
+		"green pepper": false,
+		"orange pepper": false,
+		"yellow pepper": false,
+		"zucchini": true,
+		"cucumber": false,
+		"cream cheese": true,
+		"eggs": true,
+		"tuna": true,
+		"mayonnaise": true,
+		"salt": true,
+		"white pepper": true,
+		"black pepper": false,
+		"tomato salsa": true
+	}, "../assets/menu/food/Avocado_Toast_Trio_with_Tomato_Salsa.jpg")
+
+	Menu.addItem("Mediterranean Power Bowl", 4.00, "Mediterranean Power Bowl with Hummus", {
+		"hummus": true,
+		"chickpeas": true,
+		"chicken": true,
+		"beef": false,
+		"shrimp": false,
+		"pork": false,
+		"quinoa": true,
+		"tomatoes": true,
+		"cucumber": true,
+		"red onion": true,
+		"spinach": true,
+		"green pepper": false,
+		"orange pepper": true,
+		"red pepper": true,
+		"yellow pepper": true,
+		"salt": true,
+		"white pepper": true,
+		"black pepper": false,
+		"american cheese": false,
+		"cheddar cheese": true,
+		"provolone cheese": false
+	}, "../assets/menu/food/Mediterranean_Power_Bowl_with_Hummus.jpg")
 
 	// Indulgence Oasis
-	Menu.addItem("Lobster", 15.00, "Truffle-infused Lobster Mac and Cheese", ["salt", "white pepper", "black pepper", "extra virgin olive oil", "onion", "red onion", "minced garlic", "carrots", "celery", "provolone cheese", "american cheese", "cheddar cheese"], "../assets/menu/food/Truffle-infused_Lobster_Mac_and_Cheese.jpg")
-	Menu.addItem("Filet Mignon", 8.00, "Filet Mignon with Red Wine Reduction", ["beef", "extra virgin olive oil", "black pepper", "white pepper", "red wine"], "../assets/menu/food/Filet_Mignon_with_Red_Wine_Reduction.jpg")
-	Menu.addItem("Foie Gras Crostini", 5.00, "Foie Gras Crostini with Fig Jam", ["orange zest", "extra virgin olive oil", "canola oil", "vegetable oil", "chives", "salt", "white pepper", "black pepper", "sourdough bread", "raisin bread", "fig jam", "foie gras"], "../assets/menu/food/Foie_Gras_Crostini_with_Fig_Jam.jpg")
-	Menu.addItem("Risotto", 5.00, "Black Truffle Risotto with Parmesan Crisps", ["arborio rice", "white rice", "brown rice", "minced garlic", "vegetable broth", "chicken broth", "extra virgin olive oil", "canola oil", "truffle oil", "white wine", "red wine", "parmesan cheese", "cheddar cheese", "provolone cheese", "colby jack cheese", "american cheese", "salt", "white pepper", "black pepper", "chives"], "../assets/menu/food/Black_Truffle_Risotto_with_Parmesan_Crisps.jpg")
+	Menu.addItem("Lobster", 15.00, "Truffle-infused Lobster Mac and Cheese", {
+		"salt": true,
+		"white pepper": false,
+		"black pepper": true,
+		"extra virgin olive oil": true,
+		"onion": false,
+		"red onion": false,
+		"minced garlic": true,
+		"carrots": false,
+		"celery": false,
+		"provolone cheese": false,
+		"american cheese": false,
+		"cheddar cheese": true
+	}, "../assets/menu/food/Truffle-infused_Lobster_Mac_and_Cheese.jpg")
+
+	Menu.addItem("Filet Mignon", 8.00, "Filet Mignon with Red Wine Reduction", {
+		"beef": true,
+		"extra virgin olive oil": true,
+		"black pepper": true,
+		"white pepper": false,
+		"red wine": true
+	}, "../assets/menu/food/Filet_Mignon_with_Red_Wine_Reduction.jpg")
+
+	Menu.addItem("Foie Gras Crostini", 5.00, "Foie Gras Crostini with Fig Jam", {
+		"orange zest": true,
+		"extra virgin olive oil": true,
+		"canola oil": false,
+		"vegetable oil": false,
+		"chives": true,
+		"salt": true,
+		"white pepper": false,
+		"black pepper": true,
+		"sourdough bread": true,
+		"raisin bread": false,
+		"fig jam": true,
+		"foie gras": true
+	}, "../assets/menu/food/Foie_Gras_Crostini_with_Fig_Jam.jpg")
+
+	Menu.addItem("Risotto", 5.00, "Black Truffle Risotto with Parmesan Crisps", {
+		"arborio rice": true,
+		"white rice": false,
+		"brown rice": false,
+		"minced garlic": true,
+		"vegetable broth": true,
+		"chicken broth": false,
+		"extra virgin olive oil": true,
+		"canola oil": true,
+		"truffle oil": true,
+		"white wine": true,
+		"red wine": false,
+		"parmesan cheese": true,
+		"cheddar cheese": false,
+		"provolone cheese": false,
+		"colby jack cheese": false,
+		"american cheese": false,
+		"salt": true,
+		"white pepper": true,
+		"black pepper": false,
+		"chives": true
+	}, "../assets/menu/food/Black_Truffle_Risotto_with_Parmesan_Crisps.jpg")
 
 	// Fast Fusion Corner
-	Menu.addItem("Burger", 6.00, "Gourmet Beef Burger with Chipotle Aioli", ["cilantro", "minced garlic", "worcestershire sauce", "eggs", "paprika", "cumin", "onion powder", "garlic powder", "salt", "white pepper", "black pepper", "beef", "chicken", "pork", "mayonnaise", "lime juice", "lemon juice", "chiles", "hamburger bun", "colby jack cheese", "american cheese", "cheddar cheese", "provolone cheese", "red onion", "jalapeño", "pickle", "lettuce"], "../assets/menu/food/Gourmet_Beef_Burger_with_Chipotle_Aioli.jpg")
-	Menu.addItem("Pesto Chicken Panini", 6.00, "Pesto Chicken Panini with Sundried Tomatoes", ["basil leaves", "pine nuts", "cashew nuts", "peanuts", "parmesan cheese", "extra virgin olive oil", "minced garlic", "salt", "white pepper", "black pepper", "chicken", "beef", "pork", "mozzarella cheese", "tomatoes", "sourdough bread", "raisin bread", "french bread"], "../assets/menu/food/Pesto_Chicken_Panini_with_Sundried_Tomatoes.jpg")
-	Menu.addItem("Tacos", 3.00, "Street-Style Tacos with Mango Salsa", ["mango", "lime juice", "red pepper", "yellow pepper", "orange pepper", "green pepper", "red onion", "jalapeño", "cilantro", "avocado", "sour cream", "garlic powder", "salt", "brown sugar", "white sugar", "cane sugar", "white fish", "chili powder", "beans", "tortilla", "sourdough bread"], "../assets/menu/food/Street-Style_Tacos_with_Mango_Salsa.jpg")
-	Menu.addItem("BBQ Pulled Pork Sliders", 8.00, "BBQ Pulled Pork Sliders with Coleslaw", ["ketchup", "mustard", "mayonnaise", "brown sugar", "white sugar", "cane sugar", "salt", "black pepper", "white pepper", "minced garlic", "white wine vinegar", "cider vinegar", "worcestershire sauce", "cajun seasoning", "red onion", "onion", "chicken stock", "red cabbage", "green cabbage", "carrots", "hamburger bun", "sourdough bread", "french bread"], "../assets/menu/food/BBQ_Pulled_Pork_Sliders_with_Coleslaw.jpg")
+	Menu.addItem("Burger", 6.00, "Gourmet Beef Burger with Chipotle Aioli", {
+		"cilantro": true,
+		"minced garlic": true,
+		"worcestershire sauce": true,
+		"eggs": false,
+		"paprika": true,
+		"cumin": true,
+		"onion powder": true,
+		"garlic powder": false,
+		"salt": true,
+		"white pepper": false,
+		"black pepper": true,
+		"beef": true,
+		"chicken": false,
+		"pork": false,
+		"mayonnaise": false,
+		"lime juice": false,
+		"lemon juice": false,
+		"chiles": false,
+		"hamburger bun": true,
+		"colby jack cheese": false,
+		"american cheese": true,
+		"cheddar cheese": false,
+		"provolone cheese": false,
+		"red onion": false,
+		"jalapeño": false,
+		"pickle": false,
+		"lettuce": true,
+		"tomatoes": true
+	}, "../assets/menu/food/Gourmet_Beef_Burger_with_Chipotle_Aioli.jpg")
+
+	Menu.addItem("Pesto Chicken Panini", 6.00, "Pesto Chicken Panini with Sundried Tomatoes", {
+		"basil leaves": true,
+		"pine nuts": true,
+		"cashew nuts": false,
+		"peanuts": false,
+		"parmesan cheese": true,
+		"extra virgin olive oil": true,
+		"minced garlic": true,
+		"salt": true,
+		"white pepper": false,
+		"black pepper": true,
+		"chicken": true,
+		"beef": false,
+		"pork": false,
+		"mozzarella cheese": true,
+		"tomatoes": true,
+		"sourdough bread": true,
+		"raisin bread": false,
+		"french bread": false
+	}, "../assets/menu/food/Pesto_Chicken_Panini_with_Sundried_Tomatoes.jpg")
+
+	Menu.addItem("Tacos", 3.00, "Street-Style Tacos with Mango Salsa", {
+		"mango": true,
+		"lime juice": true,
+		"red pepper": true,
+		"yellow pepper": true,
+		"orange pepper": false,
+		"green pepper": true,
+		"red onion": true,
+		"jalapeño": false,
+		"cilantro": true,
+		"avocado": true,
+		"sour cream": false,
+		"garlic powder": true,
+		"salt": true,
+		"brown sugar": true,
+		"white sugar": false,
+		"cane sugar": false,
+		"white fish": false,
+		"pork": true,
+		"beef": false,
+		"chili powder": false,
+		"beans": false,
+		"tortilla": true,
+		"sourdough bread": false
+	}, "../assets/menu/food/Street-Style_Tacos_with_Mango_Salsa.jpg")
+
+	Menu.addItem("BBQ Pulled Pork Sliders", 8.00, "BBQ Pulled Pork Sliders with Coleslaw", {
+		"ketchup": false,
+		"mustard": false,
+		"mayonnaise": false,
+		"brown sugar": true,
+		"white sugar": false,
+		"cane sugar": false,
+		"salt": true,
+		"black pepper": true,
+		"white pepper": false,
+		"minced garlic": true,
+		"white wine vinegar": true,
+		"cider vinegar": true,
+		"worcestershire sauce": true,
+		"cajun seasoning": false,
+		"red onion": true,
+		"onion": false,
+		"chicken stock": true,
+		"red cabbage": false,
+		"green cabbage": true,
+		"carrots": false,
+		"hamburger bun": true,
+		"sourdough bread": false,
+		"french bread": false
+	}, "../assets/menu/food/BBQ_Pulled_Pork_Sliders_with_Coleslaw.jpg")
 
 	// Guilt-Free Delights
-	Menu.addItem("Pizza", 5.00, "Cauliflower Crust Margherita Pizza", ["cauliflower", "parmesan cheese", "mozzarella cheese", "provolone cheese", "cheddar cheese", "american cheese", "almond flour", "corn flour", "eggs", "garlic powder", "pizza sauce", "tomatoes", "basil leaves"], "../assets/menu/food/Cauliflower_Crust_Margherita_Pizza.jpg")
-	Menu.addItem("Zucchini Noodles", 2.00, "Zucchini Noodles with Basil Pesto", ["zucchini", "basil leaves", "minced garlic", "extra virgin olive oil", "lemon juice", "parmesan cheese", "american cheese", "cheddar cheese", "provolone cheese", "colby jack cheese", "mozzarella cheese", "black pepper", "white pepper", "tomatoes"], "../assets/menu/food/Zucchini_Noodles_with_Basil_Pesto.jpg")
-	Menu.addItem("Vegan Thai Coconut Curry", 5.00, "Vegan Thai Coconut Curry with Tofu", ["tofu", "coconut milk", "red curry paste", "salt", "white pepper", "black pepper", "cornstarch", "coconut oil", "red onion", "onion", "minced garlic", "broccoli", "red pepper", "green pepper", "yellow pepper", "orange pepper", "carrots", "white sugar", "brown sugar", "soy sauce", "lime juice", "basil leaves", "sriracha"], "../assets/menu/food/Vegan_Thai_Coconut_Curry_with_Tofu.jpg")
-	Menu.addItem("Pudding Parfait", 4.00, "Chia Seed Pudding Parfait with Mixed Berries", ["yogurt", "chia seeds", "honey", "vanilla extract", "raspberries", "black berries", "blue berries"], "../assets/menu/food/Chia_Seed_Pudding_Parfait_with_Mixed_Berries.jpg")
+	Menu.addItem("Pizza", 5.00, "Cauliflower Crust Margherita Pizza", {
+		"cauliflower": true,
+		"parmesan cheese": true,
+		"mozzarella cheese": false,
+		"provolone cheese": false,
+		"cheddar cheese": false,
+		"american cheese": false,
+		"almond flour": true,
+		"corn flour": false,
+		"eggs": true,
+		"garlic powder": true,
+		"pizza sauce": true,
+		"tomatoes": true,
+		"basil leaves": true
+	}, "../assets/menu/food/Cauliflower_Crust_Margherita_Pizza.jpg")
+
+	Menu.addItem("Zucchini Noodles", 2.00, "Zucchini Noodles with Basil Pesto", {
+		"zucchini": true,
+		"basil leaves": true,
+		"minced garlic": true,
+		"extra virgin olive oil": true,
+		"lemon juice": true,
+		"parmesan cheese": true,
+		"american cheese": false,
+		"cheddar cheese": false,
+		"provolone cheese": false,
+		"colby jack cheese": false,
+		"mozzarella cheese": false,
+		"black pepper": true,
+		"white pepper": false,
+		"tomatoes": false
+	}, "../assets/menu/food/Zucchini_Noodles_with_Basil_Pesto.jpg")
+
+	Menu.addItem("Vegan Thai Coconut Curry", 5.00, "Vegan Thai Coconut Curry with Tofu", {
+		"tofu": true,
+		"coconut milk": true,
+		"red curry paste": true,
+		"salt": true,
+		"white pepper": true,
+		"black pepper": false,
+		"cornstarch": true,
+		"coconut oil": true,
+		"red onion": false,
+		"onion": false,
+		"minced garlic": true,
+		"broccoli": true,
+		"red pepper": true,
+		"green pepper": true,
+		"yellow pepper": true,
+		"orange pepper": true,
+		"carrots": true,
+		"white sugar": true,
+		"brown sugar": false,
+		"soy sauce": true,
+		"lime juice": true,
+		"basil leaves": true,
+		"sriracha": true
+	}, "../assets/menu/food/Vegan_Thai_Coconut_Curry_with_Tofu.jpg")
+
+	Menu.addItem("Pudding Parfait", 4.00, "Chia Seed Pudding Parfait with Mixed Berries", {
+		"yogurt": true,
+		"chia seeds": true,
+		"honey": true,
+		"vanilla extract": true,
+		"strawberries": true,
+		"raspberries": true,
+		"black berries": true,
+		"blue berries": true
+	}, "../assets/menu/food/Chia_Seed_Pudding_Parfait_with_Mixed_Berries.jpg")
 
 	// Decadent Dessert Haven
-	Menu.addItem("Lava Cake", 3.00, "Molten Chocolate/Vanilla Lava Cake", ["milk chocolate", "vanilla", "unsalted butter", "salted butter", "salt", "vanilla extract", "eggs", "confectioners’ sugar", "brown sugar", "white sugar", "cane sugar", "whipped cream", "ice cream", "raspberries", "blue berries", "black berries"], "../assets/menu/food/Molten_Chocolate_Lava_Cake_with_Raspberry_Coulis.jpg")
-	Menu.addItem("Sundae", 3.00, "Sundae Caramelized Banana Foster", ["salted butter", "unsalted butter", "brown sugar", "white sugar", "cane sugar", "banana", "rum", "vanilla ice cream", "whipped cream", "pecans", "cashew nuts", "peanuts"], "../assets/menu/food/Sundae_Caramelized_Banana_Foster.jpg")
-	Menu.addItem("Mousse", 3.00, "Pistachio White Chocolate Mousse", ["white chocolate", "dark chocolate", "milk chocolate", "pistachio milk", "whipped cream", "cream cheese", "powdered sugar", "white sugar", "brown sugar", "cane sugar", "confectioners’ sugar", "pistachio paste"], "../assets/menu/food/Pistachio_White_Chocolate_Mousse.jpg")
-	Menu.addItem("Tart", 3.00, "Raspberry Almond Tart with Vanilla Bean Cream", ["white sugar", "brown sugar", "cane sugar", "confectioners’ sugar", "powdered sugar", "salt", "unsalted butter", "salted butter", "eggs", "cornstarch", "whole milk", "coconut milk", "almond milk", "pistachio milk", "vanilla bean", "vanilla", "raspberries", "blue berries", "black berries", "icing sugar"], "../assets/menu/food/Raspberry_Almond_Tart_with_Vanilla_Bean_Cream.jpg")
+	Menu.addItem("Lava Cake", 3.00, "Molten Chocolate/Vanilla Lava Cake", {
+		"milk chocolate": true,
+		"vanilla": false,
+		"unsalted butter": true,
+		"salted butter": false,
+		"salt": true,
+		"vanilla extract": true,
+		"eggs": true,
+		"confectioners’ sugar": true,
+		"brown sugar": false,
+		"white sugar": false,
+		"cane sugar": false,
+		"whipped cream": true,
+		"ice cream": true,
+		"raspberries": true,
+		"blue berries": false,
+		"strawberries": false,
+		"black berries": false
+	}, "../assets/menu/food/Molten_Chocolate_Lava_Cake_with_Raspberry_Coulis.jpg")
+
+	Menu.addItem("Sundae", 3.00, "Sundae Caramelized Banana Foster", {
+		"salted butter": false,
+		"unsalted butter": true,
+		"brown sugar": true,
+		"white sugar": false,
+		"cane sugar": false,
+		"banana": true,
+		"rum": true,
+		"vanilla ice cream": true,
+		"whipped cream": true,
+		"pecans": true,
+		"cashew nuts": false,
+		"peanuts": false
+	}, "../assets/menu/food/Sundae_Caramelized_Banana_Foster.jpg")
+
+	Menu.addItem("Mousse", 3.00, "Pistachio White Chocolate Mousse", {
+		"white chocolate": true,
+		"dark chocolate": false,
+		"milk chocolate": false,
+		"pistachio milk": true,
+		"whipped cream": true,
+		"cream cheese": true,
+		"powdered sugar": true,
+		"white sugar": false,
+		"brown sugar": false,
+		"cane sugar": false,
+		"confectioners’ sugar": false,
+		"pistachio paste": true
+	}, "../assets/menu/food/Pistachio_White_Chocolate_Mousse.jpg")
+
+	Menu.addItem("Tart", 3.00, "Raspberry Almond Tart with Vanilla Bean Cream", {
+		"white sugar": true,
+		"brown sugar": false,
+		"cane sugar": false,
+		"confectioners’ sugar": false,
+		"powdered sugar": false,
+		"salt": true,
+		"unsalted butter": true,
+		"salted butter": false,
+		"eggs": true,
+		"cornstarch": true,
+		"whole milk": true,
+		"coconut milk": false,
+		"almond milk": false,
+		"pistachio milk": false,
+		"vanilla bean": true,
+		"vanilla": true,
+		"raspberries": true,
+		"blue berries": false,
+		"strawberries": false,
+		"black berries": false,
+		"icing sugar": true
+	}, "../assets/menu/food/Raspberry_Almond_Tart_with_Vanilla_Bean_Cream.jpg")
 
 	// Exotic Elixirs Bar
-	Menu.addItem("Detox Water", 1.00, "Hibiscus Infused Detox Water", ["hibiscus flowers", "sweetener", "ice"], "../assets/menu/drinks/Hibiscus_Infused_Detox_Water.jpg")
-	Menu.addItem("Smoothie", 2.00, "Mango Tango Smoothie with Chia Seeds", ["banana", "mango", "spinach", "ginger juice", "ginger puree", "chia seeds", "ice"], "../assets/menu/drinks/Mango_Tango_Smoothie_with_Chia_Seeds.jpg")
-	Menu.addItem("Sparkler", 1.00, "Basil Lemonade Sparkler", ["lemon juice", "basil leaves", "carbonated water", "maple syrup", "ice"], "../assets/menu/drinks/Basil_Lemonade_Sparkler.jpg")
-	Menu.addItem("Matcha Latte", 2.00, "Matcha Latte with Almond Milk", ["matcha powder", "almond milk", "coconut milk", "torani sugar-free coconut syrup"], "../assets/menu/drinks/Matcha_Latte_with_Almond_Milk.jpg")
+	Menu.addItem("Detox Water", 1.00, "Hibiscus Infused Detox Water", {
+		"hibiscus flowers": true,
+		"sweetener": true,
+		"ice": true
+	}, "../assets/menu/drinks/Hibiscus_Infused_Detox_Water.jpg")
+
+	Menu.addItem("Smoothie", 2.00, "Mango Tango Smoothie with Chia Seeds", {
+		"banana": true,
+		"mango": true,
+		"spinach": true,
+		"ginger juice": true,
+		"ginger puree": true,
+		"chia seeds": true,
+		"ice": true
+	}, "../assets/menu/drinks/Mango_Tango_Smoothie_with_Chia_Seeds.jpg")
+
+	Menu.addItem("Sparkler", 1.00, "Basil Lemonade Sparkler", {
+		"lemon juice": true,
+		"basil leaves": true,
+		"carbonated water": true,
+		"maple syrup": false,
+		"ice": true
+	}, "../assets/menu/drinks/Basil_Lemonade_Sparkler.jpg")
+
+	Menu.addItem("Matcha Latte", 2.00, "Matcha Latte with Almond Milk", {
+		"matcha powder": true,
+		"almond milk": true,
+		"coconut milk": false,
+		"torani sugar-free coconut syrup": true
+	}, "../assets/menu/drinks/Matcha_Latte_with_Almond_Milk.jpg")
 
 	// Drinks
-	Menu.addItem("Water", 0.50, "Water", [], "../assets/menu/drinks/Water.jpg")
-	Menu.addItem("Milk", 0.50, "Milk", ["chocolate milk", "white milk", "whole milk", "coconut milk", "almond milk", "pistachio milk"], "../assets/menu/drinks/Milk.jpg")
-	Menu.addItem("Fountain Drink", 0.50, "Coke/Pepsi product", ["coke", "cherry coke", "pepsi", "root beer", "hi c", "sprite", "ginger ale", "grape fanta", "orange fanta", "powerade", "lemonade brisk", "7up", "dr pepper", "minute maid lemonade"], "../assets/menu/drinks/Fountain_Drink.jpg")
+	Menu.addItem("Water", 0.50, "Water", {}, "../assets/menu/drinks/Water.jpg")
+
+	Menu.addItem("Milk", 0.50, "Milk", {
+		"chocolate milk": true,
+		"white milk": true,
+		"whole milk": true,
+		"coconut milk": true,
+		"almond milk": true,
+		"pistachio milk": true
+	}, "../assets/menu/drinks/Milk.jpg")
+
+	Menu.addItem("Fountain Drink", 0.50, "Coke/Pepsi product", {
+		"coke": true,
+		"cherry coke": false,
+		"pepsi": false,
+		"root beer": false,
+		"hi c": false,
+		"sprite": false,
+		"ginger ale": false,
+		"grape fanta": false,
+		"orange fanta": false,
+		"powerade": false,
+		"lemonade brisk": false,
+		"7up": false,
+		"dr pepper": false,
+		"minute maid lemonade": false
+	}, "../assets/menu/drinks/Fountain_Drink.jpg")
 
 	const menuContainer = document.createElement("div")
 	menuContainer.id = "menu_container"
