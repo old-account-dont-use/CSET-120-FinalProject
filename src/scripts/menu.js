@@ -131,12 +131,15 @@ Menu.createItemDisplay = (itemName, item, menuContainer) =>
 	const addToCartButton = document.createElement("button")
 	addToCartButton.classList.add("menu_item_cart_button")
 	addToCartButton.innerHTML = "Add to cart"
+
+	const cartContainer = document.querySelector("#cart_container")
+
 	//add item to cart along with selected toppings
 	addToCartButton.onclick = (event) =>
 	{
-
+		const cartRow = document.createElement("div")
+		cartRow.classList.add("cart_row")
 	}
-
 
 	section.appendChild(image)
 	section.appendChild(name)
@@ -148,6 +151,25 @@ Menu.createItemDisplay = (itemName, item, menuContainer) =>
 
 	menuContainer.appendChild(section)
 }
+
+Menu.isDuplicateItem = (itemName, toppingList, cartItems) =>
+{
+
+}
+
+Menu.createCartDisplay = (menuContainer) =>
+{
+	const cartContainer = document.createElement("div")
+	cartContainer.id = "cart_container"
+
+	const cartHeader = document.createElement("h2")
+	cartHeader.id = "cart_header"
+	cartHeader.innerHTML = "Cart"
+
+	cartContainer.appendChild(cartHeader)
+	menuContainer.appendChild(cartContainer)
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////
 Helper.hookEvent(window, "load", false, () =>
@@ -371,7 +393,7 @@ Helper.hookEvent(window, "load", false, () =>
 	Menu.addItem("Pudding Parfait", 4.00, "Chia Seed Pudding Parfait with Mixed Berries", ["yogurt", "chia seeds", "honey", "vanilla extract", "raspberries", "black berries", "blue berries"], "../assets/menu/food/Chia_Seed_Pudding_Parfait_with_Mixed_Berries.jpg")
 
 	// Decadent Dessert Haven
-	Menu.addItem("Lava Cake", 3.00, "Molten Chocolate/Vanilla Lava Cake with Raspberry Coulis", ["milk chocolate", "vanilla", "unsalted butter", "salted butter", "salt", "vanilla extract", "eggs", "confectioners’ sugar", "brown sugar", "white sugar", "cane sugar", "whipped cream", "ice cream", "raspberries", "blue berries", "black berries"], "../assets/menu/food/Molten_Chocolate_Lava_Cake_with_Raspberry_Coulis.jpg")
+	Menu.addItem("Lava Cake", 3.00, "Molten Chocolate/Vanilla Lava Cake", ["milk chocolate", "vanilla", "unsalted butter", "salted butter", "salt", "vanilla extract", "eggs", "confectioners’ sugar", "brown sugar", "white sugar", "cane sugar", "whipped cream", "ice cream", "raspberries", "blue berries", "black berries"], "../assets/menu/food/Molten_Chocolate_Lava_Cake_with_Raspberry_Coulis.jpg")
 	Menu.addItem("Sundae", 3.00, "Sundae Caramelized Banana Foster", ["salted butter", "unsalted butter", "brown sugar", "white sugar", "cane sugar", "banana", "rum", "vanilla ice cream", "whipped cream", "pecans", "cashew nuts", "peanuts"], "../assets/menu/food/Sundae_Caramelized_Banana_Foster.jpg")
 	Menu.addItem("Mousse", 3.00, "Pistachio White Chocolate Mousse", ["white chocolate", "dark chocolate", "milk chocolate", "pistachio milk", "whipped cream", "cream cheese", "powdered sugar", "white sugar", "brown sugar", "cane sugar", "confectioners’ sugar", "pistachio paste"], "../assets/menu/food/Pistachio_White_Chocolate_Mousse.jpg")
 	Menu.addItem("Tart", 3.00, "Raspberry Almond Tart with Vanilla Bean Cream", ["white sugar", "brown sugar", "cane sugar", "confectioners’ sugar", "powdered sugar", "salt", "unsalted butter", "salted butter", "eggs", "cornstarch", "whole milk", "coconut milk", "almond milk", "pistachio milk", "vanilla bean", "vanilla", "raspberries", "blue berries", "black berries", "icing sugar"], "../assets/menu/food/Raspberry_Almond_Tart_with_Vanilla_Bean_Cream.jpg")
@@ -396,4 +418,5 @@ Helper.hookEvent(window, "load", false, () =>
 		Menu.createItemDisplay(itemName, Menu.items.get(itemName), menuContainer)
 
 	document.body.appendChild(menuContainer)
+	Menu.createCartDisplay(menuContainer)
 })

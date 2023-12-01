@@ -344,6 +344,29 @@ html, body
 	background-attachment: fixed;
 }
 
+#home_header_title
+ {
+ 	display: flex;
+ 	flex-direction: column;
+
+ 	position: absolute;
+
+ 	width: 100%;
+
+ 	top: 50%;
+ 	transform: translateY(-50%);
+}
+
+.home_header_title_row
+{
+ 	display: flex;
+ 	justify-content: center;
+
+ 	font-size: 6rem;
+
+	color: white;
+}
+
 .home_section
 {
 	padding-top: 100px;
@@ -825,14 +848,14 @@ html, body
 
 	padding: 10px;
 
-	border-radius: 5px;
+	border-radius: 12px;
 
 	overflow: scroll;
 
 	width: 20em;
 	height: 30em;
 
-	/* background-color: white; */
+	background-color: rgba(255, 255, 255, 0.7);
 
 	font-size: large;
 }
