@@ -205,7 +205,7 @@ AccountPage.setupEntryForm = (form, mode) =>
 
 			const preText = mode == AccountPage.ENTRY_MODE_NEW ? "Already have an account? " : "Don't remember your password? "
 			const linkText = mode == AccountPage.ENTRY_MODE_NEW ? "Login" : "Forgot Password"
-			const subMode = mode ==AccountPage.ENTRY_MODE_NEW ? AccountPage.ENTRY_MODE_EXISTING : AccountPage.ENTRY_MODE_FORGOT
+			const subMode = mode == AccountPage.ENTRY_MODE_NEW ? AccountPage.ENTRY_MODE_EXISTING : AccountPage.ENTRY_MODE_FORGOT
 			const subText = AccountPage.createSubText(preText, linkText, subMode, false)
 
 			form.appendChild(subText)
@@ -365,6 +365,7 @@ AccountPage.setupAccountSidebar = (container, SIDEBAR_PROPERTIES) =>
 			button.innerHTML = property
 			{
 				button.classList.add("account_page_sidebar_link")
+				button.classList.add("account_page_button")
 				button.classList.add("glass_morphism_weak")
 
 				button.onclick = (event) =>
@@ -398,6 +399,53 @@ AccountPage.setupAccountPage = (SIDEBAR_PROPERTIES) =>
 		container.appendChild(page)
 
 	document.body.appendChild(container)
+}
+
+/*
+*
+*	Page stuff
+*
+*/
+
+/*
+*	Creates order history elements
+*/
+AccountPage.loadOrderHistory = () =>
+{
+	const account_page_orders = document.getElementById("account_page_orders")
+	if (!account_page_orders) return
+
+	const body = document.getElementById("account_page_orders_table_body")
+	if (!body) return
+
+	body.innerHTML = ""
+
+	const orderHistory = [ "" ]//AccountManager.g_AccountData.orderHistory
+	if (orderHistory.length < 1) return
+
+	for (const order of orderHistory)
+	{
+		const tr = document.createElement("tr")
+		{
+			const id = document.createElement("td")
+			id.innerHTML = order.id
+
+			const date = document.createElement("td")
+			date.innerHTML = "1234"
+
+			const items = document.createElement("td")
+			items.innerHTML = order.items.join(", ")
+
+			const amount = document.createElement("td")
+			amount.innerHTML = `$${Helper.priceify(order.amount)}`
+
+			tr.appendChild(id)
+			tr.appendChild(date)
+			tr.appendChild(items)
+			tr.appendChild(amount)
+		}
+		body.appendChild(tr)
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////

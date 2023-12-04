@@ -90,7 +90,7 @@
 					<p>********</p>
 				</div>
 
-				<button onclick="if (AccountManager.resetAccountPasswordPrompt(AccountManager.g_AccountData.email)) AccountManager.logout(true)" id="account_page_reset_password_button" class="glass_morphism_weak">Reset Password</button>
+				<button onclick="if (AccountManager.resetAccountPasswordPrompt(AccountManager.g_AccountData.email)) AccountManager.logout(true)" id="account_page_reset_password_button" class="account_page_button glass_morphism_weak">Reset Password</button>
 			</div>
 		</div>
 
@@ -99,7 +99,22 @@
 		</div>
 
 		<div id="account_page_orders" class="account_page glass_morphism_weak" tabname="Orders" active=false>
-			orders
+			<button onclick="AccountPage.loadOrderHistory()" class="account_page_button glass_morphism_weak">Load Order History</button>
+
+			<table id="account_page_orders_table">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Date</th>
+						<th>Items</th>
+						<th>Amount</th>
+					</tr>
+				</thead>
+
+				<tbody id="account_page_orders_table_body">
+
+				</tbody>
+			</table>
 		</div>
 
 		<div id="account_page_notifications" class="account_page glass_morphism_weak" tabname="Notifications" active=false>
