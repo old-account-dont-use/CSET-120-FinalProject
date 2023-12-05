@@ -100,6 +100,16 @@ Helper.getBool = (bool, fallback = false) =>
 }
 
 /*
+*	Clamp
+*/
+Helper.clamp = (x, y, z) =>
+{
+	if (x < y) return y
+	if (x > z) return z
+	return x
+}
+
+/*
 *	Converts a string or number to a price, throws an error if parsing failed
 */
 Helper.priceify = (data) =>

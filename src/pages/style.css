@@ -1104,12 +1104,10 @@ html, body
 	border-bottom: 2px solid gray;
 }
 
-/*/////////////////////make this not scrollable///////////////////////////////*/
+
 #cart_table th
 {
 	font-size: 1.3rem;
-
-	position: sticky;
 }
 
 #cart_table tr:hover
@@ -1201,11 +1199,48 @@ html, body
 	background-color: rgba(255, 51, 51, 1)
 }
 
+#cart_total_section
+{
+	width: 80%;
+	height: 3em;
+
+	align-content: space-evenly;
+
+	margin: 1em auto;
+}
+
+.cart_total_container
+{
+	align-items: center;
+}
+
+.cart_total_label
+{
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+.cart_total_value
+{
+	margin-top: 0;
+	margin-bottom: 0;
+
+	position: absolute;
+
+	left: 20%;
+}
+
+#cart_total_tip_value::-webkit-outer-spin-button,
+#cart_total_tip_value::-webkit-inner-spin-button
+{
+	-webkit-appearance: none;
+}
+
 #cart_payment_section_container
 {
 	width: 80%;
 
-	margin: 2rem auto;
+	margin: 4em auto 2em auto;
 
 	display: flex;
 	justify-content: space-evenly;

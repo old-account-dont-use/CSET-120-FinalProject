@@ -3,6 +3,8 @@ let Menu = new Map()
 Menu.toppings = new Map()
 Menu.items = new Map()
 
+Menu.cart = [];
+
 /*
 *	Adds a new topping to the menu
 */
@@ -158,6 +160,46 @@ Menu.createItemDisplay = (itemName, item, menuContainer) =>
 	//add item to cart along with selected toppings
 	addToCartButton.onclick = (event) =>
 	{
+		const name = addToCartButton.parentNode.childNodes[1].innerHTML //name of item to be added to cart
+
+		//array form of the toppings that are selected
+		const listOfWantedToppingsCheckboxes = Array.from(toppingList.childNodes).filter((element) =>
+		{
+			return element.checked
+		})
+
+		//getting name of toppings into array
+		let listOfWantedToppingsName = []
+		for (const topping of listOfWantedToppingsCheckboxes)
+		{
+			const toppingLabelText = topping.nextSibling.innerHTML
+
+			const separationIndex = toppingLabelText.indexOf("$") //index that separates name and price of topping
+
+			const name = toppingLabelText.substring(0, separationIndex - 1)
+
+			listOfWantedToppingsName.push(name)
+		}
+
+		const index = Menu.findDuplicateItem(name, listOfWantedToppingsName, Menu.cart)
+
+		//handling duplicate items
+		if (index != -1){
+
+			Menu.cart[index].quantity = Helper.clamp(Menu.cart[index].quantity + 1, 0, 10)
+
+			const tableRows = Array.from(document.querySelectorAll(".cart_table_row"))
+			const row = tableRows[index]
+
+			const quantityInput = row.querySelector(".cart_quantity_input")
+
+			quantityInput.value = Menu.cart[index].quantity
+			quantityInput.updateValue()
+			quantityInput.onchange({ target: quantityInput })
+
+			return
+		}
+
 		//stores the total price of the selected toppings
 		let totalToppingsPrice = 0
 
@@ -168,64 +210,61 @@ Menu.createItemDisplay = (itemName, item, menuContainer) =>
 
 		//creating the item name
 		const cartItemName = document.createElement("td")
+
+		cartItemName.classList.add("cart_item_name")
+
+		//creating the actual item name on cart
+		const cartItemItemName = document.createElement("h1")
+		cartItemItemName.innerHTML = `${name}`
+		cartItemItemName.classList.add("cart_item_item_name")
+
+		//creating section for the toppings
+		const cartItemToppingsSection = document.createElement("p")
+		cartItemToppingsSection.classList.add("cart_item_toppings_section")
+		cartItemToppingsSection.classList.add("flexbox_column")
+
+
+
+		let count = 0;
+		//adding toppings to the table
+		for (const topping of listOfWantedToppingsCheckboxes)
 		{
-			const name = addToCartButton.parentNode.childNodes[1].innerHTML //name of item
+			//creating container for the topping
+			const toppingContainer = document.createElement("div")
+			toppingContainer.classList.add("flexbox")
+			toppingContainer.classList.add("cart_item_topping_container")
 
-			//array form of the toppings that are selected
-			const listOfWantedToppingsCheckboxes = Array.from(toppingList.childNodes).filter((element) =>
-			{
-				return element.checked
-			})
+			// const toppingLabelText = topping.nextSibling.innerHTML
 
-			cartItemName.classList.add("cart_item_name")
+			// const separationIndex = toppingLabelText.indexOf("$") //index that separates name and price of topping
 
-			//creating the actual item name on cart
-			const cartItemItemName = document.createElement("h1")
-			cartItemItemName.innerHTML = `${name}`
-			cartItemItemName.classList.add("cart_item_item_name")
+			//creating the name of the topping
+			const toppingName = document.createElement("h4")
 
-			//creating section for the toppings
-			const cartItemToppingsSection = document.createElement("p")
-			cartItemToppingsSection.classList.add("cart_item_toppings_section")
-			cartItemToppingsSection.classList.add("flexbox_column")
-			cartItemToppingsSection.classList.add("glass_morphism_weak")
+			// const name = toppingLabelText.substring(0, separationIndex - 1)
+			const name = listOfWantedToppingsName[count]
+			count++
+			toppingName.innerHTML = name
+			toppingName.classList.add("cart_topping_name")
 
-			//adding toppings to the table
-			for (const topping of listOfWantedToppingsCheckboxes)
-			{
-				//creating container for the topping
-				const toppingContainer = document.createElement("div")
-				toppingContainer.classList.add("flexbox")
-				toppingContainer.classList.add("cart_item_topping_container")
 
-				const toppingLabelText = topping.nextSibling.innerHTML
+			//creating the price of the topping
+			let price = Number(Helper.priceify(Menu.toppings.get(name).price))
+			totalToppingsPrice += price
 
-				const separationIndex = toppingLabelText.indexOf("$") //index that separates name and price of topping
+			const toppingPrice = document.createElement("p")
+			toppingPrice.innerHTML = `$${Helper.priceify(price)}`
+			toppingPrice.classList.add("cart_topping_price")
 
-				//creating the name of the topping
-				const toppingName = document.createElement("h4")
-				const name = toppingLabelText.substring(0, separationIndex - 1)
-				toppingName.innerHTML = name
-				toppingName.classList.add("cart_topping_name")
+			toppingContainer.appendChild(toppingName)
+			toppingContainer.appendChild(toppingPrice)
 
-				//creating the price of the topping
-				let price = Number(Helper.priceify(Menu.toppings.get(name).price))
-
-				const toppingPrice = document.createElement("p")
-				toppingPrice.innerHTML = `$${price}`
-				toppingPrice.classList.add("cart_topping_price")
-
-				totalToppingsPrice += price
-
-				toppingContainer.appendChild(toppingName)
-				toppingContainer.appendChild(toppingPrice)
-
-				cartItemToppingsSection.appendChild(toppingContainer)
-			}
-
-			cartItemName.appendChild(cartItemItemName)
-			cartItemName.appendChild(cartItemToppingsSection)
+			cartItemToppingsSection.appendChild(toppingContainer)
 		}
+
+		cartItemName.appendChild(cartItemItemName)
+		cartItemName.appendChild(cartItemToppingsSection)
+
 
 		//creating the input for the item quantity
 		const cartItemQuantitySection = document.createElement("td")
@@ -248,25 +287,26 @@ Menu.createItemDisplay = (itemName, item, menuContainer) =>
 			cartItemQuantityInput.classList.add("cart_quantity_input")
 			cartItemQuantityInput.classList.add("center_text")
 
+			cartItemQuantityInput.updateValue = () =>
+			{
+				const min = Helper.getNumber(cartItemQuantityInput.getAttribute("min"), false, 0)
+				const max = Helper.getNumber(cartItemQuantityInput.getAttribute("max"), false, 10)
+
+				const amount = Helper.clamp(Helper.getNumber(cartItemQuantityInput.value), min, max)
+				cartItemQuantityInput.value = Helper.getString(amount)
+			}
 
 			cartItemQuantityInput.onkeyup = (event) =>
 			{
 				event.preventDefault()
-				const enterKey = 13
 
-				if (event.keyCode == enterKey)
-				{
-					//ensures that the value of the input is within the set max
-					if (cartItemQuantityInput.value > cartItemQuantityInput.max)
-						cartItemQuantityInput.value = cartItemQuantityInput.max
+				if (Helper.isNumber(event.keyCode) && event.keyCode != 13) return
+				if (Helper.isString(event.key) && event.key.toLowerCase() !== "enter") return
+				if (Helper.isString(event.code) && event.code.toLowerCase() !== "enter") return
 
-					//ensures that the value of the input is within the set min
-					if(cartItemQuantityInput.value < cartItemQuantityInput.min)
-						cartItemQuantityInput.value = cartItemQuantityInput.min
+				cartItemQuantityInput.updateValue()
 
-					cartItemQuantityInput.blur() //removes focus from the input
-				}
-
+				cartItemQuantityInput.blur() //removes focus from the input
 			}
 
 			cartItemQuantityContainer.appendChild(cartItemQuantityInput)
@@ -278,8 +318,23 @@ Menu.createItemDisplay = (itemName, item, menuContainer) =>
 		removeItemButton.innerHTML = "Remove"
 		removeItemButton.classList.add("cart_remove_item_button")
 		removeItemButton.onclick = (event) => {
+
+			//get the itemName and toppingList of the cart and check for duplicate in Menu.cart
+
+
 			const tableRow = event.target.parentNode.parentNode.parentNode
+
+			const itemName = tableRow.querySelector(".cart_item_item_name")
+
+			const itemToppings = Array.from(tableRow.querySelector(".cart_topping_name"))
+
+			const index = Menu.findDuplicateItem(itemName, itemToppings, Menu.cart)
+
+			Menu.cart.splice(index, 1)
+
 			tableRow.remove()
+
+			Menu.updateTotals()
 		}
 
 		cartItemQuantityContainer.appendChild(removeItemButton)
@@ -299,19 +354,32 @@ Menu.createItemDisplay = (itemName, item, menuContainer) =>
 
 		const unitPrice = Number(Helper.priceify(itemPrice + totalToppingsPrice))
 
-		cartItemPrice.innerHTML = `$${unitPrice.toFixed(2)}` //total price of the item
+		cartItemPrice.innerHTML = `$${Helper.priceify(unitPrice)}` //total price of the item
 
 		//updates price of item when the quantity is changed
 		cartItemQuantityInput.onchange = (event) => {
+			cartItemQuantityInput.updateValue()
+
 			const priceSection = event.target.parentNode.parentNode.nextSibling
 			const price = unitPrice * cartItemQuantityInput.value
 			priceSection.innerHTML = `$${price.toFixed(2)}`
+
+			Menu.updateTotals()
 		}
-
 		cartTable.appendChild(cartTableRow)
+		Menu.addToCart(cartItemItemName.innerHTML, listOfWantedToppingsName, 1)
+
+		//reset toppings list page to default selections
+		const toppingsPage = event.target.parentNode.previousSibling
+
+		const toppingsCheckboxesArray = Array.from(toppingsPage.querySelectorAll(".menu_item_topping_checkbox"))
+
+		for (let i = 0; i < itemToppingsArray.length; i++)
+		{
+			const topping = itemToppingsArray[i]
+			toppingsCheckboxesArray[i].checked = itemToppings[topping]
+		}
 	}
-
-
 
 	section.appendChild(image)
 	section.appendChild(name)
@@ -324,9 +392,54 @@ Menu.createItemDisplay = (itemName, item, menuContainer) =>
 	menuContainer.appendChild(section)
 }
 
-Menu.isDuplicateItem = (itemName, toppingList, cartItems) =>
+Menu.updateTotals = () =>
 {
+	const tableRows = Array.from(document.querySelectorAll(".cart_table_row"))
 
+	//calculating subtotal
+	let subtotal = 0
+	for(const row of tableRows)
+	{
+		const rowPrice = Helper.getNumber(row.querySelector(".cart_item_price").innerHTML.substring(1), true)
+		subtotal+= rowPrice
+	}
+
+	//creating subtotal value
+	const subTotalValue = document.querySelector("#cart_total_subTotal_value")
+	subTotalValue.innerHTML = `$${Helper.priceify(subtotal)}`
+
+	//creating tax value
+	const taxValue = document.querySelector("#cart_total_tax_value")
+	taxValue.innerHTML = `$${Helper.priceify(subtotal * 0.06)}`
+
+	//getting amount of tips
+	const tipValue = document.querySelector("#cart_total_tip_value")
+	let tipAmount = 0
+	if(tipValue.value) tipAmount = Number(tipValue.value)
+
+	//creating total value
+	const totalValue = document.querySelector("#cart_total_total_value")
+	totalValue.innerHTML = `$${Helper.priceify(subtotal + subtotal * 0.06 + tipAmount)}`
+}
+
+Menu.findDuplicateItem = (itemName, toppingList, cartItems) =>
+{
+	outer: for (let i = 0; i < cartItems.length; i++)
+	{
+		const item = cartItems[i]
+		if (item.name != itemName) continue
+
+		if (item.toppings.length != toppingList.length) continue
+
+		for (let t = 0; t < item.toppings.length; t++)
+		{
+			if (item.toppings[i] != toppingList[i]) continue outer
+		}
+
+		return i
+	}
+
+	return -1
 }
 
 Menu.createCartDisplay = (menuContainer) =>
@@ -370,6 +483,86 @@ Menu.createCartDisplay = (menuContainer) =>
 	headerItemPrice.innerHTML = "Price"
 	headerItemPrice.id = "cart_th_item_price"
 
+
+	//totals section
+	const totalSection = document.createElement("div")
+	totalSection.id = "cart_total_section"
+	totalSection.classList.add("flexbox_column")
+
+	//subtotal section
+	const subTotalContainer = document.createElement("div")
+	subTotalContainer.classList.add("cart_total_container")
+	subTotalContainer.classList.add("flexbox")
+
+	const subtotalLabel = document.createElement("h3")
+	subtotalLabel.id = "cart_total_subTotal_label"
+	subtotalLabel.classList.add("cart_total_label")
+	subtotalLabel.innerHTML = "Subtotal:"
+
+	const subTotalValue = document.createElement("p")
+	subTotalValue.id = "cart_total_subTotal_value"
+	subTotalValue.classList.add("cart_total_value")
+
+	//tax section
+	const taxContainer = document.createElement("div")
+	taxContainer.classList.add("cart_total_container")
+	taxContainer.classList.add("flexbox")
+
+	const taxLabel = document.createElement("h3")
+	taxLabel.classList.add("cart_total_label")
+	taxLabel.id = "cart_total_tax_label"
+	taxLabel.innerHTML = "Taxes:"
+
+	const taxValue = document.createElement("p")
+	taxValue.id = "cart_total_tax_value"
+	taxValue.classList.add("cart_total_value")
+
+	//tip section
+	const tipContainer = document.createElement("div")
+	tipContainer.classList.add("cart_total_container")
+	tipContainer.classList.add("flexbox")
+
+	const tipLabel = document.createElement("h3")
+	tipLabel.classList.add("cart_total_label")
+	tipLabel.id = "cart_total_tip_label"
+	tipLabel.innerHTML = "Tips:"
+
+	const tipValue = document.createElement("input")
+	tipValue.setAttribute("type", "number")
+	tipValue.id = "cart_total_tip_value"
+	tipValue.classList.add("cart_total_value")
+	tipValue.setAttribute("min", "0")
+	tipValue.setAttribute("max", "100")
+	tipValue.onkeyup = (event) =>
+	{
+		event.preventDefault()
+
+		if (Helper.isNumber(event.keyCode) && event.keyCode != 13) return
+		if (Helper.isString(event.key) && event.key.toLowerCase() !== "enter") return
+		if (Helper.isString(event.code) && event.code.toLowerCase() !== "enter") return
+
+		tipValue.blur()
+	}
+	tipValue.onchange = () =>
+	{
+		Menu.updateTotals()
+	}
+
+	//total section
+	const totalContainer = document.createElement("div")
+	totalContainer.classList.add("cart_total_container")
+	totalContainer.classList.add("flexbox")
+
+	const totalLabel = document.createElement("h3")
+	totalLabel.classList.add("cart_total_label")
+	totalLabel.id = "cart_total_total_label"
+	totalLabel.innerHTML = "Total:"
+
+	const totalValue = document.createElement("p")
+	totalValue.id = "cart_total_total_value"
+	totalValue.classList.add("cart_total_value")
+
+
 	//setting up payment section
 	const paymentSection = document.createElement("div")
 	paymentSection.id = "cart_payment_section_container"
@@ -380,20 +573,17 @@ Menu.createCartDisplay = (menuContainer) =>
 		cashButton.innerHTML = "Cash"
 	}
 
-
 	const cardPayment = document.createElement("button")
 	{
 		cardPayment.classList.add("cart_payment_button")
 		cardPayment.innerHTML = "Card"
 	}
 
-
 	const payPalButton = document.createElement("button")
 	{
 		payPalButton.classList.add("cart_payment_button")
 		payPalButton.innerHTML = "PayPal"
 	}
-
 
 	const applePayButton = document.createElement("button")
 	{
@@ -429,16 +619,44 @@ Menu.createCartDisplay = (menuContainer) =>
 	paymentSection.appendChild(samsungPayButton)
 	paymentSection.appendChild(googlePayButton)
 
+	subTotalContainer.appendChild(subtotalLabel)
+	subTotalContainer.appendChild(subTotalValue)
+	taxContainer.appendChild(taxLabel)
+	taxContainer.appendChild(taxValue)
+	tipContainer.appendChild(tipLabel)
+	tipContainer.appendChild(tipValue)
+	totalContainer.appendChild(totalLabel)
+	totalContainer.appendChild(totalValue)
+
+	totalSection.appendChild(subTotalContainer)
+	totalSection.appendChild(taxContainer)
+	totalSection.appendChild(tipContainer)
+	totalSection.appendChild(totalContainer)
 
 	cartContainer.appendChild(cartHeader)
 	cartContainer.appendChild(hr)
 	cartContainer.appendChild(cartTableContainer)
-
+	cartContainer.appendChild(totalSection)
 	cartContainer.appendChild(paymentSection)
 
 	menuContainer.appendChild(cartContainer)
 }
 
+/*
+* Adds items on the cart to an array
+*/
+Menu.addToCart = (itemName, itemTopping, quantity) =>
+{
+	const item =
+	{
+		"name": itemName,
+		"toppings": itemTopping,
+		"quantity": quantity
+	}
+
+	Menu.cart.push(item)
+	Menu.updateTotals()
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 Helper.hookEvent(window, "load", false, () =>
