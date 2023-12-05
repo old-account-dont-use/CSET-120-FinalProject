@@ -32,6 +32,11 @@ html, body
 	display: flex;
 }
 
+.flexbox_column {
+	display: flex;
+	flex-direction: column;
+}
+
 .float_left
 {
 	float: left;
@@ -1011,4 +1016,211 @@ html, body
 .menu_item_topping_label
 {
 	text-transform: capitalize;
+}
+
+/*
+*
+*	Cart
+*
+*/
+#view_cart_button
+{
+	position: absolute;
+
+	z-index: 995;
+
+	right: 2em;
+	top: 72px;
+
+	padding: 20px;
+
+	border-radius: 5px;
+	border: none;
+
+	background-color: rgba(255, 255, 255, 0.8);
+}
+
+#view_cart_button:hover
+{
+	background-color: rgba(153, 255, 153, 0.6);
+}
+
+#cart_container[isShown=false]
+{
+	display: none;
+}
+
+#cart_container
+{
+	background-color: rgba(204, 229, 255, 1);;
+
+	width: 80%;
+	max-height: calc(100vh - 80px);
+
+	overflow-y: auto;
+
+	position: absolute;
+
+	z-index: 995;
+
+	left: 50%;
+	transform: translate(-50%, 0);
+
+	border-radius: 12px;
+}
+
+#cart_header
+{
+	font-size: 4rem;
+
+	margin: 15px 0;
+}
+
+#cart_hr
+{
+	width: 80%;
+
+	border: 1px solid black;
+}
+
+#cart_table_container
+{
+	overflow-y: auto;
+
+	height: 20em;
+}
+
+#cart_table
+{
+	width: 80%;
+
+	margin: auto;
+}
+
+
+#cart_table th,
+#cart_table td
+{
+	border-bottom: 2px solid gray;
+}
+
+/*/////////////////////make this not scrollable///////////////////////////////*/
+#cart_table th
+{
+	font-size: 1.3rem;
+
+	position: sticky;
+}
+
+#cart_table tr:hover
+{
+	background-color: rgba(0, 0, 0, 0.4);
+}
+
+#cart_table tr:nth-child(even)
+{
+	/* background-color: rgba(229, 204, 255, 0.9); */
+	/* background-color: rgb(192, 192, 192); */
+}
+
+#cart_table td:hover
+{
+	background-image: linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4));
+}
+
+#cart_th_item_name
+{
+	width: 60%;
+}
+
+#cart_th_item_price
+{
+	width: 20%;
+}
+
+#cart_th_item_quantity
+{
+	width: 20%;
+}
+
+.cart_item_name
+{
+	text-transform: capitalize;
+}
+
+.cart_item_item_name
+{
+	font-size: 1.5rem;
+}
+
+.cart_item_toppings_section
+{
+	height: 3em;
+
+	overflow-y: auto;
+}
+
+.cart_item_topping_container {
+	justify-content: space-between;
+}
+
+.cart_topping_name,
+.cart_topping_price
+{
+	margin: 0.4em 0;
+
+}
+
+.cart_item_quantity_container {
+	justify-content: space-evenly;
+}
+
+.cart_quantity_input
+{
+	padding: 0.5em 1em;
+
+	border: 1px solid black;
+	border-radius: 5px;
+}
+
+.cart_quantity_input::-webkit-outer-spin-button,
+.cart_quantity_input::-webkit-inner-spin-button
+{
+	-webkit-appearance: none;
+}
+
+.cart_remove_item_button
+{
+	border: 1px solid black;
+	border-radius: 5px;
+
+	background-color: rgba(255, 102, 102, 1);
+}
+
+.cart_remove_item_button:hover {
+	background-color: rgba(255, 51, 51, 1)
+}
+
+#cart_payment_section_container
+{
+	width: 80%;
+
+	margin: 2rem auto;
+
+	display: flex;
+	justify-content: space-evenly;
+}
+
+.cart_payment_button
+{
+	padding: 8px 15px;
+
+	background-color: white;
+
+	border: 1px solid black;
+	border-radius: 5px;
+}
+.cart_payment_button:hover
+{
+	background-image: linear-gradient(rgba(153, 255, 153, 0.6), rgba(153, 255, 153, 0.6));
 }

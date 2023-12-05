@@ -155,14 +155,163 @@ Menu.createItemDisplay = (itemName, item, menuContainer) =>
 	addToCartButton.classList.add("menu_item_cart_button")
 	addToCartButton.innerHTML = "Add to cart"
 
-	const cartContainer = document.querySelector("#cart_container")
-
 	//add item to cart along with selected toppings
 	addToCartButton.onclick = (event) =>
 	{
-		const cartRow = document.createElement("div")
-		cartRow.classList.add("cart_row")
+		//stores the total price of the selected toppings
+		let totalToppingsPrice = 0
+
+		const cartTable = document.querySelector("#cart_table")
+
+		const cartTableRow = document.createElement("tr")
+		cartTableRow.classList.add("cart_table_row")
+
+		//creating the item name
+		const cartItemName = document.createElement("td")
+		{
+			const name = addToCartButton.parentNode.childNodes[1].innerHTML //name of item
+
+			//array form of the toppings that are selected
+			const listOfWantedToppingsCheckboxes = Array.from(toppingList.childNodes).filter((element) =>
+			{
+				return element.checked
+			})
+
+			cartItemName.classList.add("cart_item_name")
+
+			//creating the actual item name on cart
+			const cartItemItemName = document.createElement("h1")
+			cartItemItemName.innerHTML = `${name}`
+			cartItemItemName.classList.add("cart_item_item_name")
+
+			//creating section for the toppings
+			const cartItemToppingsSection = document.createElement("p")
+			cartItemToppingsSection.classList.add("cart_item_toppings_section")
+			cartItemToppingsSection.classList.add("flexbox_column")
+			cartItemToppingsSection.classList.add("glass_morphism_weak")
+
+			//adding toppings to the table
+			for (const topping of listOfWantedToppingsCheckboxes)
+			{
+				//creating container for the topping
+				const toppingContainer = document.createElement("div")
+				toppingContainer.classList.add("flexbox")
+				toppingContainer.classList.add("cart_item_topping_container")
+
+				const toppingLabelText = topping.nextSibling.innerHTML
+
+				const separationIndex = toppingLabelText.indexOf("$") //index that separates name and price of topping
+
+				//creating the name of the topping
+				const toppingName = document.createElement("h4")
+				const name = toppingLabelText.substring(0, separationIndex - 1)
+				toppingName.innerHTML = name
+				toppingName.classList.add("cart_topping_name")
+
+				//creating the price of the topping
+				let price = Number(Helper.priceify(Menu.toppings.get(name).price))
+
+				const toppingPrice = document.createElement("p")
+				toppingPrice.innerHTML = `$${price}`
+				toppingPrice.classList.add("cart_topping_price")
+
+				totalToppingsPrice += price
+
+				toppingContainer.appendChild(toppingName)
+				toppingContainer.appendChild(toppingPrice)
+
+				cartItemToppingsSection.appendChild(toppingContainer)
+			}
+
+			cartItemName.appendChild(cartItemItemName)
+			cartItemName.appendChild(cartItemToppingsSection)
+		}
+
+		//creating the input for the item quantity
+		const cartItemQuantitySection = document.createElement("td")
+		cartItemQuantitySection.classList.add("cart_item_quantity_section")
+
+		const cartItemQuantityContainer = document.createElement("div")
+		cartItemQuantityContainer.classList.add("cart_item_quantity_container")
+		cartItemQuantityContainer.classList.add("flexbox")
+
+		const cartItemQuantityInput = document.createElement("input")
+		{
+			cartItemQuantityInput.setAttribute("type", "number")
+			cartItemQuantityInput.value = "1"
+			cartItemQuantityInput.onwheel = () => {
+				return false
+			}
+
+			cartItemQuantityInput.setAttribute("min", "1")
+			cartItemQuantityInput.setAttribute("max", "10")
+			cartItemQuantityInput.classList.add("cart_quantity_input")
+			cartItemQuantityInput.classList.add("center_text")
+
+
+			cartItemQuantityInput.onkeyup = (event) =>
+			{
+				event.preventDefault()
+				const enterKey = 13
+
+				if (event.keyCode == enterKey)
+				{
+					//ensures that the value of the input is within the set max
+					if (cartItemQuantityInput.value > cartItemQuantityInput.max)
+						cartItemQuantityInput.value = cartItemQuantityInput.max
+
+					//ensures that the value of the input is within the set min
+					if(cartItemQuantityInput.value < cartItemQuantityInput.min)
+						cartItemQuantityInput.value = cartItemQuantityInput.min
+
+					cartItemQuantityInput.blur() //removes focus from the input
+				}
+
+			}
+
+			cartItemQuantityContainer.appendChild(cartItemQuantityInput)
+			cartItemQuantitySection.appendChild(cartItemQuantityContainer)
+		}
+
+		//creating the button for removing the item from the cart
+		const removeItemButton = document.createElement("button")
+		removeItemButton.innerHTML = "Remove"
+		removeItemButton.classList.add("cart_remove_item_button")
+		removeItemButton.onclick = (event) => {
+			const tableRow = event.target.parentNode.parentNode.parentNode
+			tableRow.remove()
+		}
+
+		cartItemQuantityContainer.appendChild(removeItemButton)
+
+		cartTableRow.appendChild(cartItemName)
+		cartTableRow.appendChild(cartItemQuantitySection)
+
+		//creating the price section
+		const cartItemPrice = document.createElement("td")
+		cartItemPrice.classList.add("cart_item_price")
+		cartItemPrice.classList.add("center_text")
+
+		cartTableRow.appendChild(cartItemPrice)
+
+		const itemName = cartItemPrice.parentNode.childNodes[0].childNodes[0].innerHTML
+		const itemPrice = Number(Helper.priceify(Menu.items.get(itemName).price))
+
+		const unitPrice = Number(Helper.priceify(itemPrice + totalToppingsPrice))
+
+		cartItemPrice.innerHTML = `$${unitPrice.toFixed(2)}` //total price of the item
+
+		//updates price of item when the quantity is changed
+		cartItemQuantityInput.onchange = (event) => {
+			const priceSection = event.target.parentNode.parentNode.nextSibling
+			const price = unitPrice * cartItemQuantityInput.value
+			priceSection.innerHTML = `$${price.toFixed(2)}`
+		}
+
+		cartTable.appendChild(cartTableRow)
 	}
+
+
 
 	section.appendChild(image)
 	section.appendChild(name)
@@ -184,12 +333,109 @@ Menu.createCartDisplay = (menuContainer) =>
 {
 	const cartContainer = document.createElement("div")
 	cartContainer.id = "cart_container"
+	cartContainer.setAttribute("isShown", false)
 
 	const cartHeader = document.createElement("h2")
 	cartHeader.id = "cart_header"
+	cartHeader.classList.add("center_text")
 	cartHeader.innerHTML = "Cart"
 
+	const hr = document.createElement("hr")
+	hr.id = "cart_hr"
+
+	//container for table for cart
+	const cartTableContainer = document.createElement("div")
+	cartTableContainer.id = "cart_table_container"
+
+	//setting up table and headers for the cart
+	const cartTable = document.createElement("table")
+	cartTable.id = "cart_table"
+
+	const cartTableRow = document.createElement("tr")
+
+	//creating table header for item name
+	const headerItemName = document.createElement("th")
+	headerItemName.id = "cart_th_item_name"
+	headerItemName.innerHTML = "Item"
+	const divpos = cartHeader.offsetHeight
+	console.log(divpos)
+
+	//creating table header for item quantity
+	const headerItemQuantity = document.createElement("th")
+	headerItemQuantity.id = "cart_th_item_quantity"
+	headerItemQuantity.innerHTML = "Quantity"
+
+	//creating table header for item price
+	const headerItemPrice = document.createElement("th")
+	headerItemPrice.innerHTML = "Price"
+	headerItemPrice.id = "cart_th_item_price"
+
+	//setting up payment section
+	const paymentSection = document.createElement("div")
+	paymentSection.id = "cart_payment_section_container"
+
+	const cashButton = document.createElement("button")
+	{
+		cashButton.classList.add("cart_payment_button")
+		cashButton.innerHTML = "Cash"
+	}
+
+
+	const cardPayment = document.createElement("button")
+	{
+		cardPayment.classList.add("cart_payment_button")
+		cardPayment.innerHTML = "Card"
+	}
+
+
+	const payPalButton = document.createElement("button")
+	{
+		payPalButton.classList.add("cart_payment_button")
+		payPalButton.innerHTML = "PayPal"
+	}
+
+
+	const applePayButton = document.createElement("button")
+	{
+		applePayButton.classList.add("cart_payment_button")
+		applePayButton.innerHTML = "Apple Pay"
+	}
+
+	const samsungPayButton = document.createElement("button")
+	{
+		samsungPayButton.classList.add("cart_payment_button")
+		samsungPayButton.innerHTML = "Samsung Pay"
+	}
+
+	const googlePayButton = document.createElement("button")
+	{
+		googlePayButton.classList.add("cart_payment_button")
+		googlePayButton.innerHTML = "Google Pay"
+	}
+
+
+	cartTableRow.appendChild(headerItemName)
+	cartTableRow.appendChild(headerItemQuantity)
+	cartTableRow.appendChild(headerItemPrice)
+
+	cartTable.appendChild(cartTableRow)
+
+	cartTableContainer.appendChild(cartTable)
+
+	paymentSection.appendChild(cashButton)
+	paymentSection.appendChild(cardPayment)
+	paymentSection.appendChild(payPalButton)
+	paymentSection.appendChild(applePayButton)
+	paymentSection.appendChild(samsungPayButton)
+	paymentSection.appendChild(googlePayButton)
+
+
 	cartContainer.appendChild(cartHeader)
+	cartContainer.appendChild(hr)
+	cartContainer.appendChild(cartTableContainer)
+
+	cartContainer.appendChild(paymentSection)
+
 	menuContainer.appendChild(cartContainer)
 }
 
@@ -836,12 +1082,12 @@ Helper.hookEvent(window, "load", false, () =>
 	Menu.addItem("Water", 0.50, "Water", {}, "../assets/menu/drinks/Water.jpg")
 
 	Menu.addItem("Milk", 0.50, "Milk", {
-		"chocolate milk": true,
+		"chocolate milk": false,
 		"white milk": true,
-		"whole milk": true,
-		"coconut milk": true,
-		"almond milk": true,
-		"pistachio milk": true
+		"whole milk": false,
+		"coconut milk": false,
+		"almond milk": false,
+		"pistachio milk": false
 	}, "../assets/menu/drinks/Milk.jpg")
 
 	Menu.addItem("Fountain Drink", 0.50, "Coke/Pepsi product", {
@@ -864,11 +1110,37 @@ Helper.hookEvent(window, "load", false, () =>
 	const menuContainer = document.createElement("div")
 	menuContainer.id = "menu_container"
 
+
+
+	Menu.createCartDisplay(menuContainer)
+
+	//creating button for viewing cart
+	const viewCartButton = document.createElement("button")
+	viewCartButton.id = "view_cart_button"
+	viewCartButton.innerHTML = "Cart"
+	viewCartButton.onclick = () => {
+		const cartContainer = document.querySelector("#cart_container")
+
+		const isShown = (/true/).test(cartContainer.getAttribute("isShown"))
+
+		cartContainer.setAttribute("isShown", !isShown )
+	}
+
+	//broken
+	viewCartButton.onkeyup = (event) =>
+	{
+		const escapeKey = 27
+
+		if (event.keyCode == escapeKey)
+			cartContainer.setAttribute("isShown", false)
+
+	}
+
 	const menuArray = Array.from(Menu.items.keys())
 
 	for(const itemName of menuArray)
 		Menu.createItemDisplay(itemName, Menu.items.get(itemName), menuContainer)
 
+	document.body.appendChild(viewCartButton)
 	document.body.appendChild(menuContainer)
-	Menu.createCartDisplay(menuContainer)
 })
