@@ -32,7 +32,7 @@ Menu.addItem = (name, price, description, toppingList, image) =>
 		"description": description,
 		"toppings": toppingList,
 		"image": image,
-		"availibility": true
+		"availability": true
 	}
 
 	Menu.items.set(name.toLowerCase(), newItem)
