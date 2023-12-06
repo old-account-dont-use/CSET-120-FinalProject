@@ -140,6 +140,89 @@ Helper.copyArray = (array) =>
 }
 
 /*
+*	Copies an object
+*/
+Helper.copyObject = (object) =>
+{
+	const newObject = {}
+
+	for (const property of Object.getOwnPropertyNames(object))
+	{
+		let data = object[property]
+
+		if (data instanceof Array)
+			data = Helper.copyArray(data)
+		else if (data instanceof Object)
+			data = Helper.copyObject(data)
+
+		newObject[property] = data
+	}
+
+	return newObject
+}
+
+/*
+*	Compares two arrays
+*	Returns true if they are the same, false otherwise
+*/
+Helper.compareArrays = (array1, array2) =>
+{
+	if (array1 === array2) return true
+	if (array1.length != array2.length) return false
+
+	for (let i = 0; i < array1.length; i++)
+		if (array1[i] !== array2[i]) return false
+
+	return true
+}
+
+/*
+*	Compares two objects
+*	Returns true if they are the same, false otherwise
+*/
+Helper.compareObjects = (object1, object2) =>
+{
+	if (object1 === object2) return true
+
+	const firstSet = Object.getOwnPropertyNames(object1)
+	const secondSet = Object.getOwnPropertyNames(object2)
+
+	if (firstSet.length != secondSet.length) return false
+
+	for (const key of firstSet)
+	{
+		const first = object1[key]
+		const second = object2[key]
+
+		const firstIsArray = first instanceof Array
+		const secondIsArray = second instanceof Array
+		if (firstIsArray != secondIsArray) return false
+		if (firstIsArray && secondIsArray)
+		{
+			if (!Helper.compareArrays(first, second))
+				return false
+
+			continue
+		}
+
+		const firstIsObject = first instanceof Object
+		const secondIsObject = second instanceof Object
+		if (firstIsObject != secondIsObject) return false
+		if (firstIsObject && secondIsObject)
+		{
+			if (!Helper.compareObjects(first, second))
+				return false
+
+			continue
+		}
+
+		if (first !== second) return false
+	}
+
+	return true
+}
+
+/*
 *	Registers a function to be ran on an event
 */
 Helper.g_Events = new Map()
