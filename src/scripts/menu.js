@@ -320,8 +320,6 @@ Menu.createItemDisplay = (itemName, item, menuContainer) =>
 		removeItemButton.onclick = (event) => {
 
 			//get the itemName and toppingList of the cart and check for duplicate in Menu.cart
-
-
 			const tableRow = event.target.parentNode.parentNode.parentNode
 
 			const itemName = tableRow.querySelector(".cart_item_item_name")
@@ -415,7 +413,16 @@ Menu.updateTotals = () =>
 	//getting amount of tips
 	const tipValue = document.querySelector("#cart_total_tip_value")
 	let tipAmount = 0
-	if(tipValue.value) tipAmount = Number(tipValue.value)
+
+	//ensures that tip amount is within the min and max range of possible tip amount
+	if(tipValue.value)
+	{
+		const min = Helper.getNumber(tipValue.getAttribute("min"), true, 0)
+		const max = Helper.getNumber(tipValue.getAttribute("max"), true, 100)
+
+		tipAmount = Helper.clamp(Helper.getNumber(tipValue.value), min, max)
+	}
+	tipValue.value = tipAmount
 
 	//creating total value
 	const totalValue = document.querySelector("#cart_total_total_value")
