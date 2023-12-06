@@ -88,7 +88,7 @@ Helper.parse = (data) =>
 }
 
 /*
-*	Safely access a string when it's unknown if it's hashed or not
+*	Safely access a string
 */
 Helper.getString = (data) =>
 {
