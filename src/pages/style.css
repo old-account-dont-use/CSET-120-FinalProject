@@ -1230,10 +1230,9 @@ html, body
 	left: 20%;
 }
 
-#cart_total_tip_value::-webkit-outer-spin-button,
-#cart_total_tip_value::-webkit-inner-spin-button
+#cart_total_tip_value
 {
-	-webkit-appearance: none;
+	appearance: textfield;
 }
 
 #cart_payment_section_container
