@@ -152,6 +152,9 @@ Helper.priceify = (data) =>
 {
 	if (Helper.isString(data))
 	{
+		if (data.charCodeAt(0) == 36) // Remove dollar sign in front
+			data = data.substring(1)
+
 		data = parseFloat(data)
 		if (!Helper.isNumber(data))
 			throw new Error("Invalid data passed to priceify")
@@ -160,6 +163,17 @@ Helper.priceify = (data) =>
 		throw new Error("Invalid data passed to priceify")
 
 	return `$${data.toFixed(2)}`
+}
+
+/*
+*	Converts a string or number to a price in float form
+*/
+Helper.priceifyNumber = (data) =>
+{
+	let result = Helper.priceify(data)
+	result = result.substring(1)
+
+	return parseFloat(result)
 }
 
 /*

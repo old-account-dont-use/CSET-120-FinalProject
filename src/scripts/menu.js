@@ -13,7 +13,7 @@ Menu.addTopping = (name, price) =>
 	const newTopping =
 	{
 		"name": name,
-		"price": Helper.priceify(price),
+		"price": Helper.priceifyNumber(price),
 		"availability": true
 	}
 
@@ -28,7 +28,7 @@ Menu.addItem = (name, price, description, toppingList, image) =>
 	const newItem =
 	{
 		"name": name,
-		"price": Helper.priceify(price),
+		"price": Helper.priceifyNumber(price),
 		"description": description,
 		"toppings": toppingList,
 		"image": image,
@@ -60,8 +60,7 @@ Menu.createItemDisplay = (itemName, item, menuContainer) =>
 
 	//creates the item price tag
 	const price = document.createElement("h3")
-	price.classList.add("menu_item_price")
-	price.innerHTML = `$${Helper.priceify(item.price)}`
+	price.innerHTML = Helper.priceify(item.price)
 
 	//creates the item description
 	const description = document.createElement("p")
@@ -111,7 +110,7 @@ Menu.createItemDisplay = (itemName, item, menuContainer) =>
 		//creates the label/name of the topping
 		const toppingLabel = document.createElement("label")
 		toppingLabel.classList.add("menu_item_topping_label")
-		toppingLabel.innerHTML = `${topping} $${toppingData.price}`
+		toppingLabel.innerHTML = `${topping} ${Helper.priceify(toppingData.price)}`
 		toppingLabel.setAttribute("for", `topping_checkbox_${topping}`)
 
 		//creates a line break for after each topping
@@ -249,11 +248,11 @@ Menu.createItemDisplay = (itemName, item, menuContainer) =>
 
 
 			//creating the price of the topping
-			let price = Number(Helper.priceify(Menu.toppings.get(name).price))
+			const price = Menu.toppings.get(name).price
 			totalToppingsPrice += price
 
 			const toppingPrice = document.createElement("p")
-			toppingPrice.innerHTML = `$${Helper.priceify(price)}`
+			toppingPrice.innerHTML = Helper.priceify(price)
 			toppingPrice.classList.add("cart_topping_price")
 
 			toppingContainer.appendChild(toppingName)
@@ -348,11 +347,11 @@ Menu.createItemDisplay = (itemName, item, menuContainer) =>
 		cartTableRow.appendChild(cartItemPrice)
 
 		const itemName = cartItemPrice.parentNode.childNodes[0].childNodes[0].innerHTML
-		const itemPrice = Number(Helper.priceify(Menu.items.get(itemName).price))
+		const itemPrice = Menu.items.get(itemName).price
 
-		const unitPrice = Number(Helper.priceify(itemPrice + totalToppingsPrice))
+		const unitPrice = itemPrice + totalToppingsPrice
 
-		cartItemPrice.innerHTML = `$${Helper.priceify(unitPrice)}` //total price of the item
+		cartItemPrice.innerHTML = Helper.priceify(unitPrice) //total price of the item
 
 		//updates price of item when the quantity is changed
 		cartItemQuantityInput.onchange = (event) => {
@@ -404,11 +403,11 @@ Menu.updateTotals = () =>
 
 	//creating subtotal value
 	const subTotalValue = document.querySelector("#cart_total_subTotal_value")
-	subTotalValue.innerHTML = `$${Helper.priceify(subtotal)}`
+	subTotalValue.innerHTML = Helper.priceify(subtotal)
 
 	//creating tax value
 	const taxValue = document.querySelector("#cart_total_tax_value")
-	taxValue.innerHTML = `$${Helper.priceify(subtotal * 0.06)}`
+	taxValue.innerHTML = Helper.priceify(subtotal * 0.06)
 
 	//getting amount of tips
 	const tipValue = document.querySelector("#cart_total_tip_value")
@@ -426,7 +425,7 @@ Menu.updateTotals = () =>
 
 	//creating total value
 	const totalValue = document.querySelector("#cart_total_total_value")
-	totalValue.innerHTML = `$${Helper.priceify(subtotal + subtotal * 0.06 + tipAmount)}`
+	totalValue.innerHTML = Helper.priceify(subtotal + subtotal * 0.06 + tipAmount)
 }
 
 Menu.findDuplicateItem = (itemName, toppingList, cartItems) =>
