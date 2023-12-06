@@ -54,6 +54,40 @@ Helper.hash = (string) =>
 }
 
 /*
+*	Converts something to a JSON string
+*	Same as JSON.stringify, but with Map support
+*/
+Helper.json = (data) =>
+{
+	if (data instanceof Map)
+	{
+		data = Object.fromEntries(data)
+		data.m_bWasMap = true
+	}
+
+	return JSON.stringify(data)
+}
+
+/*
+*	Converts JSON to an object
+*	Same as JSON.parse, but with Map support
+*/
+Helper.parse = (data) =>
+{
+	data = Helper.getString(data)
+
+	let converted = JSON.parse(data)
+
+	if (converted.m_bWasMap)
+	{
+		delete converted.m_bWasMap
+		converted = new Map(Object.entries(converted))
+	}
+
+	return converted
+}
+
+/*
 *	Safely access a string when it's unknown if it's hashed or not
 */
 Helper.getString = (data) =>

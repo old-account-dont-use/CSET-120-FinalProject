@@ -32,7 +32,7 @@ AccountManager.getAccountList = () =>
 	if (accountList.length < 1)
 		return new Map()
 
-	const accountMap = new Map(Object.entries(JSON.parse(accountList)))
+	const accountMap = Helper.parse(accountList)
 	return accountMap
 }
 
@@ -46,7 +46,7 @@ AccountManager.storeAccountList = (accountMap) =>
 	if (!(accountMap instanceof Map))
 		return false
 
-	const accountList = JSON.stringify(Object.fromEntries(accountMap))
+	const accountList = Helper.json(accountMap)
 	StorageManager.setStoredValue("accountList", accountList)
 
 	return true

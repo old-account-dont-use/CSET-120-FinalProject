@@ -15,7 +15,7 @@ Manager.getModifiedItemsList = () =>
 	if (list.length < 1)
 		return new Map()
 
-	const map = new Map(Object.entries(JSON.parse(list)))
+	const map = Helper.parse(list)
 	return map
 }
 
@@ -24,7 +24,7 @@ Manager.getModifiedItemsList = () =>
 */
 Manager.storeModifiedItemsList = () =>
 {
-	const list = JSON.stringify(Object.fromEntries(Manager.m_ModifiedItems))
+	const list = Helper.json(Manager.m_ModifiedItems)
 	StorageManager.setStoredValue("modifiedItems", list)
 }
 
