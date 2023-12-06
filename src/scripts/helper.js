@@ -145,6 +145,8 @@ Helper.clamp = (x, y, z) =>
 
 /*
 *	Converts a string or number to a price, throws an error if parsing failed
+*
+*	Example: Helper.priceify(12.567) -> "$12.57"
 */
 Helper.priceify = (data) =>
 {
@@ -157,7 +159,7 @@ Helper.priceify = (data) =>
 	else if (typeof(data) !== "number")
 		throw new Error("Invalid data passed to priceify")
 
-	return data.toFixed(2)
+	return `$${data.toFixed(2)}`
 }
 
 /*
