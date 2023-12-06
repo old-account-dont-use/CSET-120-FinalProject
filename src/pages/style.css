@@ -1181,10 +1181,9 @@ html, body
 	border-radius: 5px;
 }
 
-.cart_quantity_input::-webkit-outer-spin-button,
-.cart_quantity_input::-webkit-inner-spin-button
+.cart_quantity_input
 {
-	-webkit-appearance: none;
+	appearance: textfield;
 }
 
 .cart_remove_item_button
