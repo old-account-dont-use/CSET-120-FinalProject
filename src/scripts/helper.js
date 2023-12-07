@@ -54,6 +54,51 @@ Helper.hash = (string) =>
 }
 
 /*
+*	Validates a string using the Luhn Algorithm
+*
+*	https://github.com/braintree/card-validator/blob/main/src/luhn-10.js
+*/
+Helper.luhnValidate = (dataSet) =>
+{
+	dataSet = Helper.getString(dataSet)
+
+	let sum = 0
+
+	for (let i = 0; i < dataSet.length; i++)
+	{
+		let digit = parseInt(dataSet.charAt(i))
+
+		if (i % 2 == 0)
+		{
+			digit *= 2
+
+			if (digit > 9)
+			{
+				digit %= 10
+				digit++
+			}
+		}
+
+		sum += digit
+	}
+
+	return sum % 10 == 0
+}
+
+/*
+*	Validates a credit card number
+*
+*	Returns true if the card is valid, false otherwise
+*/
+Helper.validateCardNumber = (cardNumber) =>
+{
+	cardNumber = Helper.getString(Helper.getNumber(cardNumber))
+
+	if (!(/^[0-9]{13,19}$/).test(cardNumber)) return false
+	return Helper.luhnValidate(cardNumber)
+}
+
+/*
 *	Converts something to a JSON string
 *	Same as JSON.stringify, but with Map support
 */
