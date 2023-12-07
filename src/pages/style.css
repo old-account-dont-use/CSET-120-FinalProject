@@ -1298,3 +1298,59 @@ input[type=number]
 {
 	background-image: linear-gradient(rgba(153, 255, 153, 0.6), rgba(153, 255, 153, 0.6));
 }
+
+/*
+*
+*	Payment page
+*
+*/
+#payment_container
+{
+	padding: 20px;
+	padding-top: 72px;
+
+	top: 0;
+	left: 0;
+
+	width: 100%;
+	height: 100vh;
+
+	overflow-y: auto;
+
+	background-color: lightblue;
+
+	justify-content: center;
+	align-items: center;
+}
+
+#payment_heading
+{
+	font-size: 2.5rem;
+}
+
+#payment_content_form
+{
+	background-color: red;
+
+	width: 50em;
+	height: 30em;
+
+	border-radius: 12px;
+
+	align-content: space-evenly;
+
+}
+
+#payment_content_form *
+{
+	width: 80%;
+	height: 3em;
+
+	border-radius: 15px;
+
+}
+
+#place_order_btn
+{
+
+}

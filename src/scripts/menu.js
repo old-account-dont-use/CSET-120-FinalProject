@@ -198,19 +198,21 @@ Menu.createItemDisplay = (itemName, item, menuContainer) =>
 			listOfWantedToppingsName.push(name)
 		}
 
-		const index = Menu.findDuplicateItem(name, listOfWantedToppingsName, Menu.cart)
+		const index = Menu.findDuplicateItem(name, listOfWantedToppingsName)
+
 
 		//handling duplicate items
-		if (index != -1){
-
-			Menu.cart[index].quantity = Helper.clamp(Menu.cart[index].quantity + 1, 0, 10)
+		if (index != -1)
+		{
+			const cartItem = Menu.cart[index]
+			cartItem.quantity = Helper.clamp(cartItem.quantity + 1, 0, 10)
 
 			const tableRows = Array.from(document.querySelectorAll(".cart_table_row"))
 			const row = tableRows[index]
 
 			const quantityInput = row.querySelector(".cart_quantity_input")
 
-			quantityInput.value = Menu.cart[index].quantity
+			quantityInput.value = cartItem.quantity
 			quantityInput.updateValue()
 			quantityInput.onchange({ target: quantityInput })
 
@@ -279,6 +281,8 @@ Menu.createItemDisplay = (itemName, item, menuContainer) =>
 			cartItemToppingsSection.appendChild(toppingContainer)
 		}
 
+		Menu.storeCartInfo()
+
 		cartItemName.appendChild(cartItemItemName)
 		cartItemName.appendChild(cartItemToppingsSection)
 
@@ -343,9 +347,11 @@ Menu.createItemDisplay = (itemName, item, menuContainer) =>
 
 			const itemToppings = Array.from(tableRow.querySelector(".cart_topping_name"))
 
-			const index = Menu.findDuplicateItem(itemName, itemToppings, Menu.cart)
+			const index = Menu.findDuplicateItem(itemName, itemToppings)
 
 			Menu.cart.splice(index, 1)
+
+			Menu.storeCartInfo()
 
 			tableRow.remove()
 
@@ -382,7 +388,11 @@ Menu.createItemDisplay = (itemName, item, menuContainer) =>
 			Menu.updateTotals()
 		}
 		cartTable.appendChild(cartTableRow)
-		Menu.addToCart(cartItemItemName.innerHTML, listOfWantedToppingsName, 1)
+
+
+		const newItem = Menu.addToCartArray(cartItemItemName.innerHTML, listOfWantedToppingsName, 1)
+		newItem.unitPrice = unitPrice
+		Menu.storeCartInfo()
 
 		//reset toppings list page to default selections
 		const toppingsPage = event.target.parentNode.previousSibling
@@ -396,7 +406,6 @@ Menu.createItemDisplay = (itemName, item, menuContainer) =>
 		}
 	}
 
-
 	section.appendChild(image)
 	section.appendChild(name)
 	section.appendChild(price)
@@ -409,6 +418,17 @@ Menu.createItemDisplay = (itemName, item, menuContainer) =>
 	menuContainer.appendChild(toppingList)
 	menuContainer.appendChild(section)
 }
+Menu.addToCartDisplay = () =>
+{
+
+}
+
+Menu.storeCartInfo = () =>
+{
+	StorageManager.setStoredValue("cartItems", Helper.json(Menu.cart))
+}
+
+
 
 Menu.handleItemAvailability = (section, item) =>
 {
@@ -472,8 +492,10 @@ Menu.updateTotals = () =>
 	totalValue.innerHTML = Helper.priceify(subtotal + subtotal * 0.06 + tipAmount)
 }
 
-Menu.findDuplicateItem = (itemName, toppingList, cartItems) =>
+Menu.findDuplicateItem = (itemName, toppingList) =>
 {
+	const cartItems = Menu.cart
+
 	outer: for (let i = 0; i < cartItems.length; i++)
 	{
 		const item = cartItems[i]
@@ -638,7 +660,8 @@ Menu.createCartDisplay = (menuContainer) =>
 		//bring to payment page
 		cashButton.onclick = () =>
 		{
-
+			Order.createPaymentPage(Order.PAYMENT_TYPE_CASH)
+			window.location.assign("../pages/order.html?type=cash")
 		}
 	}
 
@@ -648,8 +671,9 @@ Menu.createCartDisplay = (menuContainer) =>
 		cardPayment.innerHTML = "Card"
 
 		//bring to payment page
-		cashButton.onclick = () => {
-
+		cardPayment.onclick = () => {
+			Order.createPaymentPage(Order.PAYMENT_TYPE_CARD)
+			window.location.assign("../pages/order.html?type=card")
 		}
 	}
 
@@ -659,8 +683,9 @@ Menu.createCartDisplay = (menuContainer) =>
 		payPalButton.innerHTML = "PayPal"
 
 		//bring to payment page
-		cashButton.onclick = () => {
-
+		payPalButton.onclick = () => {
+			Order.createPaymentPage(Order.PAYMENT_TYPE_PAYPAL)
+			window.location.assign("../pages/order.html?type=paypal")
 		}
 	}
 
@@ -670,8 +695,9 @@ Menu.createCartDisplay = (menuContainer) =>
 		applePayButton.innerHTML = "Apple Pay"
 
 		//bring to payment page
-		cashButton.onclick = () => {
-
+		applePayButton.onclick = () => {
+			Order.createPaymentPage(Order.PAYMENT_TYPE_APPLE)
+			window.location.assign("../pages/order.html?type=applepay")
 		}
 	}
 
@@ -681,8 +707,9 @@ Menu.createCartDisplay = (menuContainer) =>
 		samsungPayButton.innerHTML = "Samsung Pay"
 
 		//bring to payment page
-		cashButton.onclick = () => {
-			window.location.href = "../orders.html"
+		samsungPayButton.onclick = () => {
+			Order.createPaymentPage(Order.PAYMENT_TYPE_SAMSUNG)
+			window.location.assign("../pages/order.html?type=samsungpay")
 		}
 	}
 
@@ -692,8 +719,9 @@ Menu.createCartDisplay = (menuContainer) =>
 		googlePayButton.innerHTML = "Google Pay"
 
 		//bring to payment page
-		cashButton.onclick = () => {
-
+		googlePayButton.onclick = () => {
+			Order.createPaymentPage(Order.PAYMENT_TYPE_GOOGLE)
+			window.location.assign("../pages/order.html?type=googlepay")
 		}
 	}
 
@@ -740,7 +768,7 @@ Menu.createCartDisplay = (menuContainer) =>
 /*
 * Adds items on the cart to an array
 */
-Menu.addToCart = (itemName, itemTopping, quantity) =>
+Menu.addToCartArray = (itemName, itemTopping, quantity) =>
 {
 	const item =
 	{
@@ -751,6 +779,8 @@ Menu.addToCart = (itemName, itemTopping, quantity) =>
 
 	Menu.cart.push(item)
 	Menu.updateTotals()
+
+	return item
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1421,6 +1451,12 @@ Helper.hookEvent(window, "load", false, () =>
 	}, "../assets/menu/drinks/Fountain_Drink.jpg")
 
 	if (!Helper.isOnPage("menu.html")) return
+
+	const storedCart = StorageManager.getStoredString("cartItems")
+	if (storedCart.length > 0)
+	{
+		Menu.cart = Helper.parse(storedCart)
+	}
 
 	const menuContainer = document.createElement("div")
 	menuContainer.id = "menu_container"
