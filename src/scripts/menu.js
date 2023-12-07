@@ -47,6 +47,7 @@ Menu.createItemDisplay = (itemName, item, menuContainer) =>
 	const section = document.createElement("div")
 	section.classList.add("menu_item_section")
 	section.classList.add("glass_morphism_weak")
+	section.setAttribute("isAvailable", true)
 
 	//creates the image of the item
 	const image = document.createElement("img")
@@ -60,6 +61,7 @@ Menu.createItemDisplay = (itemName, item, menuContainer) =>
 
 	//creates the item price tag
 	const price = document.createElement("h3")
+	price.classList.add("menu_item_price")
 	price.innerHTML = Helper.priceify(item.price)
 
 	//creates the item description
@@ -79,11 +81,25 @@ Menu.createItemDisplay = (itemName, item, menuContainer) =>
 	toppingList.classList.add("glass_morphism")
 	toppingList.setAttribute("isShown", false)
 
+	const toppingCloseBtn = document.createElement("button")
+	toppingCloseBtn.classList.add("menu_topping_close_btn")
+	toppingCloseBtn.classList.add("close_btn")
+	toppingCloseBtn.classList.add("float_right")
+
+	toppingCloseBtn.innerHTML = "x"
+	toppingCloseBtn.onclick = () =>
+	{
+		const isShown = (/true/).test(toppingList.getAttribute("isShown"))
+
+		toppingList.setAttribute("isShown", !isShown)
+	}
+
 	//creates the item name on the display of list of toppings
 	const toppingListItemLabel = document.createElement("h3")
 	toppingListItemLabel.classList.add("item_menu_topping_list_item_label")
 	toppingListItemLabel.innerHTML = itemName
 
+	toppingList.appendChild(toppingCloseBtn)
 	toppingList.appendChild(toppingListItemLabel)
 
 	for (const topping of itemToppingsArray)
@@ -116,10 +132,12 @@ Menu.createItemDisplay = (itemName, item, menuContainer) =>
 		//creates a line break for after each topping
 		const lineBreak = document.createElement("br")
 
-		//adding topping checkbox, name, and line break to the display of list of toppings
+		//adding topping close button, checkbox, name, and line break to the display of list of toppings
 		toppingList.appendChild(toppingCheckbox)
 		toppingList.appendChild(toppingLabel)
 		toppingList.appendChild(lineBreak)
+
+		Menu.handleToppingAvailability(toppingCheckbox, topping)
 	}
 
 	//creates a button for viewing display of list of toppings
@@ -378,6 +396,7 @@ Menu.createItemDisplay = (itemName, item, menuContainer) =>
 		}
 	}
 
+
 	section.appendChild(image)
 	section.appendChild(name)
 	section.appendChild(price)
@@ -385,8 +404,35 @@ Menu.createItemDisplay = (itemName, item, menuContainer) =>
 	section.appendChild(viewToppingsButton)
 	section.appendChild(addToCartButton)
 
+	Menu.handleItemAvailability(section, item)
+
 	menuContainer.appendChild(toppingList)
 	menuContainer.appendChild(section)
+}
+
+Menu.handleItemAvailability = (section, item) =>
+{
+	console.log(section)
+	const isAvailable = item.availability
+
+	//setting section availability for styling
+	section.setAttribute("isAvailable", isAvailable)
+
+	//"Select Toppings" button enabling/disabling
+	const selectToppingsBtn = section.querySelector(".menu_item_toppings_view_button")
+	selectToppingsBtn.disabled = !isAvailable
+
+	//"Add to Cart" button enabling/disabling
+	const addToCartBtn = section.querySelector(".menu_item_cart_button")
+	addToCartBtn.disabled = !isAvailable
+}
+
+Menu.handleToppingAvailability = (toppingCheckbox, topping) =>
+{
+	const isAvailable = Menu.toppings.get(topping).availability
+	console.log(isAvailable)
+
+	toppingCheckbox.disabled = !isAvailable
 }
 
 Menu.updateTotals = () =>
@@ -450,10 +496,25 @@ Menu.findDuplicateItem = (itemName, toppingList, cartItems) =>
 
 Menu.createCartDisplay = (menuContainer) =>
 {
+	//cart container
 	const cartContainer = document.createElement("div")
 	cartContainer.id = "cart_container"
 	cartContainer.setAttribute("isShown", false)
 
+	//close button
+	const cartCloseBtn = document.createElement("button")
+	cartCloseBtn.id = "cart_close_btn"
+	cartCloseBtn.classList.add("close_btn")
+	cartCloseBtn.classList.add("float_right")
+	cartCloseBtn.innerHTML = "x"
+	cartCloseBtn.onclick = () =>
+	{
+		const isShown = (/true/).test(cartContainer.getAttribute("isShown"))
+
+		cartContainer.setAttribute("isShown", !isShown)
+	}
+
+	//cart header
 	const cartHeader = document.createElement("h2")
 	cartHeader.id = "cart_header"
 	cartHeader.classList.add("center_text")
@@ -577,36 +638,67 @@ Menu.createCartDisplay = (menuContainer) =>
 	{
 		cashButton.classList.add("cart_payment_button")
 		cashButton.innerHTML = "Cash"
+
+		//bring to payment page
+		cashButton.onclick = () =>
+		{
+
+		}
 	}
 
 	const cardPayment = document.createElement("button")
 	{
 		cardPayment.classList.add("cart_payment_button")
 		cardPayment.innerHTML = "Card"
+
+		//bring to payment page
+		cashButton.onclick = () => {
+
+		}
 	}
 
 	const payPalButton = document.createElement("button")
 	{
 		payPalButton.classList.add("cart_payment_button")
 		payPalButton.innerHTML = "PayPal"
+
+		//bring to payment page
+		cashButton.onclick = () => {
+
+		}
 	}
 
 	const applePayButton = document.createElement("button")
 	{
 		applePayButton.classList.add("cart_payment_button")
 		applePayButton.innerHTML = "Apple Pay"
+
+		//bring to payment page
+		cashButton.onclick = () => {
+
+		}
 	}
 
 	const samsungPayButton = document.createElement("button")
 	{
 		samsungPayButton.classList.add("cart_payment_button")
 		samsungPayButton.innerHTML = "Samsung Pay"
+
+		//bring to payment page
+		cashButton.onclick = () => {
+			window.location.href = "../orders.html"
+		}
 	}
 
 	const googlePayButton = document.createElement("button")
 	{
 		googlePayButton.classList.add("cart_payment_button")
 		googlePayButton.innerHTML = "Google Pay"
+
+		//bring to payment page
+		cashButton.onclick = () => {
+
+		}
 	}
 
 
@@ -639,6 +731,7 @@ Menu.createCartDisplay = (menuContainer) =>
 	totalSection.appendChild(tipContainer)
 	totalSection.appendChild(totalContainer)
 
+	cartContainer.appendChild(cartCloseBtn)
 	cartContainer.appendChild(cartHeader)
 	cartContainer.appendChild(hr)
 	cartContainer.appendChild(cartTableContainer)
@@ -1350,16 +1443,6 @@ Helper.hookEvent(window, "load", false, () =>
 		const isShown = (/true/).test(cartContainer.getAttribute("isShown"))
 
 		cartContainer.setAttribute("isShown", !isShown )
-	}
-
-	//broken
-	viewCartButton.onkeyup = (event) =>
-	{
-		const escapeKey = 27
-
-		if (event.keyCode == escapeKey)
-			cartContainer.setAttribute("isShown", false)
-
 	}
 
 	const menuArray = Array.from(Menu.items.keys())

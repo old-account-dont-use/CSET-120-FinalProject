@@ -96,6 +96,7 @@ Manager.setItemField = (itemName, field, value) =>
 	const stored = Manager.getModifiedItem(itemName)
 
 	stored[field] = value
+
 	Manager.storeModifiedItemsList()
 }
 
