@@ -109,8 +109,24 @@ Manager.getItemField = (itemName, field) =>
 	return stored[field]
 }
 
+/*
+*
+*	Actual menu
+*
+*/
+Manager.createManagerPage = () =>
+{
+	const managerContainer = document.createElement("div")
+	managerContainer.id = "manager_menu_container"
+
+
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 Helper.hookEvent(window, "load", false, () =>
 {
 	Manager.m_ModifiedItems = Manager.getModifiedItemsList()
+
+	if (Helper.isOnPage("manager.html"))
+		Manager.createManagerPage()
 })

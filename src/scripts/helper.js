@@ -383,6 +383,23 @@ Helper.compareObjects = (object1, object2) =>
 }
 
 /*
+*	Gets the name of the current page
+*/
+Helper.getPageName = () =>
+{
+	return location.href.substring(location.href.lastIndexOf('/') + 1)
+}
+
+/*
+*	Returns true if we're on the specified page, false otherwise
+*/
+Helper.isOnPage = (page) =>
+{
+	page = Helper.getString(page).toLowerCase()
+	return Helper.getPageName() === page
+}
+
+/*
 *	Registers a function to be ran on an event
 */
 Helper.g_Events = new Map()

@@ -1420,7 +1420,7 @@ Helper.hookEvent(window, "load", false, () =>
 		"minute maid lemonade": false
 	}, "../assets/menu/drinks/Fountain_Drink.jpg")
 
-	if (location.href.substring(location.href.lastIndexOf('/') + 1) != "menu.html") return
+	if (!Helper.isOnPage("menu.html")) return
 
 	const menuContainer = document.createElement("div")
 	menuContainer.id = "menu_container"
