@@ -3,7 +3,7 @@ let Menu = new Map()
 Menu.toppings = new Map()
 Menu.items = new Map()
 
-Menu.cart = [];
+Menu.cart = []
 
 /*
 *	Adds a new topping to the menu

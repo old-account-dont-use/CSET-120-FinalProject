@@ -114,12 +114,51 @@ Manager.getItemField = (itemName, field) =>
 *	Actual menu
 *
 */
+Manager.SUB_PAGE_MENU = 1
+Manager.SUB_PAGE_ORDERS = 2
+Manager.SUB_PAGE_ACCOUNTS = 3
+
+Manager.createSubPage = (managerContainer, id) =>
+{
+	switch (id)
+	{
+		default:
+		case Manager.SUB_PAGE_MENU:
+		{
+			const toppings = Array.from(Menu.toppings.keys())
+
+			for (const toppingName of toppings)
+			{
+
+			}
+
+			const items = Array.from(Menu.items.keys())
+
+
+
+			break
+		}
+
+		case Manager.SUB_PAGE_ORDERS: // TODO
+		{
+			break
+		}
+
+		case Manager.SUB_PAGE_ACCOUNTS: // TODO
+		{
+			break
+		}
+	}
+}
+
 Manager.createManagerPage = () =>
 {
 	const managerContainer = document.createElement("div")
 	managerContainer.id = "manager_menu_container"
-
-
+	{
+		Manager.createSubPage(managerContainer, Manager.SUB_PAGE_MENU) // TODO
+	}
+	document.body.appendChild(managerContainer)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
