@@ -107,3 +107,17 @@ StorageManager.setStoredValue = (keyName, value) =>
 	else
 		sessionStorage.setItem(keyName, String(value))
 }
+
+/*
+*	Removes a key from the session
+*/
+StorageManager.removeStoredValue = (keyName) =>
+{
+	if (!keyName)
+	throw new Error(`Invalid keyName '${keyName}' provided`)
+
+	if (!Helper.isString(keyName))
+		keyName = String(keyName)
+
+	sessionStorage.removeItem(keyName)
+}

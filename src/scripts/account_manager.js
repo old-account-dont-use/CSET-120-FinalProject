@@ -58,25 +58,9 @@ AccountManager.storeAccountList = (accountMap) =>
 AccountManager.setActiveAccount = (accountData) =>
 {
 	if (!accountData)
-	{
-		StorageManager.setStoredValue("email", "")
-		StorageManager.setStoredValue("password", "")
-		StorageManager.setStoredValue("uid", 0)
-		StorageManager.setStoredValue("accountType", 0)
-		StorageManager.setStoredValue("orderHistory", "")
-		StorageManager.setStoredValue("paymentMethods", "")
-		StorageManager.setStoredValue("notifications", "")
-	}
+		StorageManager.removeStoredValue("activeAccount")
 	else
-	{
-		StorageManager.setStoredValue("email", accountData.email)
-		StorageManager.setStoredValue("password", accountData.password)
-		StorageManager.setStoredValue("uid", accountData.userID)
-		StorageManager.setStoredValue("accountType", accountData.type)
-		StorageManager.setStoredValue("orderHistory", accountData.orderHistory)
-		StorageManager.setStoredValue("paymentMethods", accountData.paymentMethods)
-		StorageManager.setStoredValue("notifications", accountData.notifications)
-	}
+		StorageManager.setStoredValue("activeAccount", Helper.json(accountData))
 
 	AccountManager.g_bLoggedIn = accountData != null
 	AccountManager.g_AccountData = AccountManager.g_bLoggedIn ? accountData : null
@@ -290,20 +274,26 @@ Helper.hookEvent(window, "load", false, () =>
 */
 Helper.hookEvent(window, "load", false, () =>
 {
-	const email = StorageManager.getStoredString("email")
-	const password = StorageManager.getStoredString("password")
-	const uid = StorageManager.getStoredInteger("uid")
-	const accountType = StorageManager.getStoredInteger("accountType")
+	const storedAccountData = StorageManager.getStoredString("activeAccount")
+	if (storedAccountData.length < 1)
+	{
+		AccountManager.g_bLoggedIn = false
+		return
+	}
 
-	if (uid != 0 && !AccountManager.validateAccount(email, password, uid, accountType))
+	const storedAccount = Helper.parse(storedAccountData)
+
+	const wasLoggedIn = storedAccount.email.length > 0 || storedAccount.password.length > 0
+
+	if (uid != 0 && !AccountManager.validateAccount(storedAccount.email, storedAccount.password, storedAccount.userID, storedAccount.type))
 	{
 		AccountManager.logout(false)
 
-		if (email.length > 0 || password.length > 0 || uid > 0 || accountType > 0)
+		if (wasLoggedIn)
 			location.reload()
 
 		return
 	}
 
-	AccountManager.loginHashed(email, password)
+	AccountManager.loginHashed(storedAccount.email, storedAccount.password)
 })
