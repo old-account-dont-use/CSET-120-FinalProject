@@ -285,7 +285,7 @@ Helper.hookEvent(window, "load", false, () =>
 
 	const wasLoggedIn = storedAccount.email.length > 0 || storedAccount.password.length > 0
 
-	if (uid != 0 && !AccountManager.validateAccount(storedAccount.email, storedAccount.password, storedAccount.userID, storedAccount.type))
+	if (storedAccount.userID != 0 && !AccountManager.validateAccount(storedAccount.email, storedAccount.password, storedAccount.userID, storedAccount.type))
 	{
 		AccountManager.logout(false)
 
