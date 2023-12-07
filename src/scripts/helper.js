@@ -144,6 +144,63 @@ Helper.clamp = (x, y, z) =>
 }
 
 /*
+*	RNG
+*/
+Helper.rng = (min = Number.MIN_SAFE_INTEGER, max = Number.MAX_SAFE_INTEGER, allowFloat = false) =>
+{
+	min = Helper.getNumber(min)
+	max = Helper.getNumber(max)
+
+	const number = (max - min + 1) * Math.random() + min
+
+	if (allowFloat) return number
+	return Math.floor(number)
+}
+
+/*
+*	Generates a random string with the given length
+*	Length is 10 by default
+*/
+Helper.randomString = (length = 10) =>
+{
+	length = Helper.getNumber(length)
+	if (length < 1) return ""
+
+	let random = ""
+	for (let i = 1; i <= length; i++)
+	{
+		let code = 0
+
+		const highMedLow = Helper.rng(1, 3)
+		switch (highMedLow)
+		{
+			default:
+			case 1: // Numbers
+			{
+				code = Helper.rng(48, 57)
+				break
+			}
+
+			case 2: // Uppercase
+			{
+				code = Helper.rng(65, 90)
+				break
+			}
+
+			case 3: // Lowercase
+			{
+				code = Helper.rng(97, 122)
+				break
+			}
+		}
+
+		random += String.fromCharCode(code)
+	}
+
+	return random
+}
+
+/*
 *	Converts a string or number to a price, throws an error if parsing failed
 *
 *	Example:

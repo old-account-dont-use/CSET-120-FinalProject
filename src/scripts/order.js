@@ -1,9 +1,15 @@
 const Order = new Map()
 
-const letters = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
+Order.PAYMENT_TYPE_CASH = 1
+Order.PAYMENT_TYPE_CARD = 2
+Order.PAYMENT_TYPE_PAYPAL = 3
+Order.PAYMENT_TYPE_APPLE = 4
+Order.PAYMENT_TYPE_SAMSUNG = 5
+Order.PAYMENT_TYPE_GOOGLE = 6
 
-const numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
-
+/*
+*	Sets up a payment page
+*/
 Order.createPaymentPage = (paymentType) =>
 {
 	const paymentContainer =  document.createElement("div")
@@ -14,55 +20,55 @@ Order.createPaymentPage = (paymentType) =>
 	const paymentContent = document.createElement("div")
 
 	//name for order
-	const name = document.createElement("input")
-	name.id = "customer_name"
-	name.setAttribute("type", "text")
-	name.setAttribute("min", "1")
-	name.setAttribute("max", "25")
-	name.setAttribute("placeholder", "Enter your name")
-	name.required = true
+	// const name = document.createElement("input")
+	// name.id = "customer_name"
+	// name.setAttribute("type", "text")
+	// name.setAttribute("min", "1")
+	// name.setAttribute("max", "25")
+	// name.setAttribute("placeholder", "Enter your name")
+	// name.required = true
 
-	const phone = document.createElement("input")
-	phone.id = "customer_phone"
-	phone.setAttribute("type", "number")
-	phone.setAttribute("min", "")
-	phone.setAttribute("max", "")
-	phone.setAttribute("placeholder", "Enter you phone number")
-	phone.required = true
+	// const phone = document.createElement("input")
+	// phone.id = "customer_phone"
+	// phone.setAttribute("type", "number")
+	// phone.setAttribute("min", "")
+	// phone.setAttribute("max", "")
+	// phone.setAttribute("placeholder", "Enter you phone number")
+	// phone.required = true
 
-	const email = document.createElement("input")
-	email.id = "customer_email"
-	email.setAttribute("type", "text")
-	email.setAttribute("min", "")
-	email.setAttribute("max", "50")
-	email.setAttribute("placeholder", "Enter your email")
-	email.required = true
+	// const email = document.createElement("input")
+	// email.id = "customer_email"
+	// email.setAttribute("type", "text")
+	// email.setAttribute("min", "")
+	// email.setAttribute("max", "50")
+	// email.setAttribute("placeholder", "Enter your email")
+	// email.required = true
 
 	paymentContainer.appendChild(paymentHeading)
 	paymentContainer.appendChild(paymentContent)
-	paymentContainer.appendChild(name)
-	paymentContainer.appendChild(phone)
-	paymentContainer.appendChild(email)
+	// paymentContainer.appendChild(name)
+	// paymentContainer.appendChild(phone)
+	// paymentContainer.appendChild(email)
 
-	if(paymentType === "card")
+	if(paymentType == Order.PAYMENT_TYPE_CARD)
 	{
 		const cardContainer = document.createElement("div")
 
 
 		const number = document.createElement("input")
 		number.id = "card_number"
-		number.setAttribute("type", "number")
-		number.setAttribute("min", "15")
-		number.setAttribute("max", "16")
-		number.setAttribute("placeholder", "#############")
+		number.setAttribute("type", "text")
+		number.setAttribute("minlength", "10")
+		number.setAttribute("maxlength", "20")
+		number.setAttribute("placeholder", "Card Number")
 		number.required = true
 
 		const expiration = document.createElement("input")
 		expiration.id = "card_expiration"
-		expiration.setAttribute("type", "number")
-		expiration.setAttribute("min", "4")
-		expiration.setAttribute("max", "4")
-		expiration.setAttribute("placeholder", "MMYY")
+		expiration.setAttribute("type", "text")
+		expiration.setAttribute("minlength", "5")
+		expiration.setAttribute("maxlength", "5")
+		expiration.setAttribute("placeholder", "MM/YY")
 		expiration.required = true
 
 		cardContainer.appendChild(number)
@@ -75,18 +81,10 @@ Order.createPaymentPage = (paymentType) =>
 	placeOrderBtn.innerHTML = "Place Order"
 	placeOrderBtn.onclick = () =>
 	{
-		const customerName = document.querySelector("#customer_name")
-		const customerPhone = document.querySelector("#customer_phone")
-		const customerEmail = document.querySelector("#customer_email")
-		const cardNumber = document.querySelector("#card_number")
-		const cardExpiration = document.querySelector("#card_expiration")
+		const accountData = AccountManager.g_AccountData
 
+		console.log(accountData.email)
 
-		StorageManager.setStoredValue("customerName", customerName.value)
-		StorageManager.setStoredValue("customerPhone", customerPhone.value)
-		StorageManager.setStoredValue("customerEmail", customerEmail.value)
-		StorageManager.setStoredValue("cardNumber", cardNumber.value)
-		StorageManager.setStoredValue("cardExpiration", cardExpiration.value)
 
 		alert("Thank you for your purchase")
 
@@ -105,22 +103,6 @@ Order.createPaymentPage = (paymentType) =>
 }
 
 /*
-*	Generates a random order ID
-*/
-Order.setOrderID = () =>
-{
-	let id = ""
-
-	for (let i = 0; i < 4; i++)
-		id+=letters[rng(0, letters.length-1)]
-
-	for (let i = 0; i < 4; i++)
-		id += numbers[rng(0, numbers.length - 1)]
-
-	return id
-}
-
-/*
 *	Creates the receipt for the order
 */
 Order.createReceipt = (paymentType) =>
@@ -128,17 +110,11 @@ Order.createReceipt = (paymentType) =>
 	const receiptContainer = document.createElement("div")
 	receiptContainer.id = "receipt_container"
 
-	const orderID = Order.setOrderID()
+	const orderID = Helper.randomString(12)
 	// StorageManager.setStoredValue(orderID, "orderInfoToBeCreated") //stores what's on receipt (customer info, cart)
 
-	const customerName = StorageManager.getStoredString("customerName")
-	console.log(customerName)
 
-	const customerPhone = StorageManager.getStoredString("customerPhone")
-
-	const customerEmail = StorageManager.getStoredString("customerEmail")
-
-	Order.createCustomerInfo(customerName, customerPhone, customerEmail, receiptContainer)
+	// Order.createCustomerInfo(customerName, customerPhone, customerEmail, receiptContainer)
 
 
 	document.body.appendChild(receiptContainer)
@@ -208,17 +184,8 @@ Order.createCustomerInfo = (name, phone, email, receiptContainer) =>
 	receiptContainer.appendChild(customerInfoContainer)
 }
 
-/*
-*	Returns a random integer between low and high
-*/
-function rng(low, high)
-{
-	return Math.floor((high - low + 1) * Math.random() + low)
-}
-
 ///////////////////////////////////////////////////////////////////////
 Helper.hookEvent(window, "load", false, () =>
 {
-	if (location.href.substring(location.href.lastIndexOf('/') + 1) != "order.html") return
-	Order.createPaymentPage("card")
+	Order.createPaymentPage(Order.PAYMENT_TYPE_CARD)
 })

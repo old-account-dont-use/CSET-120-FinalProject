@@ -412,7 +412,6 @@ Menu.createItemDisplay = (itemName, item, menuContainer) =>
 
 Menu.handleItemAvailability = (section, item) =>
 {
-	console.log(section)
 	const isAvailable = item.availability
 
 	//setting section availability for styling
@@ -430,7 +429,6 @@ Menu.handleItemAvailability = (section, item) =>
 Menu.handleToppingAvailability = (toppingCheckbox, topping) =>
 {
 	const isAvailable = Menu.toppings.get(topping).availability
-	console.log(isAvailable)
 
 	toppingCheckbox.disabled = !isAvailable
 }
@@ -537,8 +535,6 @@ Menu.createCartDisplay = (menuContainer) =>
 	const headerItemName = document.createElement("th")
 	headerItemName.id = "cart_th_item_name"
 	headerItemName.innerHTML = "Item"
-	const divpos = cartHeader.offsetHeight
-	console.log(divpos)
 
 	//creating table header for item quantity
 	const headerItemQuantity = document.createElement("th")
