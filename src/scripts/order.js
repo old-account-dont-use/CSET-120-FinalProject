@@ -187,5 +187,7 @@ Order.createCustomerInfo = (name, phone, email, receiptContainer) =>
 ///////////////////////////////////////////////////////////////////////
 Helper.hookEvent(window, "load", false, () =>
 {
+	if (!Helper.isOnPage("order.html")) return
+
 	Order.createPaymentPage(Order.PAYMENT_TYPE_CARD)
 })
