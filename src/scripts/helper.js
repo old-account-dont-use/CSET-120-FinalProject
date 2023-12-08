@@ -193,8 +193,8 @@ Helper.clamp = (x, y, z) =>
 */
 Helper.rng = (min = Number.MIN_SAFE_INTEGER, max = Number.MAX_SAFE_INTEGER, allowFloat = false) =>
 {
-	min = Helper.getNumber(min)
-	max = Helper.getNumber(max)
+	min = Helper.getNumber(min, true, Number.MIN_SAFE_INTEGER)
+	max = Helper.getNumber(max, true, Number.MAX_SAFE_INTEGER)
 
 	const number = (max - min + 1) * Math.random() + min
 
