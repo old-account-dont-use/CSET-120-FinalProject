@@ -85,7 +85,7 @@ Manager.isItemModified = (itemName) =>
 	const original = Manager.getOriginalItem(itemName)
 	const stored = Manager.getModifiedItem(itemName)
 
-	return !Helper.compareObjects(original, stored)
+	return !Helper.smartCompare(original, stored)
 }
 
 /*

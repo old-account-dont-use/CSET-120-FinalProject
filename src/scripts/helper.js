@@ -322,6 +322,30 @@ Helper.copyObject = (object) =>
 }
 
 /*
+*	Attempts to smartly compare two objects
+*/
+Helper.smartCompare = (object1, object2) =>
+{
+	if (object1 === object2) return true
+
+	const firstIsArray = object1 instanceof Array
+	const secondIsArray = object2 instanceof Array
+	if (firstIsArray != secondIsArray) return false
+
+	if (firstIsArray && secondIsArray)
+		return Helper.compareArrays(object1, object2)
+
+	const firstIsObject = object1 instanceof Object
+	const secondIsObject = object2 instanceof Object
+	if (firstIsObject != secondIsObject) return false
+
+	if (firstIsObject && secondIsObject)
+		return Helper.compareObjects(object1, object2)
+
+	return false
+}
+
+/*
 *	Compares two arrays
 *	Returns true if they are the same, false otherwise
 */
@@ -331,7 +355,11 @@ Helper.compareArrays = (array1, array2) =>
 	if (array1.length != array2.length) return false
 
 	for (let i = 0; i < array1.length; i++)
-		if (array1[i] !== array2[i]) return false
+	{
+		if (!Helper.smartCompare(array1[i], array2[i]))
+			return false
+	}
+
 
 	return true
 }
@@ -345,38 +373,17 @@ Helper.compareObjects = (object1, object2) =>
 	if (object1 === object2) return true
 
 	const firstSet = Object.getOwnPropertyNames(object1)
-	const secondSet = Object.getOwnPropertyNames(object2)
+	firstSet.sort()
 
-	if (firstSet.length != secondSet.length) return false
+	const secondSet = Object.getOwnPropertyNames(object2)
+	secondSet.sort()
+
+	if (!Helper.compareArrays(firstSet, secondSet)) return false
 
 	for (const key of firstSet)
 	{
-		const first = object1[key]
-		const second = object2[key]
-
-		const firstIsArray = first instanceof Array
-		const secondIsArray = second instanceof Array
-		if (firstIsArray != secondIsArray) return false
-		if (firstIsArray && secondIsArray)
-		{
-			if (!Helper.compareArrays(first, second))
-				return false
-
-			continue
-		}
-
-		const firstIsObject = first instanceof Object
-		const secondIsObject = second instanceof Object
-		if (firstIsObject != secondIsObject) return false
-		if (firstIsObject && secondIsObject)
-		{
-			if (!Helper.compareObjects(first, second))
-				return false
-
-			continue
-		}
-
-		if (first !== second) return false
+		if (!Helper.smartCompare(object1[key], object2[key]))
+			return false
 	}
 
 	return true
