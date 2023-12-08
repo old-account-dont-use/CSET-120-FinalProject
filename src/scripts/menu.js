@@ -37,7 +37,292 @@ Menu.addItem = (name, price, description, toppingList, image) =>
 
 	Menu.items.set(name.toLowerCase(), newItem)
 }
+// /*
+// *	Creates the display of the item and topping
+// */
+// Menu.createMenuDisplay = (itemName, item, menuContainer) =>
+// {
+// 	Menu.createItemsDisplay(itemName, item, menuContainer)
+// }
 
+// Menu.createItemsDisplay = (itemName, item, menuContainer) =>
+// {
+// 	//creates a container for the item
+// 	const section = document.createElement("div")
+// 	section.classList.add("menu_item_section")
+// 	section.classList.add("glass_morphism_weak")
+// 	section.setAttribute("isAvailable", true)
+
+// 	////////////////////////////////////////////////////////////////
+
+// 	//creates the image of the item
+// 	const image = document.createElement("img")
+// 	image.classList.add("menu_item_image")
+// 	image.src = item.image
+
+
+// 	//creates the item name
+// 	const name = document.createElement("h3")
+// 	name.classList.add("menu_item_name")
+// 	name.innerHTML = itemName
+
+
+// 	//creates the item price tag
+// 	const price = document.createElement("h3")
+// 	price.classList.add("menu_item_price")
+// 	price.innerHTML = Helper.priceify(item.price)
+
+
+// 	//creates the item description
+// 	const description = document.createElement("p")
+// 	description.classList.add("menu_item_description")
+// 	description.innerHTML = item.description
+
+// 	section.appendChild(image)
+// 	section.appendChild(name)
+// 	section.appendChild(price)
+// 	section.appendChild(description)
+
+// 	////////////////////////////////////////////////////////////////
+
+// 	/*
+// 	* creates the display of the list of toppings
+// 	* hidden on default
+// 	*/
+// 	const toppingList = document.createElement("div")
+// 	toppingList.classList.add("menu_item_topping_list")
+// 	toppingList.classList.add("glass_morphism")
+// 	toppingList.setAttribute("isShown", false)
+
+// 	const toppingCloseBtn = document.createElement("button")
+// 	toppingCloseBtn.classList.add("menu_topping_close_btn")
+// 	toppingCloseBtn.classList.add("close_btn")
+// 	toppingCloseBtn.classList.add("float_right")
+// 	toppingCloseBtn.innerHTML = "x"
+
+// 	toppingCloseBtn.onclick = () => {
+// 		const isShown = Helper.getBool(toppingList.getAttribute("isShown"))
+
+// 		toppingList.setAttribute("isShown", !isShown)
+// 	}
+
+
+// 	////////////////////////////////////////////////////////////////
+
+// 	//creates the item name on the display of list of toppings
+// 	const toppingListItemLabel = document.createElement("h3")
+// 	toppingListItemLabel.classList.add("item_menu_topping_list_item_label")
+// 	toppingListItemLabel.innerHTML = itemName
+
+// 	toppingList.appendChild(toppingCloseBtn)
+// 	toppingList.appendChild(toppingListItemLabel)
+
+
+// 	const itemToppings = item.toppings //object form of the toppings for the item
+// 	const itemToppingsArray = Object.getOwnPropertyNames(itemToppings) //string array form of the toppings name
+
+// 	//setting up checkboxes and topping labels for the list of toppings of the item
+// 	for (const topping of itemToppingsArray) {
+// 		const toppingData = Menu.toppings.get(topping.toLowerCase()) //object form of the topping
+
+// 		//checks for whether the item topping exists in the list of possible toppings
+// 		if (!toppingData) {
+// 			console.error(`Item ${itemName} has invalid topping ${topping}`)
+// 			continue
+// 		}
+
+// 		/*
+// 		* creates the checkbox for the topping
+// 		* checkbox checking based on whether topping is on item by default
+// 		*/
+// 		const toppingCheckbox = document.createElement("input")
+// 		toppingCheckbox.type = "checkbox"
+// 		toppingCheckbox.classList.add("menu_item_topping_checkbox")
+// 		toppingCheckbox.id = `topping_checkbox_${topping}`
+// 		toppingCheckbox.checked = itemToppings[topping]
+
+// 		//creates the label/name of the topping
+// 		const toppingLabel = document.createElement("label")
+// 		toppingLabel.classList.add("menu_item_topping_label")
+// 		toppingLabel.innerHTML = `${topping} ${Helper.priceify(toppingData.price)}`
+// 		toppingLabel.setAttribute("for", `topping_checkbox_${topping}`)
+
+// 		//creates a line break for after each topping
+// 		const lineBreak = document.createElement("br")
+
+// 		//adding topping close button, checkbox, name, and line break to the display of list of toppings
+// 		toppingList.appendChild(toppingCheckbox)
+// 		toppingList.appendChild(toppingLabel)
+// 		toppingList.appendChild(lineBreak)
+
+// 		Menu.handleToppingAvailability(toppingCheckbox, topping)
+// 	}
+
+// 	//adding topping list display to menu container
+// 	menuContainer.appendChild(toppingList)
+
+// 	//adding item display to menu container
+// 	menuContainer.appendChild(section)
+
+// 	////////////////////////////////////////////////////////////////
+
+// 	//creates a button for viewing display of list of toppings
+// 	const viewToppingsButton = document.createElement("button")
+// 	viewToppingsButton.classList.add("menu_item_toppings_view_button")
+// 	viewToppingsButton.innerHTML = "Select Toppings"
+// 	viewToppingsButton.m_ToppingList = toppingList //stores div for displaying list of toppings
+
+// 	//toggling display for list of toppings
+// 	viewToppingsButton.onclick = (event) =>
+// 	{
+// 		const toppingList = event.target.m_ToppingList
+
+// 		const isShown = Helper.getBool(toppingList.getAttribute("isShown")) //converts string to boolean form
+
+// 		const toppingLists = document.querySelectorAll(".menu_item_topping_list") //gets all the divs containing list of toppings
+
+// 		//hides the already displayed list of toppings if applicable so that only one list displays at a time
+// 		for (const list of toppingLists) {
+// 			if (isShown) {
+// 				list.setAttribute("isShown", false)
+// 				break
+// 			}
+// 		}
+
+// 		//toggles visibility of the display of list of toppings when "Select Toppings" button is clicked
+// 		toppingList.setAttribute("isShown", !isShown)
+// 	}
+// 	section.appendChild(viewToppingsButton)
+
+// 	////////////////////////////////////////////////////////////////
+
+// 	//creates the button for adding item to the cart
+// 	const addToCartButton = document.createElement("button")
+// 	section.appendChild(addToCartButton)
+// 	addToCartButton.classList.add("menu_item_cart_button")
+// 	addToCartButton.innerHTML = "Add to cart"
+// 	console.log(addToCartButton)
+// 	addToCartButton.onclick = Menu.addToCartDisplay()
+
+// 	////////////////////////////////////////////////////////////////
+
+
+
+// 	////////////////////////////////////////////////////////////////
+// }
+
+// Menu.addToCartDisplay = (menuItem, menuContainer) =>
+// {
+// 	// const name = menuItem.name
+
+// 	if (true) return
+
+// 	// //array form of the toppings that are selected
+// 	// const listOfWantedToppingsCheckboxes = Array.from(toppingList.childNodes).filter((element) => {
+// 	// 	return element.checked
+// 	// })
+
+// 	// //getting name of toppings into array
+// 	// let listOfWantedToppingsName = []
+// 	// for (const topping of listOfWantedToppingsCheckboxes) {
+// 	// 	const toppingLabelText = topping.nextSibling.innerHTML
+
+// 	// 	const separationIndex = toppingLabelText.indexOf("$") //index that separates name and price of topping
+
+// 	// 	const name = toppingLabelText.substring(0, separationIndex - 1)
+
+// 	// 	listOfWantedToppingsName.push(name)
+// 	// }
+
+// 	// //handling duplicate items
+// 	// const index = Menu.findDuplicateItem(name, listOfWantedToppingsName)
+// 	// Menu.handleAddingDuplicateItems(index)
+
+// 	// ////////////////////////////////////////////////////////////////
+// 	// //If not a duplicate item
+
+
+// 	// Menu.createCartItem(name, menuContainer)
+// }
+
+// Menu.createCartItem = (name, menuContainer) =>
+// {
+// 	const cartTable = menuContainer.querySelector("#cart_table")
+
+
+// 	const cartTableRow = document.createElement("tr")
+// 	cartTableRow.classList.add("cart_table_row")
+
+// 	cartTable.appendChild(cartTableRow)
+
+// 	////////////////////////////////////////////////////////////////
+
+// 	Menu.createCartItemSection(cartTableRow, name) //creating the cart item section of item
+// 	/Menu.createCartQuantitySection(cartTableRow, name) //creating the cart quantity section of item
+// 	Menu.createCartPriceSection(cartTableRow, name)	//creating the cart price section of item
+
+
+// 	//creating section for the toppings
+// 	const cartItemToppingsSection = document.createElement("p")
+// 	cartItemToppingsSection.classList.add("cart_item_toppings_section")
+// 	cartItemToppingsSection.classList.add("flexbox_column")
+
+// }
+
+// Menu.createCartItemSection = (cartTableRow, name) =>
+// {
+// 	//creating the item name
+// 	const cartItemSection = document.createElement("td")
+// 	cartItemSection.classList.add("cart_item_name")
+
+// 	cartTableRow.appendChild(cartItemSection)
+
+// 	Menu.createCartItemSectionItem(cartItemSection, name)
+// }
+
+// Menu.createCartQuantitySection = (cartTableRow) =>
+// {
+
+// }
+
+// Menu.createCartPriceSection = (cartTableRow) => {
+
+// }
+
+
+// Menu.createCartItemSectionItem = (cartItemSection, name) =>
+// {
+// 	//creating the actual item name on cart
+// 	const cartItemItemName = document.createElement("h1")
+// 	cartItemItemName.classList.add("cart_item_item_name")
+
+// 	cartItemItemName.innerHTML = `${name}`
+
+// 	cartItemSection.appendChild(cartItemItemName)
+// }
+
+// /*
+// *	Updates quantity of item if item is already on the cart
+// */
+// Menu.handleAddingDuplicateItems = (index) =>
+// {
+// 	if (index != -1) {
+// 		const cartItem = Menu.cart[index]
+// 		cartItem.quantity = Helper.clamp(cartItem.quantity + 1, 0, 10)
+
+// 		const tableRows = Array.from(document.querySelectorAll(".cart_table_row"))
+// 		const row = tableRows[index]
+
+// 		const quantityInput = row.querySelector(".cart_quantity_input")
+
+// 		quantityInput.value = cartItem.quantity
+// 		quantityInput.updateValue()
+// 		quantityInput.onchange({ target: quantityInput })
+
+// 		return
+// 	}
+// }
+//================================================Old section=======================================================================
 /*
 *	Creates the display of the item and topping
 */
@@ -418,10 +703,6 @@ Menu.createItemDisplay = (itemName, item, menuContainer) =>
 	menuContainer.appendChild(toppingList)
 	menuContainer.appendChild(section)
 }
-Menu.addToCartDisplay = () =>
-{
-
-}
 
 Menu.storeCartInfo = () =>
 {
@@ -529,7 +810,7 @@ Menu.createCartDisplay = (menuContainer) =>
 	cartCloseBtn.innerHTML = "x"
 	cartCloseBtn.onclick = () =>
 	{
-		const isShown = (/true/).test(cartContainer.getAttribute("isShown"))
+		const isShown = Helper.getBool(cartContainer.getAttribute("isShown"))
 
 		cartContainer.setAttribute("isShown", !isShown)
 	}
@@ -783,8 +1064,10 @@ Menu.addToCartArray = (itemName, itemTopping, quantity) =>
 	return item
 }
 
-///////////////////////////////////////////////////////////////////////////////
-Helper.hookEvent(window, "load", false, () =>
+/*
+*	Sets up the menu items and toppings
+*/
+Menu.setup = () =>
 {
 	// Add toppings
 	// Vegetable options
@@ -979,6 +1262,8 @@ Helper.hookEvent(window, "load", false, () =>
 	Menu.addTopping("chocolate milk", 0.00)
 	Menu.addTopping("white milk", 0.00)
 
+	////////////////////////////////////////////////////////////////
+
 	// Add items
 
 	// Healthy Haven
@@ -1028,7 +1313,7 @@ Helper.hookEvent(window, "load", false, () =>
 		"parsely leaves": true,
 		"mint leaves": true,
 		"tomatoes": true
-	} , "../assets/menu/food/Quinoa_and_Vegetable_Stuffed_Bell_Peppers.jpg")
+	}, "../assets/menu/food/Quinoa_and_Vegetable_Stuffed_Bell_Peppers.jpg")
 
 	Menu.addItem("Avocado Toast Trio", 4.00, "Avocado Toast Trio with Tomato Salsa", {
 		"toasted": true,
@@ -1449,6 +1734,14 @@ Helper.hookEvent(window, "load", false, () =>
 		"dr pepper": false,
 		"minute maid lemonade": false
 	}, "../assets/menu/drinks/Fountain_Drink.jpg")
+}
+
+///////////////////////////////////////////////////////////////////////////////
+Helper.hookEvent(window, "load", false, () =>
+{
+	Menu.setup() //setting up the menu items and toppings
+
+	////////////////////////////////////////////////////////////////
 
 	if (!Helper.isOnPage("menu.html")) return
 
@@ -1461,10 +1754,14 @@ Helper.hookEvent(window, "load", false, () =>
 	const menuContainer = document.createElement("div")
 	menuContainer.id = "menu_container"
 
+	////////////////////////////////////////////////////////////////
 
+	Menu.createCartDisplay(menuContainer) //creating the cart display
 
-	Menu.createCartDisplay(menuContainer)
+	// const cartTable = menuContainer.querySelector("#cart_table")
+	// console.log(cartTable)
 
+	////////////////////////////////////////////////////////////////
 	//creating button for viewing cart
 	const viewCartButton = document.createElement("button")
 	viewCartButton.id = "view_cart_button"
@@ -1472,15 +1769,19 @@ Helper.hookEvent(window, "load", false, () =>
 	viewCartButton.onclick = () => {
 		const cartContainer = document.querySelector("#cart_container")
 
-		const isShown = (/true/).test(cartContainer.getAttribute("isShown"))
+		const isShown = Helper.getBool(cartContainer.getAttribute("isShown"))
 
 		cartContainer.setAttribute("isShown", !isShown )
 	}
 
-	const menuArray = Array.from(Menu.items.keys())
+	////////////////////////////////////////////////////////////////
+
+	const menuArray = Array.from(Menu.items.keys()) //converts the map of items into array form
 
 	for(const itemName of menuArray)
 		Menu.createItemDisplay(itemName, Menu.items.get(itemName), menuContainer)
+
+	////////////////////////////////////////////////////////////////
 
 	document.body.appendChild(viewCartButton)
 	document.body.appendChild(menuContainer)
