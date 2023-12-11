@@ -131,7 +131,7 @@ Order.createReceipt = (paymentType, accountData) =>
 	const receiptContainer = document.createElement("div")
 	receiptContainer.id = "receipt_container"
 
-	const orderID = Helper.randomString(12)
+	const orderID = Helper.randomString()
 	// StorageManager.setStoredValue(orderID, "orderInfoToBeCreated") //stores what's on receipt (customer info, cart)
 
 	const orderIDLabel = document.createElement("h3")

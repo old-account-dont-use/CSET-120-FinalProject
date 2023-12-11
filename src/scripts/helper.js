@@ -203,46 +203,13 @@ Helper.rng = (min = Number.MIN_SAFE_INTEGER, max = Number.MAX_SAFE_INTEGER, allo
 }
 
 /*
-*	Generates a random string with the given length
-*	Length is 10 by default
+*	Generates a random string
+*
+*	Converts a number to a base 36 string shifted to the left
 */
-Helper.randomString = (length = 10) =>
+Helper.randomString = () =>
 {
-	length = Helper.getNumber(length)
-	if (length < 1) return ""
-
-	let random = ""
-	for (let i = 1; i <= length; i++)
-	{
-		let code = 0
-
-		const highMedLow = Helper.rng(1, 3)
-		switch (highMedLow)
-		{
-			default:
-			case 1: // Numbers
-			{
-				code = Helper.rng(48, 57)
-				break
-			}
-
-			case 2: // Uppercase
-			{
-				code = Helper.rng(65, 90)
-				break
-			}
-
-			case 3: // Lowercase
-			{
-				code = Helper.rng(97, 122)
-				break
-			}
-		}
-
-		random += String.fromCharCode(code)
-	}
-
-	return random
+	return (Math.random() * 10000).toString(36)
 }
 
 /*
