@@ -1,4 +1,4 @@
-let Menu = new Map()
+const Menu = {}
 
 Menu.toppings = new Map()
 Menu.items = new Map()

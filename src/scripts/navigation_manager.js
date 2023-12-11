@@ -1,4 +1,4 @@
-let NavigationManager = new Map()
+const NavigationManager = {}
 
 /*
 *	Creates a navbar link

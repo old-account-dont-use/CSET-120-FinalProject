@@ -1,4 +1,4 @@
-let Helper = new Map()
+const Helper = {}
 
 /*
 *	Returns true if the passed in value is a string

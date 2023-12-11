@@ -1,4 +1,4 @@
-let StorageManager = new Map()
+const StorageManager = {}
 
 /*
 *	Getters

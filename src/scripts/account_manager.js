@@ -1,4 +1,4 @@
-let AccountManager = new Map()
+const AccountManager = {}
 
 AccountManager.ACCOUNT_TYPE_INVALID = 0
 AccountManager.ACCOUNT_TYPE_USER = 1

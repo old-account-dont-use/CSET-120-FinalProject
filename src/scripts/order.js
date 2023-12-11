@@ -1,4 +1,4 @@
-const Order = new Map()
+const Order = {}
 
 Order.PAYMENT_TYPE_CASH = 1
 Order.PAYMENT_TYPE_CARD = 2

@@ -1,4 +1,4 @@
-const Manager = new Map()
+const Manager = {}
 
 /*
 *
