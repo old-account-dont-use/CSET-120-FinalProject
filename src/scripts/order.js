@@ -16,102 +16,119 @@ Order.subTotal = 0
 Order.createPaymentPage = (paymentType) =>
 {
 	//payment container
-	const paymentContainer =  document.createElement("div")
-	paymentContainer.id = "payment_container"
-	paymentContainer.classList.add("flexbox_column")
+		const paymentContainer =  document.createElement("div")
+		paymentContainer.id = "payment_container"
+		paymentContainer.classList.add("flexbox_column")
+		paymentContainer.classList.add("glass_morphism")
 
 	//payment heading
-	const paymentHeading = document.createElement("h1")
-	paymentHeading.id = "payment_heading"
-	paymentHeading.innerHTML = "Payment"
-	paymentHeading.classList.add("center_text")
+		const paymentHeading = document.createElement("h1")
+		paymentHeading.id = "payment_heading"
+		paymentHeading.innerHTML = "Payment"
+		paymentHeading.classList.add("center_text")
+		// paymentHeading.classList.add("glass_morphism")
 
 	//payment content container
-	const paymentContentForm = document.createElement("form")
-	paymentContentForm.id = "payment_content_form"
-	paymentContentForm.classList.add("flexbox_column")
+		const paymentContentForm = document.createElement("form")
+		paymentContentForm.id = "payment_content_form"
+		paymentContentForm.classList.add("flexbox_column")
+		paymentContentForm.classList.add("glass_morphism")
+
+	//form sub containers
+		const infoContainer = document.createElement("div")
+		infoContainer.classList.add("payment_form_sub_container")
+		// infoContainer.classList.add("glass_morphism")
+
+		const submitContainer = document.createElement("div")
+		submitContainer.id = "payment_form_submit_container"
+		submitContainer.classList.add("payment_form_sub_container")
+		// submitContainer.classList.add("glass_morphism")
 
 	//name for order
-	const name = document.createElement("input")
-	name.id = "customer_name"
-	name.setAttribute("type", "text")
-	name.setAttribute("min", "1")
-	name.setAttribute("max", "25")
-	name.setAttribute("placeholder", "Enter your name")
-	name.required = true
+		const name = document.createElement("input")
+		name.classList.add("glass_morphism")
+		name.id = "customer_name"
+		name.setAttribute("type", "text")
+		name.setAttribute("min", "1")
+		name.setAttribute("max", "25")
+		name.setAttribute("placeholder", "Enter your name")
+		name.required = true
 
-	paymentContentForm.appendChild(name)
-	//paymentContentForm.appendChild(phone)
-	// paymentContentForm.appendChild(email)
+		infoContainer.appendChild(name)
+
+	paymentContentForm.appendChild(infoContainer)
+
 	paymentContainer.appendChild(paymentHeading)
 	paymentContainer.appendChild(paymentContentForm)
 
 	document.body.appendChild(paymentContainer)
 
 	//card payment section
-	if(paymentType === Order.PAYMENT_TYPE_CARD)
-	{
-		//card number input
-		const number = document.createElement("input")
-		number.id = "card_number"
-		number.setAttribute("type", "text")
-		number.setAttribute("minlength", "10")
-		number.setAttribute("maxlength", "20")
-		number.setAttribute("placeholder", "Card Number")
-		number.required = true
+		if(paymentType === Order.PAYMENT_TYPE_CARD)
+		{
+			//card number input
+			const number = document.createElement("input")
+			number.id = "card_number"
+			number.classList.add("glass_morphism")
+			number.setAttribute("type", "text")
+			number.setAttribute("minlength", "10")
+			number.setAttribute("maxlength", "20")
+			number.setAttribute("placeholder", "Card Number")
+			number.required = true
 
-		//card expiration input
-		const expiration = document.createElement("input")
-		expiration.id = "card_expiration"
-		expiration.setAttribute("type", "text")
-		expiration.setAttribute("minlength", "4")
-		expiration.setAttribute("maxlength", "4")
-		expiration.setAttribute("placeholder", "MMYY")
-		expiration.required = true
+			//card expiration input
+			const expiration = document.createElement("input")
+			expiration.classList.add("glass_morphism")
+			expiration.id = "card_expiration"
+			expiration.setAttribute("type", "text")
+			expiration.setAttribute("minlength", "4")
+			expiration.setAttribute("maxlength", "4")
+			expiration.setAttribute("placeholder", "MMYY")
+			expiration.required = true
 
-		paymentContentForm.appendChild(number)
-		paymentContentForm.appendChild(expiration)
+			infoContainer.appendChild(number)
+			infoContainer.appendChild(expiration)
 
-	}
+		}
 
 	//setting up the receipt after form is submitted
-	paymentContentForm.onsubmit = () => {
-		const number = document.querySelector("#card_number")
+		paymentContentForm.onsubmit = () => {
+			const number = document.querySelector("#card_number")
 
-		//validating card number
-		if (paymentType === Order.PAYMENT_TYPE_CARD && !Helper.validateCardNumber(number.value))
-		{
-			alert("Please enter a valid card number")
+			//validating card number
+			if (paymentType === Order.PAYMENT_TYPE_CARD && !Helper.validateCardNumber(number.value))
+			{
+				alert("Please enter a valid card number")
+				return false
+			}
+
+			StorageManager.setStoredValue("name", name.value) //stores the name
+
+			const accountData = AccountManager.g_AccountData
+
+			//ensures that the user is logged in so the email could be retrieved
+			if (!accountData) {
+				alert("Please log in")
+				return
+			}
+
+			alert("Thank you for your purchase")
+			paymentContainer.remove()
+
+			//brings to the receipt page
+			window.open("../pages/receipt.html", "_blank")
 			return false
 		}
 
-		StorageManager.setStoredValue("name", name.value) //stores the name
-
-		const accountData = AccountManager.g_AccountData
-
-		//ensures that the user is logged in so the email could be retrieved
-		if (!accountData) {
-			alert("Please log in")
-			return
-		}
-
-		alert("Thank you for your purchase")
-		paymentContainer.remove()
-
-		//brings to the receipt page
-		window.open("../pages/receipt.html", "_blank")
-		return false
-	}
-
 	//button for placing order
-	const placeOrderBtn = document.createElement("input")
-	placeOrderBtn.setAttribute("type", "submit")
-	placeOrderBtn.id = "place_order_btn"
-	placeOrderBtn.innerHTML = "Place Order"
+		const placeOrderBtn = document.createElement("input")
+		placeOrderBtn.classList.add("glass_morphism")
+		placeOrderBtn.setAttribute("type", "submit")
+		placeOrderBtn.id = "place_order_btn"
+		placeOrderBtn.innerHTML = "Place Order"
 
-	paymentContentForm.appendChild(placeOrderBtn)
-
-	// document.body.appendChild(paymentContainer)
+		submitContainer.appendChild(placeOrderBtn)
+		paymentContentForm.appendChild(submitContainer)
 }
 
 /*
