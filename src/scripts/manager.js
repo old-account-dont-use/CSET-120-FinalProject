@@ -125,16 +125,56 @@ Manager.createSubPage = (managerContainer, id) =>
 		default:
 		case Manager.SUB_PAGE_MENU:
 		{
-			const toppings = Array.from(Menu.toppings.keys())
+			//toppings
+				const toppings = Array.from(Menu.toppings.keys())
 
-			for (const toppingName of toppings)
-			{
+				const toppingSectionContainer = document.createElement("div")
+				toppingSectionContainer.classList.add("manager_section_container")
+				toppingSectionContainer.classList.add("glass_morphism_weak")
 
-			}
+				const toppingHeader = document.createElement("div")
+				toppingHeader.classList.add("center_text")
+				toppingHeader.classList.add("manager_section_header")
+				toppingHeader.classList.add("glass_morphism_weak")
+				toppingHeader.innerHTML = "Toppings"
 
-			const items = Array.from(Menu.items.keys())
+				const toppingsSection = document.createElement("div")
+				toppingsSection.id = "manager_toppings_section"
 
+				toppingSectionContainer.appendChild(toppingHeader)
+				toppingSectionContainer.appendChild(toppingsSection)
+				managerContainer.appendChild(toppingSectionContainer)
 
+				for (const toppingName of toppings)
+				{
+					Manager.createItemDisplay(toppingName, "toppings", toppingsSection)
+				}
+
+			//items
+				const items = Array.from(Menu.items.keys())
+
+				const itemSectionContainer = document.createElement("div")
+				itemSectionContainer.classList.add("manager_section_container")
+				itemSectionContainer.classList.add("glass_morphism_weak")
+
+				const itemHeader = document.createElement("div")
+				itemHeader.classList.add("center_text")
+				itemHeader.classList.add("manager_section_header")
+				itemHeader.classList.add("glass_morphism_weak")
+				itemHeader.innerHTML = "Items"
+
+				const itemsSection = document.createElement("div")
+				itemsSection.id = "manager_items_section"
+
+				itemSectionContainer.appendChild(itemHeader)
+				itemSectionContainer.appendChild(itemsSection)
+				managerContainer.appendChild(itemSectionContainer)
+
+				for(const item of items)
+				{
+					console.log(item)
+					Manager.createItemDisplay(item, "items", itemsSection)
+				}
 
 			break
 		}
@@ -149,6 +189,50 @@ Manager.createSubPage = (managerContainer, id) =>
 			break
 		}
 	}
+}
+
+Manager.createItemDisplay = (itemName, type, container) =>
+{
+	//container for item
+		const div = document.createElement("div")
+		div.classList.add("flexbox")
+		div.classList.add("manager_item_container")
+		div.classList.add("glass_morphism_weak")
+
+	//name section
+		const name = document.createElement("h3")
+		name.classList.add("manager_section_name")
+		name.innerHTML = itemName
+		div.appendChild(name)
+
+	//price section
+		const price = document.createElement("input")
+		price.classList.add("center_text")
+		price.setAttribute("type", "number")
+		price.setAttribute("min", "0")
+		price.setAttribute("max", "10")
+		price.setAttribute("step", 0.1)
+		price.value = Menu[type].get(itemName).price
+		price.onkeyup = (event) =>
+		{
+			event.preventDefault()
+
+			if (Helper.isNumber(event.keyCode) && event.keyCode != 13) return
+			if (Helper.isString(event.key) && event.key.toLowerCase() !== "enter") return
+			if (Helper.isString(event.code) && event.code.toLowerCase() !== "enter") return
+
+			price.blur()
+
+		}
+		div.appendChild(price)
+
+	//availability section
+		const checkbox = document.createElement("input")
+		checkbox.setAttribute("type", "checkbox")
+		checkbox.onchange = "";
+		div.appendChild(checkbox)
+
+	container.appendChild(div)
 }
 
 Manager.createManagerPage = () =>

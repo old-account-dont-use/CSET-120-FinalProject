@@ -1357,6 +1357,100 @@ input[type=number]
 
 /*
 *
+*	Receipt page
+*
+*/
+#receipt_container
+{
+	padding: 20px;
+	padding-top: 72px;
+
+	top: 0;
+	left: 0;
+
+	width: 100%;
+	height: 100vh;
+}
+
+#receipt_info_container
+{
+	margin-bottom: 1em;
+}
+
+#receipt_info_container div
+{
+	margin: 1em 0;
+}
+
+#receipt_info_container h3,
+#receipt_info_container p
+{
+	padding: 0;
+
+	margin: 0;
+
+	font-size: 1.2rem;
+}
+
+#receipt_info_container h3::after
+{
+	content: "\00a0";
+}
+
+#receipt_items_table
+{
+	width: 100%;
+}
+
+#receipt_items_table,
+#receipt_items_table th,
+#receipt_items_table tr,
+#receipt_items_table td
+{
+	border: 1px solid black;
+
+	border-collapse: collapse;
+}
+
+.receipt_table_header
+{
+	padding: 1em;
+
+	font-size: 1.3rem;
+
+	background-color: lightgray;
+}
+
+#receipt_items_table td
+{
+	padding: 1em;
+}
+
+.receipt_item_name_container
+{
+	justify-content: space-between;
+}
+
+.receipt_item_name
+{
+	text-transform: capitalize;
+}
+
+.receipt_toppings_container
+{
+	text-transform: capitalize;
+
+	justify-content: space-between;
+}
+
+.receipt_toppings_container *
+{
+	margin: 0;
+	padding: 0;
+}
+
+/*
+*
 *	Manager menu
 *
 */
@@ -1364,7 +1458,81 @@ input[type=number]
 #manager_menu_container
 {
 	width: 100vw;
-	height: 100vh;
 
+	padding: 20px;
+	padding-top: 72px;
+
+	top: 0;
+	left: 0;
 	background-color: violet;
+}
+
+.manager_section_container
+{
+	padding-top: 1em;
+
+	border-radius: 12px;
+}
+
+#manager_toppings_section,
+#manager_items_section
+{
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+
+	gap: 20px;
+
+	margin-bottom: 2em;
+
+	padding: 2em;
+}
+
+.manager_section_header
+{
+	margin: 1em 1.5em;
+
+	padding: 1em;
+
+	font-size: 2rem;
+
+	border-radius: 12px;
+}
+
+.manager_item_container
+{
+	width: 18em;
+	height: 4em;
+
+	align-items: center;
+	justify-content: space-evenly;
+
+	border-radius: 12px;
+
+	text-transform: capitalize;
+}
+
+.manager_item_container *
+{
+	padding: 0;
+	margin: 0;
+}
+
+.manager_section_name
+{
+	width: 50%;
+}
+
+.manager_item_container input
+{
+	height: 2em;
+	width: 4em;
+
+	border: none;
+	border-radius: 5px;
+}
+
+.manager_item_container input[type=checkbox]
+{
+	width: 1.5em;
 }

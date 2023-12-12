@@ -500,6 +500,7 @@ Menu.createItemDisplay = (itemName, item, menuContainer) =>
 			quantityInput.value = cartItem.quantity
 			quantityInput.updateValue()
 			quantityInput.onchange({ target: quantityInput })
+			Menu.storeCartInfo()
 
 			return
 		}
@@ -941,7 +942,7 @@ Menu.createCartDisplay = (menuContainer) =>
 		//bring to payment page
 		cashButton.onclick = () =>
 		{
-			Order.createPaymentPage(Order.PAYMENT_TYPE_CASH)
+			StorageManager.setStoredValue("payment", "Cash")
 			window.location.assign("../pages/order.html?type=cash")
 		}
 	}
@@ -953,7 +954,7 @@ Menu.createCartDisplay = (menuContainer) =>
 
 		//bring to payment page
 		cardPayment.onclick = () => {
-			Order.createPaymentPage(Order.PAYMENT_TYPE_CARD)
+			StorageManager.setStoredValue("payment", "Card")
 			window.location.assign("../pages/order.html?type=card")
 		}
 	}
@@ -965,7 +966,7 @@ Menu.createCartDisplay = (menuContainer) =>
 
 		//bring to payment page
 		payPalButton.onclick = () => {
-			Order.createPaymentPage(Order.PAYMENT_TYPE_PAYPAL)
+			StorageManager.setStoredValue("payment", "PayPal")
 			window.location.assign("../pages/order.html?type=paypal")
 		}
 	}
@@ -977,7 +978,7 @@ Menu.createCartDisplay = (menuContainer) =>
 
 		//bring to payment page
 		applePayButton.onclick = () => {
-			Order.createPaymentPage(Order.PAYMENT_TYPE_APPLE)
+			StorageManager.setStoredValue("payment", "Apple Pay")
 			window.location.assign("../pages/order.html?type=applepay")
 		}
 	}
@@ -989,7 +990,7 @@ Menu.createCartDisplay = (menuContainer) =>
 
 		//bring to payment page
 		samsungPayButton.onclick = () => {
-			Order.createPaymentPage(Order.PAYMENT_TYPE_SAMSUNG)
+			StorageManager.setStoredValue("payment", "Samsung Pay")
 			window.location.assign("../pages/order.html?type=samsungpay")
 		}
 	}
@@ -1001,7 +1002,7 @@ Menu.createCartDisplay = (menuContainer) =>
 
 		//bring to payment page
 		googlePayButton.onclick = () => {
-			Order.createPaymentPage(Order.PAYMENT_TYPE_GOOGLE)
+			StorageManager.setStoredValue("payment", "Google Pay")
 			window.location.assign("../pages/order.html?type=googlepay")
 		}
 	}
