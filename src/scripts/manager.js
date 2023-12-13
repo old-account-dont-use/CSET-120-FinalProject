@@ -220,6 +220,8 @@ Manager.createItemDisplay = (itemName, type, container) =>
 			if (Helper.isString(event.key) && event.key.toLowerCase() !== "enter") return
 			if (Helper.isString(event.code) && event.code.toLowerCase() !== "enter") return
 
+			Menu.find(itemName)[0].setPrice(price.value) //changes price
+
 			price.blur()
 
 		}
@@ -228,7 +230,11 @@ Manager.createItemDisplay = (itemName, type, container) =>
 	//availability section
 		const checkbox = document.createElement("input")
 		checkbox.setAttribute("type", "checkbox")
-		checkbox.onchange = "";
+		checkbox.checked = true
+		checkbox.onchange = (event) =>
+		{
+			Menu.find(itemName)[0].setAvailable(checkbox.checked) //changes availability
+		}
 		div.appendChild(checkbox)
 
 	container.appendChild(div)
