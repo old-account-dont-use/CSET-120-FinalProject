@@ -126,7 +126,7 @@ Manager.createSubPage = (managerContainer, id) =>
 		case Manager.SUB_PAGE_MENU:
 		{
 			//toppings
-				const toppings = Array.from(Menu.toppings.keys())
+				const toppings = Array.from(Menu.m_Toppings.keys())
 
 				const toppingSectionContainer = document.createElement("div")
 				toppingSectionContainer.classList.add("manager_section_container")
@@ -145,13 +145,13 @@ Manager.createSubPage = (managerContainer, id) =>
 				toppingSectionContainer.appendChild(toppingsSection)
 				managerContainer.appendChild(toppingSectionContainer)
 
-				for (const toppingName of toppings)
+				for (const topping of toppings)
 				{
-					Manager.createItemDisplay(toppingName, "toppings", toppingsSection)
+					Manager.createItemDisplay(topping.getName(), "toppings", toppingsSection)
 				}
 
 			//items
-				const items = Array.from(Menu.items.keys())
+				const items = Array.from(Menu.m_Items.keys())
 
 				const itemSectionContainer = document.createElement("div")
 				itemSectionContainer.classList.add("manager_section_container")
@@ -172,8 +172,7 @@ Manager.createSubPage = (managerContainer, id) =>
 
 				for(const item of items)
 				{
-					console.log(item)
-					Manager.createItemDisplay(item, "items", itemsSection)
+					Manager.createItemDisplay(item.getName(), "items", itemsSection)
 				}
 
 			break
@@ -212,7 +211,7 @@ Manager.createItemDisplay = (itemName, type, container) =>
 		price.setAttribute("min", "0")
 		price.setAttribute("max", "10")
 		price.setAttribute("step", 0.1)
-		price.value = Menu[type].get(itemName).price
+		price.value = Menu.find(itemName)[0].getPrice()
 		price.onkeyup = (event) =>
 		{
 			event.preventDefault()
@@ -251,5 +250,8 @@ Helper.hookEvent(window, "load", false, () =>
 	Manager.m_ModifiedItems = Manager.getModifiedItemsList()
 
 	if (Helper.isOnPage("manager"))
+	{
+		if (!Menu.m_bReady) return false
 		Manager.createManagerPage()
+	}
 })
