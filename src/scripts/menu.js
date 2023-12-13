@@ -12,7 +12,7 @@ Menu.MAX_TOPPING_TYPES = 5
 Menu.ITEM_BUTTON_TOPPINGS = 1
 Menu.ITEM_BUTTON_CART = 2
 
-Menu.MIN_CART_ITEM_QUANTITY = 0
+Menu.MIN_CART_ITEM_QUANTITY = 1
 Menu.MAX_CART_ITEM_QUANTITY = 10
 
 Menu.m_Items = new Map()
@@ -1246,6 +1246,16 @@ Menu.updateCartDisplay = (tbody) =>
 			const finalize = document.createElement("td")
 			finalize.classList.add("flexbox")
 			{
+				const removeBtn = document.createElement("button")
+				removeBtn.innerHTML = "x"
+				removeBtn.classList.add("close_btn")
+				removeBtn.m_Item  = item
+				removeBtn.onclick = (event) =>
+				{
+					Menu.m_Cart.delete(event.target.m_Item)
+					Menu.updateCartDisplay()
+				}
+
 				const quantityInput = document.createElement("input")
 				quantityInput.setAttribute("type", "number")
 				quantityInput.setAttribute("min", Menu.MIN_CART_ITEM_QUANTITY)
@@ -1271,7 +1281,7 @@ Menu.updateCartDisplay = (tbody) =>
 					const finalPrice = itemPrice + toppingPrice
 					priceDisplay.innerHTML = Helper.priceify(finalPrice)
 				}
-
+				finalize.appendChild(removeBtn)
 				finalize.appendChild(quantityInput)
 				finalize.appendChild(priceDisplay)
 			}
