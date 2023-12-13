@@ -356,7 +356,7 @@ Order.createTableRow = (itemObj, table) =>
 
 	const quantity = itemObj.quantity
 
-	const unitPrice = itemObj.unitPrice
+	let unitPrice = itemObj.unitPrice
 
 	//updating stats
 	Order.totalQuantity += quantity
@@ -400,6 +400,8 @@ Order.createTableRow = (itemObj, table) =>
 			toppingPrice.innerHTML = Helper.priceify(topping.getPrice())
 
 			Order.subTotal += topping.getPrice() * quantity
+
+			unitPrice += topping.getPrice() * quantity
 
 			container.appendChild(toppingName)
 			container.appendChild(toppingPrice)
