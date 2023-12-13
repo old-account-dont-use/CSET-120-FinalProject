@@ -181,7 +181,7 @@ AccountPage.setupEntryForm = (form, mode) =>
 				password_input.setAttribute("type", "password")
 				password_input.setAttribute("minlength", 8)
 				password_input.setAttribute("maxlength", 255)
-				password_input.setAttribute("placeholder", "Enter your desired password")
+				password_input.setAttribute("placeholder", "Enter your password")
 				password_input.setAttribute("required", true)
 			}
 
