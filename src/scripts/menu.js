@@ -1614,6 +1614,7 @@ Helper.hookEvent(window, "load", false, () =>
 	if (stored.length > 0)
 		Menu.restoreCart(stored)
 
+	Menu.m_bReady = true
 	if (!Helper.isOnPage("menu")) return
 
 	const container = document.createElement("div")

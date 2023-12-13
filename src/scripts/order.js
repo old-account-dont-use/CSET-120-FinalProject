@@ -221,8 +221,30 @@ Order.createReceipt = () =>
 Order.createOrderedItemsSection = (receiptContainer) =>
 {
 	//getting the cartItems that was stored and converting from string to array
-	const cartItemsString = StorageManager.getStoredString("cartItems")
-	const cartItemsArray = Helper.parse(cartItemsString)
+	const cartItemsString = StorageManager.getStoredString("storedCart")
+	const cartItemsArray = []
+
+	for (const [ key, value ] of Menu.m_Cart)
+	{
+		const toppings = key.getToppings()
+		const toppingArray = []
+
+		for (const [ topping, active ] of toppings.entries())
+		{
+			if (!active) continue
+			toppingArray.push(topping)
+		}
+
+		cartItemsArray.push({
+			name: key.getName(),
+
+			toppings: toppingArray,
+
+			quantity: value,
+
+			unitPrice: key.getPrice()
+		})
+	}
 
 	//setting up the table for the ordered items
 
@@ -355,7 +377,7 @@ Order.createTableRow = (itemObj, table) =>
 
 		const namePrice = document.createElement("h3")
 		namePrice.classList.add("receipt_item_name")
-		namePrice.innerHTML = Helper.priceify(Menu.items.get(name).price)
+		namePrice.innerHTML = Helper.priceify(Menu.findItem(name)[0].getPrice())
 		nameContainer.appendChild(namePrice)
 
 		itemSection.appendChild(nameContainer)
@@ -371,11 +393,13 @@ Order.createTableRow = (itemObj, table) =>
 
 			const toppingName = document.createElement("p")
 			toppingName.classList.add("receipt_topping_name")
-			toppingName.innerHTML = topping
+			toppingName.innerHTML = topping.getName()
 
 			const toppingPrice = document.createElement("p")
 			toppingPrice.classList.add("receipt_topping_price")
-			toppingPrice.innerHTML = Helper.priceify(Menu.toppings.get(topping).price)
+			toppingPrice.innerHTML = Helper.priceify(topping.getPrice())
+
+			Order.subTotal += topping.getPrice() * quantity
 
 			container.appendChild(toppingName)
 			container.appendChild(toppingPrice)
@@ -517,6 +541,7 @@ Helper.hookEvent(window, "load", false, () =>
 		return
 	}
 	if (!Helper.isOnPage("order")) return
+	if (!Menu.m_bReady) return false
 
 	const searchParemeters = Helper.getSearchParameters()
 	const searchType = Helper.getString(searchParemeters.get("type")).toLowerCase()
