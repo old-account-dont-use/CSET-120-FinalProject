@@ -1,1789 +1,1630 @@
 const Menu = {}
 
-Menu.toppings = new Map()
-Menu.items = new Map()
+Menu.TOPPING_TYPE_GENERIC = 1
+Menu.TOPPING_TYPE_SAUCE = 2
+Menu.TOPPING_TYPE_SPICE = 3
+Menu.TOPPING_TYPE_SIDE = 4
+Menu.TOPPING_TYPE_DRINK = 5
 
-Menu.cart = []
+Menu.MIN_TOPPING_TYPES = 1
+Menu.MAX_TOPPING_TYPES = 5
 
-/*
-*	Adds a new topping to the menu
-*/
-Menu.addTopping = (name, price) =>
+Menu.ITEM_BUTTON_TOPPINGS = 1
+Menu.ITEM_BUTTON_CART = 2
+
+Menu.MIN_CART_ITEM_QUANTITY = 1
+Menu.MAX_CART_ITEM_QUANTITY = 10
+
+Menu.m_Items = new Map()
+Menu.m_Toppings = new Map() // Toppings are more than just toppings. Condiments, sides, etc.
+
+Menu.m_Cart = new Map()
+
+class Menu__Item
 {
-	const newTopping =
+	constructor(data)
 	{
-		"name": name,
-		"price": Helper.priceifyNumber(price),
-		"availability": true
+		if (!data)
+			throw new Error("No item data provided")
+
+		if (data instanceof Menu__Item) // Time to make a copy
+		{
+			const newStructure = {}
+
+			newStructure.section = data.getSectionName()
+
+			newStructure.name = data.getName()
+			newStructure.description = data.getDescription()
+
+			newStructure.price = data.getPrice()
+
+			newStructure.toppingList = []
+			{
+				for (const [ item, _ ] of data.getToppings().entries())
+					newStructure.toppingList.push(item)
+			}
+
+			newStructure.image = data.getImagePath()
+
+			newStructure.available = data.getAvailable()
+
+			data = newStructure
+		}
+
+		this.m_strSection = Helper.getString(data.section, "BROKEN SECTION").trim()
+
+		this.m_strName = Helper.getString(data.name, "BROKEN ITEM").trim()
+		this.m_strDescription = Helper.getString(data.description, "").trim()
+
+		this.m_flPrice = Helper.priceifyNumber(data.price)
+
+		if (data.toppingList instanceof Array)
+		{
+			this.m_Toppings = new Map()
+
+			for (const topping of data.toppingList)
+			{
+				if (!(topping instanceof Menu__Topping))
+					throw new Error("Invalid topping provided")
+
+				const found = Menu.findTopping(topping.getName())
+				if (!found)
+					throw new Error("Invalid topping provided")
+
+				this.m_Toppings.set(topping, found[1])
+			}
+		}
+
+		this.m_strImagePath = Helper.getString(data.image, "").trim()
+
+		this.m_bAvailable = Helper.getBool(data.available, true)
 	}
 
-	Menu.toppings.set(name, newTopping)
-}
-
-/*
-*	Adds a new item to the menu
-*/
-Menu.addItem = (name, price, description, toppingList, image) =>
-{
-	const newItem =
+	toString()
 	{
-		"name": name,
-		"price": Helper.priceifyNumber(price),
-		"description": description,
-		"toppings": toppingList,
-		"image": image,
-		"availability": true
+		let built = {}
+
+		const properties = Object.getOwnPropertyNames(this)
+
+		for (const property of properties)
+		{
+			const propertyValue = this[property]
+
+			if (!(propertyValue instanceof Map))
+				built[property] = propertyValue
+			else
+				built[property] = Helper.json(propertyValue)
+		}
+
+		return Helper.json(built)
 	}
-
-	Menu.items.set(name.toLowerCase(), newItem)
-}
-// /*
-// *	Creates the display of the item and topping
-// */
-// Menu.createMenuDisplay = (itemName, item, menuContainer) =>
-// {
-// 	Menu.createItemsDisplay(itemName, item, menuContainer)
-// }
-
-// Menu.createItemsDisplay = (itemName, item, menuContainer) =>
-// {
-// 	//creates a container for the item
-// 	const section = document.createElement("div")
-// 	section.classList.add("menu_item_section")
-// 	section.classList.add("glass_morphism_weak")
-// 	section.setAttribute("isAvailable", true)
-
-// 	////////////////////////////////////////////////////////////////
-
-// 	//creates the image of the item
-// 	const image = document.createElement("img")
-// 	image.classList.add("menu_item_image")
-// 	image.src = item.image
-
-
-// 	//creates the item name
-// 	const name = document.createElement("h3")
-// 	name.classList.add("menu_item_name")
-// 	name.innerHTML = itemName
-
-
-// 	//creates the item price tag
-// 	const price = document.createElement("h3")
-// 	price.classList.add("menu_item_price")
-// 	price.innerHTML = Helper.priceify(item.price)
-
-
-// 	//creates the item description
-// 	const description = document.createElement("p")
-// 	description.classList.add("menu_item_description")
-// 	description.innerHTML = item.description
-
-// 	section.appendChild(image)
-// 	section.appendChild(name)
-// 	section.appendChild(price)
-// 	section.appendChild(description)
-
-// 	////////////////////////////////////////////////////////////////
-
-// 	/*
-// 	* creates the display of the list of toppings
-// 	* hidden on default
-// 	*/
-// 	const toppingList = document.createElement("div")
-// 	toppingList.classList.add("menu_item_topping_list")
-// 	toppingList.classList.add("glass_morphism")
-// 	toppingList.setAttribute("isShown", false)
-
-// 	const toppingCloseBtn = document.createElement("button")
-// 	toppingCloseBtn.classList.add("menu_topping_close_btn")
-// 	toppingCloseBtn.classList.add("close_btn")
-// 	toppingCloseBtn.classList.add("float_right")
-// 	toppingCloseBtn.innerHTML = "x"
-
-// 	toppingCloseBtn.onclick = () => {
-// 		const isShown = Helper.getBool(toppingList.getAttribute("isShown"))
-
-// 		toppingList.setAttribute("isShown", !isShown)
-// 	}
-
-
-// 	////////////////////////////////////////////////////////////////
-
-// 	//creates the item name on the display of list of toppings
-// 	const toppingListItemLabel = document.createElement("h3")
-// 	toppingListItemLabel.classList.add("item_menu_topping_list_item_label")
-// 	toppingListItemLabel.innerHTML = itemName
-
-// 	toppingList.appendChild(toppingCloseBtn)
-// 	toppingList.appendChild(toppingListItemLabel)
-
-
-// 	const itemToppings = item.toppings //object form of the toppings for the item
-// 	const itemToppingsArray = Object.getOwnPropertyNames(itemToppings) //string array form of the toppings name
-
-// 	//setting up checkboxes and topping labels for the list of toppings of the item
-// 	for (const topping of itemToppingsArray) {
-// 		const toppingData = Menu.toppings.get(topping.toLowerCase()) //object form of the topping
-
-// 		//checks for whether the item topping exists in the list of possible toppings
-// 		if (!toppingData) {
-// 			console.error(`Item ${itemName} has invalid topping ${topping}`)
-// 			continue
-// 		}
-
-// 		/*
-// 		* creates the checkbox for the topping
-// 		* checkbox checking based on whether topping is on item by default
-// 		*/
-// 		const toppingCheckbox = document.createElement("input")
-// 		toppingCheckbox.type = "checkbox"
-// 		toppingCheckbox.classList.add("menu_item_topping_checkbox")
-// 		toppingCheckbox.id = `topping_checkbox_${topping}`
-// 		toppingCheckbox.checked = itemToppings[topping]
-
-// 		//creates the label/name of the topping
-// 		const toppingLabel = document.createElement("label")
-// 		toppingLabel.classList.add("menu_item_topping_label")
-// 		toppingLabel.innerHTML = `${topping} ${Helper.priceify(toppingData.price)}`
-// 		toppingLabel.setAttribute("for", `topping_checkbox_${topping}`)
-
-// 		//creates a line break for after each topping
-// 		const lineBreak = document.createElement("br")
-
-// 		//adding topping close button, checkbox, name, and line break to the display of list of toppings
-// 		toppingList.appendChild(toppingCheckbox)
-// 		toppingList.appendChild(toppingLabel)
-// 		toppingList.appendChild(lineBreak)
-
-// 		Menu.handleToppingAvailability(toppingCheckbox, topping)
-// 	}
-
-// 	//adding topping list display to menu container
-// 	menuContainer.appendChild(toppingList)
-
-// 	//adding item display to menu container
-// 	menuContainer.appendChild(section)
-
-// 	////////////////////////////////////////////////////////////////
-
-// 	//creates a button for viewing display of list of toppings
-// 	const viewToppingsButton = document.createElement("button")
-// 	viewToppingsButton.classList.add("menu_item_toppings_view_button")
-// 	viewToppingsButton.innerHTML = "Select Toppings"
-// 	viewToppingsButton.m_ToppingList = toppingList //stores div for displaying list of toppings
-
-// 	//toggling display for list of toppings
-// 	viewToppingsButton.onclick = (event) =>
-// 	{
-// 		const toppingList = event.target.m_ToppingList
-
-// 		const isShown = Helper.getBool(toppingList.getAttribute("isShown")) //converts string to boolean form
-
-// 		const toppingLists = document.querySelectorAll(".menu_item_topping_list") //gets all the divs containing list of toppings
-
-// 		//hides the already displayed list of toppings if applicable so that only one list displays at a time
-// 		for (const list of toppingLists) {
-// 			if (isShown) {
-// 				list.setAttribute("isShown", false)
-// 				break
-// 			}
-// 		}
-
-// 		//toggles visibility of the display of list of toppings when "Select Toppings" button is clicked
-// 		toppingList.setAttribute("isShown", !isShown)
-// 	}
-// 	section.appendChild(viewToppingsButton)
-
-// 	////////////////////////////////////////////////////////////////
-
-// 	//creates the button for adding item to the cart
-// 	const addToCartButton = document.createElement("button")
-// 	section.appendChild(addToCartButton)
-// 	addToCartButton.classList.add("menu_item_cart_button")
-// 	addToCartButton.innerHTML = "Add to cart"
-// 	console.log(addToCartButton)
-// 	addToCartButton.onclick = Menu.addToCartDisplay()
-
-// 	////////////////////////////////////////////////////////////////
-
-
-
-// 	////////////////////////////////////////////////////////////////
-// }
-
-// Menu.addToCartDisplay = (menuItem, menuContainer) =>
-// {
-// 	// const name = menuItem.name
-
-// 	if (true) return
-
-// 	// //array form of the toppings that are selected
-// 	// const listOfWantedToppingsCheckboxes = Array.from(toppingList.childNodes).filter((element) => {
-// 	// 	return element.checked
-// 	// })
-
-// 	// //getting name of toppings into array
-// 	// let listOfWantedToppingsName = []
-// 	// for (const topping of listOfWantedToppingsCheckboxes) {
-// 	// 	const toppingLabelText = topping.nextSibling.innerHTML
-
-// 	// 	const separationIndex = toppingLabelText.indexOf("$") //index that separates name and price of topping
-
-// 	// 	const name = toppingLabelText.substring(0, separationIndex - 1)
-
-// 	// 	listOfWantedToppingsName.push(name)
-// 	// }
-
-// 	// //handling duplicate items
-// 	// const index = Menu.findDuplicateItem(name, listOfWantedToppingsName)
-// 	// Menu.handleAddingDuplicateItems(index)
-
-// 	// ////////////////////////////////////////////////////////////////
-// 	// //If not a duplicate item
-
-
-// 	// Menu.createCartItem(name, menuContainer)
-// }
-
-// Menu.createCartItem = (name, menuContainer) =>
-// {
-// 	const cartTable = menuContainer.querySelector("#cart_table")
-
-
-// 	const cartTableRow = document.createElement("tr")
-// 	cartTableRow.classList.add("cart_table_row")
-
-// 	cartTable.appendChild(cartTableRow)
-
-// 	////////////////////////////////////////////////////////////////
-
-// 	Menu.createCartItemSection(cartTableRow, name) //creating the cart item section of item
-// 	/Menu.createCartQuantitySection(cartTableRow, name) //creating the cart quantity section of item
-// 	Menu.createCartPriceSection(cartTableRow, name)	//creating the cart price section of item
-
-
-// 	//creating section for the toppings
-// 	const cartItemToppingsSection = document.createElement("p")
-// 	cartItemToppingsSection.classList.add("cart_item_toppings_section")
-// 	cartItemToppingsSection.classList.add("flexbox_column")
-
-// }
-
-// Menu.createCartItemSection = (cartTableRow, name) =>
-// {
-// 	//creating the item name
-// 	const cartItemSection = document.createElement("td")
-// 	cartItemSection.classList.add("cart_item_name")
-
-// 	cartTableRow.appendChild(cartItemSection)
-
-// 	Menu.createCartItemSectionItem(cartItemSection, name)
-// }
-
-// Menu.createCartQuantitySection = (cartTableRow) =>
-// {
-
-// }
-
-// Menu.createCartPriceSection = (cartTableRow) => {
-
-// }
-
-
-// Menu.createCartItemSectionItem = (cartItemSection, name) =>
-// {
-// 	//creating the actual item name on cart
-// 	const cartItemItemName = document.createElement("h1")
-// 	cartItemItemName.classList.add("cart_item_item_name")
-
-// 	cartItemItemName.innerHTML = `${name}`
-
-// 	cartItemSection.appendChild(cartItemItemName)
-// }
-
-// /*
-// *	Updates quantity of item if item is already on the cart
-// */
-// Menu.handleAddingDuplicateItems = (index) =>
-// {
-// 	if (index != -1) {
-// 		const cartItem = Menu.cart[index]
-// 		cartItem.quantity = Helper.clamp(cartItem.quantity + 1, 0, 10)
-
-// 		const tableRows = Array.from(document.querySelectorAll(".cart_table_row"))
-// 		const row = tableRows[index]
-
-// 		const quantityInput = row.querySelector(".cart_quantity_input")
-
-// 		quantityInput.value = cartItem.quantity
-// 		quantityInput.updateValue()
-// 		quantityInput.onchange({ target: quantityInput })
-
-// 		return
-// 	}
-// }
-//================================================Old section=======================================================================
-/*
-*	Creates the display of the item and topping
-*/
-Menu.createItemDisplay = (itemName, item, menuContainer) =>
-{
-	//creates a container for the item
-	const section = document.createElement("div")
-	section.classList.add("menu_item_section")
-	section.classList.add("glass_morphism_weak")
-	section.setAttribute("isAvailable", true)
-
-	//creates the image of the item
-	const image = document.createElement("img")
-	image.classList.add("menu_item_image")
-	image.src = item.image
-
-	//creates the item name
-	const name = document.createElement("h3")
-	name.classList.add("menu_item_name")
-	name.innerHTML = itemName
-
-	//creates the item price tag
-	const price = document.createElement("h3")
-	price.classList.add("menu_item_price")
-	price.innerHTML = Helper.priceify(item.price)
-
-	//creates the item description
-	const description = document.createElement("p")
-	description.classList.add("menu_item_description")
-	description.innerHTML = item.description
-
-	const itemToppings = item.toppings //object form of the toppings for the item
-	const itemToppingsArray = Object.getOwnPropertyNames(itemToppings) //string array form of the toppings name
 
 	/*
-	* creates the display of the list of toppings
-	* hidden on default
+	*	Getters
 	*/
-	const toppingList = document.createElement("div")
-	toppingList.classList.add("menu_item_topping_list")
-	toppingList.classList.add("glass_morphism")
-	toppingList.setAttribute("isShown", false)
-
-	const toppingCloseBtn = document.createElement("button")
-	toppingCloseBtn.classList.add("menu_topping_close_btn")
-	toppingCloseBtn.classList.add("close_btn")
-	toppingCloseBtn.classList.add("float_right")
-
-	toppingCloseBtn.innerHTML = "x"
-	toppingCloseBtn.onclick = () =>
+	getSectionName()
 	{
-		const isShown = (/true/).test(toppingList.getAttribute("isShown"))
-
-		toppingList.setAttribute("isShown", !isShown)
+		return this.m_strSection
 	}
 
-	//creates the item name on the display of list of toppings
-	const toppingListItemLabel = document.createElement("h3")
-	toppingListItemLabel.classList.add("item_menu_topping_list_item_label")
-	toppingListItemLabel.innerHTML = itemName
-
-	toppingList.appendChild(toppingCloseBtn)
-	toppingList.appendChild(toppingListItemLabel)
-
-	for (const topping of itemToppingsArray)
+	getName()
 	{
-		const toppingData = Menu.toppings.get(topping.toLowerCase()) //object form of the topping
-
-		//checks for whether the item topping exists in the list of possible toppings
-		if (!toppingData)
-		{
-			console.error(`Item ${itemName} has invalid topping ${topping}`)
-			continue
-		}
-
-		/*
-		* creates the checkbox for the topping
-		* checkbox checking based on whether topping is on item by default
-		*/
-		const toppingCheckbox = document.createElement("input")
-		toppingCheckbox.type = "checkbox"
-		toppingCheckbox.classList.add("menu_item_topping_checkbox")
-		toppingCheckbox.id = `topping_checkbox_${topping}`
-		toppingCheckbox.checked = itemToppings[topping]
-
-		//creates the label/name of the topping
-		const toppingLabel = document.createElement("label")
-		toppingLabel.classList.add("menu_item_topping_label")
-		toppingLabel.innerHTML = `${topping} ${Helper.priceify(toppingData.price)}`
-		toppingLabel.setAttribute("for", `topping_checkbox_${topping}`)
-
-		//creates a line break for after each topping
-		const lineBreak = document.createElement("br")
-
-		//adding topping close button, checkbox, name, and line break to the display of list of toppings
-		toppingList.appendChild(toppingCheckbox)
-		toppingList.appendChild(toppingLabel)
-		toppingList.appendChild(lineBreak)
-
-		Menu.handleToppingAvailability(toppingCheckbox, topping)
+		return this.m_strName
 	}
 
-	//creates a button for viewing display of list of toppings
-	const viewToppingsButton = document.createElement("button")
-	viewToppingsButton.classList.add("menu_item_toppings_view_button")
-	viewToppingsButton.innerHTML = "Select Toppings"
-	viewToppingsButton.m_ToppingList = toppingList //stores div for displaying list of toppings
-
-
-	viewToppingsButton.onclick = (event) =>
+	getDescription()
 	{
-		const toppingList = event.target.m_ToppingList
-
-		const isShown = (/true/).test(toppingList.getAttribute("isShown")) //converts string to boolean form
-
-		const toppingLists = document.querySelectorAll(".menu_item_topping_list") //gets all the divs containing list of toppings
-
-		//hides the already displayed list of toppings if applicable so that only one list displays at a time
-		for(const list of toppingLists)
-		{
-			if ((/true/).test(list.getAttribute("isShown")))
-			{
-				list.setAttribute("isShown", false)
-				break
-			}
-		}
-
-		//toggles visibility of the display of list of toppings when "Select Toppings" button is clicked
-		toppingList.setAttribute("isShown", !isShown)
+		return this.m_strDescription
 	}
 
-	//creates the button for adding item to the cart
-	const addToCartButton = document.createElement("button")
-	addToCartButton.classList.add("menu_item_cart_button")
-	addToCartButton.innerHTML = "Add to cart"
-
-	//add item to cart along with selected toppings
-	addToCartButton.onclick = (event) =>
+	getPrice()
 	{
-		const name = addToCartButton.parentNode.childNodes[1].innerHTML //name of item to be added to cart
-
-		//array form of the toppings that are selected
-		const listOfWantedToppingsCheckboxes = Array.from(toppingList.childNodes).filter((element) =>
-		{
-			return element.checked
-		})
-
-		//getting name of toppings into array
-		let listOfWantedToppingsName = []
-		for (const topping of listOfWantedToppingsCheckboxes)
-		{
-			const toppingLabelText = topping.nextSibling.innerHTML
-
-			const separationIndex = toppingLabelText.indexOf("$") //index that separates name and price of topping
-
-			const name = toppingLabelText.substring(0, separationIndex - 1)
-
-			listOfWantedToppingsName.push(name)
-		}
-
-		const index = Menu.findDuplicateItem(name, listOfWantedToppingsName)
-
-
-		//handling duplicate items
-		if (index != -1)
-		{
-			const cartItem = Menu.cart[index]
-			cartItem.quantity = Helper.clamp(cartItem.quantity + 1, 0, 10)
-
-			const tableRows = Array.from(document.querySelectorAll(".cart_table_row"))
-			const row = tableRows[index]
-
-			const quantityInput = row.querySelector(".cart_quantity_input")
-
-			quantityInput.value = cartItem.quantity
-			quantityInput.updateValue()
-			quantityInput.onchange({ target: quantityInput })
-			Menu.storeCartInfo()
-
-			return
-		}
-
-		//stores the total price of the selected toppings
-		let totalToppingsPrice = 0
-
-		const cartTable = document.querySelector("#cart_table")
-
-		const cartTableRow = document.createElement("tr")
-		cartTableRow.classList.add("cart_table_row")
-
-		//creating the item name
-		const cartItemName = document.createElement("td")
-
-		cartItemName.classList.add("cart_item_name")
-
-		//creating the actual item name on cart
-		const cartItemItemName = document.createElement("h1")
-		cartItemItemName.innerHTML = `${name}`
-		cartItemItemName.classList.add("cart_item_item_name")
-
-		//creating section for the toppings
-		const cartItemToppingsSection = document.createElement("p")
-		cartItemToppingsSection.classList.add("cart_item_toppings_section")
-		cartItemToppingsSection.classList.add("flexbox_column")
-
-
-
-		let count = 0;
-		//adding toppings to the table
-		for (const topping of listOfWantedToppingsCheckboxes)
-		{
-			//creating container for the topping
-			const toppingContainer = document.createElement("div")
-			toppingContainer.classList.add("flexbox")
-			toppingContainer.classList.add("cart_item_topping_container")
-
-			// const toppingLabelText = topping.nextSibling.innerHTML
-
-			// const separationIndex = toppingLabelText.indexOf("$") //index that separates name and price of topping
-
-			//creating the name of the topping
-			const toppingName = document.createElement("h4")
-
-			// const name = toppingLabelText.substring(0, separationIndex - 1)
-			const name = listOfWantedToppingsName[count]
-			count++
-			toppingName.innerHTML = name
-			toppingName.classList.add("cart_topping_name")
-
-
-			//creating the price of the topping
-			const price = Menu.toppings.get(name).price
-			totalToppingsPrice += price
-
-			const toppingPrice = document.createElement("p")
-			toppingPrice.innerHTML = Helper.priceify(price)
-			toppingPrice.classList.add("cart_topping_price")
-
-			toppingContainer.appendChild(toppingName)
-			toppingContainer.appendChild(toppingPrice)
-
-			cartItemToppingsSection.appendChild(toppingContainer)
-		}
-
-		Menu.storeCartInfo()
-
-		cartItemName.appendChild(cartItemItemName)
-		cartItemName.appendChild(cartItemToppingsSection)
-
-
-		//creating the input for the item quantity
-		const cartItemQuantitySection = document.createElement("td")
-		cartItemQuantitySection.classList.add("cart_item_quantity_section")
-
-		const cartItemQuantityContainer = document.createElement("div")
-		cartItemQuantityContainer.classList.add("cart_item_quantity_container")
-		cartItemQuantityContainer.classList.add("flexbox")
-
-		const cartItemQuantityInput = document.createElement("input")
-		{
-			cartItemQuantityInput.setAttribute("type", "number")
-			cartItemQuantityInput.value = "1"
-			cartItemQuantityInput.onwheel = () => {
-				return false
-			}
-
-			cartItemQuantityInput.setAttribute("min", "1")
-			cartItemQuantityInput.setAttribute("max", "10")
-			cartItemQuantityInput.classList.add("cart_quantity_input")
-			cartItemQuantityInput.classList.add("center_text")
-
-			cartItemQuantityInput.updateValue = () =>
-			{
-				const min = Helper.getNumber(cartItemQuantityInput.getAttribute("min"), false, 0)
-				const max = Helper.getNumber(cartItemQuantityInput.getAttribute("max"), false, 10)
-
-				const amount = Helper.clamp(Helper.getNumber(cartItemQuantityInput.value), min, max)
-				cartItemQuantityInput.value = Helper.getString(amount)
-			}
-
-			cartItemQuantityInput.onkeyup = (event) =>
-			{
-				event.preventDefault()
-
-				if (Helper.isNumber(event.keyCode) && event.keyCode != 13) return
-				if (Helper.isString(event.key) && event.key.toLowerCase() !== "enter") return
-				if (Helper.isString(event.code) && event.code.toLowerCase() !== "enter") return
-
-				cartItemQuantityInput.updateValue()
-
-				cartItemQuantityInput.blur() //removes focus from the input
-			}
-
-			cartItemQuantityContainer.appendChild(cartItemQuantityInput)
-			cartItemQuantitySection.appendChild(cartItemQuantityContainer)
-		}
-
-		//creating the button for removing the item from the cart
-		const removeItemButton = document.createElement("button")
-		removeItemButton.innerHTML = "Remove"
-		removeItemButton.classList.add("cart_remove_item_button")
-		removeItemButton.onclick = (event) => {
-
-			//get the itemName and toppingList of the cart and check for duplicate in Menu.cart
-			const tableRow = event.target.parentNode.parentNode.parentNode
-
-			const itemName = tableRow.querySelector(".cart_item_item_name")
-
-			const itemToppings = Array.from(tableRow.querySelector(".cart_topping_name"))
-
-			const index = Menu.findDuplicateItem(itemName, itemToppings)
-
-			Menu.cart.splice(index, 1)
-
-			Menu.storeCartInfo()
-
-			tableRow.remove()
-
-			Menu.updateTotals()
-		}
-
-		cartItemQuantityContainer.appendChild(removeItemButton)
-
-		cartTableRow.appendChild(cartItemName)
-		cartTableRow.appendChild(cartItemQuantitySection)
-
-		//creating the price section
-		const cartItemPrice = document.createElement("td")
-		cartItemPrice.classList.add("cart_item_price")
-		cartItemPrice.classList.add("center_text")
-
-		cartTableRow.appendChild(cartItemPrice)
-
-		const itemName = cartItemPrice.parentNode.childNodes[0].childNodes[0].innerHTML
-		const itemPrice = Menu.items.get(itemName).price
-
-		const unitPrice = itemPrice + totalToppingsPrice
-
-		cartItemPrice.innerHTML = Helper.priceify(unitPrice) //total price of the item
-
-		//updates price of item when the quantity is changed
-		cartItemQuantityInput.onchange = (event) => {
-			cartItemQuantityInput.updateValue()
-
-			const priceSection = event.target.parentNode.parentNode.nextSibling
-			const price = unitPrice * cartItemQuantityInput.value
-			priceSection.innerHTML = `$${price.toFixed(2)}`
-
-			Menu.updateTotals()
-		}
-		cartTable.appendChild(cartTableRow)
-
-
-		const newItem = Menu.addToCartArray(cartItemItemName.innerHTML, listOfWantedToppingsName, 1)
-		newItem.unitPrice = unitPrice
-		Menu.storeCartInfo()
-
-		//reset toppings list page to default selections
-		const toppingsPage = event.target.parentNode.previousSibling
-
-		const toppingsCheckboxesArray = Array.from(toppingsPage.querySelectorAll(".menu_item_topping_checkbox"))
-
-		for (let i = 0; i < itemToppingsArray.length; i++)
-		{
-			const topping = itemToppingsArray[i]
-			toppingsCheckboxesArray[i].checked = itemToppings[topping]
-		}
+		return this.m_flPrice
 	}
 
-	section.appendChild(image)
-	section.appendChild(name)
-	section.appendChild(price)
-	section.appendChild(description)
-	section.appendChild(viewToppingsButton)
-	section.appendChild(addToCartButton)
+	getToppings()
+	{
+		return this.m_Toppings
+	}
 
-	Menu.handleItemAvailability(section, item)
+	getImagePath()
+	{
+		return this.m_strImagePath
+	}
 
-	menuContainer.appendChild(toppingList)
-	menuContainer.appendChild(section)
+	getAvailable()
+	{
+		return this.m_bAvailable
+	}
+
+	/*
+	*	Setters
+	*/
+	setPrice(price)
+	{
+		this.m_flPrice = Helper.priceifyNumber(price)
+	}
+
+	// Returns true if the topping was successfully added, false otherwise
+	addTopping(topping)
+	{
+		if (!this.m_Toppings)
+			throw new Error("This object does not support toppings")
+
+		if (!(topping instanceof Menu__Topping))
+			throw new Error("Invalid topping provided")
+
+		if (this.m_Toppings.has(topping))
+			return false
+
+		this.m_Toppings.set(topping, true)
+		return true
+	}
+
+	// Returns true if the topping was successfully removed, false otherwise
+	removeTopping(topping)
+	{
+		if (!this.m_Toppings)
+			throw new Error("This object does not support toppings")
+
+		if (!(topping instanceof Menu__Topping))
+			throw new Error("Invalid topping provided")
+
+		if (!this.m_Toppings.has(topping))
+			return false
+
+		this.m_Toppings.delete(topping)
+		return true
+	}
+
+	setAvailable(available)
+	{
+		this.m_bAvailable = Helper.getBool(available, true)
+	}
 }
 
-Menu.storeCartInfo = () =>
+class Menu__Topping extends Menu__Item // Exists so we can do instanceof
 {
-	StorageManager.setStoredValue("cartItems", Helper.json(Menu.cart))
-}
-
-
-
-Menu.handleItemAvailability = (section, item) =>
-{
-	const isAvailable = item.availability
-
-	//setting section availability for styling
-	section.setAttribute("isAvailable", isAvailable)
-
-	//"Select Toppings" button enabling/disabling
-	const selectToppingsBtn = section.querySelector(".menu_item_toppings_view_button")
-	selectToppingsBtn.disabled = !isAvailable
-
-	//"Add to Cart" button enabling/disabling
-	const addToCartBtn = section.querySelector(".menu_item_cart_button")
-	addToCartBtn.disabled = !isAvailable
-}
-
-Menu.handleToppingAvailability = (toppingCheckbox, topping) =>
-{
-	const isAvailable = Menu.toppings.get(topping).availability
-
-	toppingCheckbox.disabled = !isAvailable
-}
-
-Menu.updateTotals = () =>
-{
-	const tableRows = Array.from(document.querySelectorAll(".cart_table_row"))
-
-	//calculating subtotal
-	let subtotal = 0
-	for(const row of tableRows)
+	constructor(data)
 	{
-		const rowPrice = Helper.getNumber(row.querySelector(".cart_item_price").innerHTML.substring(1), true)
-		subtotal+= rowPrice
+		super(data)
+
+		let type = Helper.getNumber(data.type, false, Menu.TOPPING_TYPE_GENERIC)
+		if (type < Menu.MIN_TOPPING_TYPES || type > Menu.MAX_TOPPING_TYPES)
+			type = Menu.TOPPING_TYPE_GENERIC
+
+		this.m_iType = type
 	}
 
-	//creating subtotal value
-	const subTotalValue = document.querySelector("#cart_total_subTotal_value")
-	subTotalValue.innerHTML = Helper.priceify(subtotal)
-
-	//creating tax value
-	const taxValue = document.querySelector("#cart_total_tax_value")
-	taxValue.innerHTML = Helper.priceify(subtotal * 0.06)
-
-	//getting amount of tips
-	const tipValue = document.querySelector("#cart_total_tip_value")
-	let tipAmount = 0
-
-	//ensures that tip amount is within the min and max range of possible tip amount
-	if(tipValue.value)
+	/*
+	*	Getters
+	*/
+	getToppingType()
 	{
-		const min = Helper.getNumber(tipValue.getAttribute("min"), true, 0)
-		const max = Helper.getNumber(tipValue.getAttribute("max"), true, 100)
-
-		tipAmount = Helper.clamp(Helper.getNumber(tipValue.value), min, max)
+		return this.m_iType
 	}
-	tipValue.value = tipAmount
-
-	//creating total value
-	const totalValue = document.querySelector("#cart_total_total_value")
-	totalValue.innerHTML = Helper.priceify(subtotal + subtotal * 0.06 + tipAmount)
-}
-
-Menu.findDuplicateItem = (itemName, toppingList) =>
-{
-	const cartItems = Menu.cart
-
-	outer: for (let i = 0; i < cartItems.length; i++)
-	{
-		const item = cartItems[i]
-		if (item.name != itemName) continue
-
-		if (item.toppings.length != toppingList.length) continue
-
-		for (let t = 0; t < item.toppings.length; t++)
-		{
-			if (item.toppings[i] != toppingList[i]) continue outer
-		}
-
-		return i
-	}
-
-	return -1
-}
-
-Menu.createCartDisplay = (menuContainer) =>
-{
-	//cart container
-	const cartContainer = document.createElement("div")
-	cartContainer.id = "cart_container"
-	cartContainer.setAttribute("isShown", false)
-
-	//close button
-	const cartCloseBtn = document.createElement("button")
-	cartCloseBtn.id = "cart_close_btn"
-	cartCloseBtn.classList.add("close_btn")
-	cartCloseBtn.classList.add("float_right")
-	cartCloseBtn.innerHTML = "x"
-	cartCloseBtn.onclick = () =>
-	{
-		const isShown = Helper.getBool(cartContainer.getAttribute("isShown"))
-
-		cartContainer.setAttribute("isShown", !isShown)
-	}
-
-	//cart header
-	const cartHeader = document.createElement("h2")
-	cartHeader.id = "cart_header"
-	cartHeader.classList.add("center_text")
-	cartHeader.innerHTML = "Cart"
-
-	const hr = document.createElement("hr")
-	hr.id = "cart_hr"
-
-	//container for table for cart
-	const cartTableContainer = document.createElement("div")
-	cartTableContainer.id = "cart_table_container"
-
-	//setting up table and headers for the cart
-	const cartTable = document.createElement("table")
-	cartTable.id = "cart_table"
-
-	const cartTableRow = document.createElement("tr")
-
-	//creating table header for item name
-	const headerItemName = document.createElement("th")
-	headerItemName.id = "cart_th_item_name"
-	headerItemName.innerHTML = "Item"
-
-	//creating table header for item quantity
-	const headerItemQuantity = document.createElement("th")
-	headerItemQuantity.id = "cart_th_item_quantity"
-	headerItemQuantity.innerHTML = "Quantity"
-
-	//creating table header for item price
-	const headerItemPrice = document.createElement("th")
-	headerItemPrice.innerHTML = "Price"
-	headerItemPrice.id = "cart_th_item_price"
-
-
-	//totals section
-	const totalSection = document.createElement("div")
-	totalSection.id = "cart_total_section"
-	totalSection.classList.add("flexbox_column")
-
-	//subtotal section
-	const subTotalContainer = document.createElement("div")
-	subTotalContainer.classList.add("cart_total_container")
-	subTotalContainer.classList.add("flexbox")
-
-	const subtotalLabel = document.createElement("h3")
-	subtotalLabel.id = "cart_total_subTotal_label"
-	subtotalLabel.classList.add("cart_total_label")
-	subtotalLabel.innerHTML = "Subtotal:"
-
-	const subTotalValue = document.createElement("p")
-	subTotalValue.id = "cart_total_subTotal_value"
-	subTotalValue.classList.add("cart_total_value")
-
-	//tax section
-	const taxContainer = document.createElement("div")
-	taxContainer.classList.add("cart_total_container")
-	taxContainer.classList.add("flexbox")
-
-	const taxLabel = document.createElement("h3")
-	taxLabel.classList.add("cart_total_label")
-	taxLabel.id = "cart_total_tax_label"
-	taxLabel.innerHTML = "Taxes:"
-
-	const taxValue = document.createElement("p")
-	taxValue.id = "cart_total_tax_value"
-	taxValue.classList.add("cart_total_value")
-
-	//tip section
-	const tipContainer = document.createElement("div")
-	tipContainer.classList.add("cart_total_container")
-	tipContainer.classList.add("flexbox")
-
-	const tipLabel = document.createElement("h3")
-	tipLabel.classList.add("cart_total_label")
-	tipLabel.id = "cart_total_tip_label"
-	tipLabel.innerHTML = "Tips:"
-
-	const tipValue = document.createElement("input")
-	tipValue.setAttribute("type", "number")
-	tipValue.id = "cart_total_tip_value"
-	tipValue.classList.add("cart_total_value")
-	tipValue.setAttribute("min", "0")
-	tipValue.setAttribute("max", "100")
-	tipValue.onkeyup = (event) =>
-	{
-		event.preventDefault()
-
-		if (Helper.isNumber(event.keyCode) && event.keyCode != 13) return
-		if (Helper.isString(event.key) && event.key.toLowerCase() !== "enter") return
-		if (Helper.isString(event.code) && event.code.toLowerCase() !== "enter") return
-
-		tipValue.blur()
-	}
-	tipValue.onchange = () =>
-	{
-		Menu.updateTotals()
-	}
-
-	//total section
-	const totalContainer = document.createElement("div")
-	totalContainer.classList.add("cart_total_container")
-	totalContainer.classList.add("flexbox")
-
-	const totalLabel = document.createElement("h3")
-	totalLabel.classList.add("cart_total_label")
-	totalLabel.id = "cart_total_total_label"
-	totalLabel.innerHTML = "Total:"
-
-	const totalValue = document.createElement("p")
-	totalValue.id = "cart_total_total_value"
-	totalValue.classList.add("cart_total_value")
-
-
-	//setting up payment section
-	const paymentSection = document.createElement("div")
-	paymentSection.id = "cart_payment_section_container"
-
-	const cashButton = document.createElement("button")
-	{
-		cashButton.classList.add("cart_payment_button")
-		cashButton.innerHTML = "Cash"
-
-		//bring to payment page
-		cashButton.onclick = () =>
-		{
-			StorageManager.setStoredValue("payment", "Cash")
-			window.location.assign("../pages/order.html?type=cash")
-		}
-	}
-
-	const cardPayment = document.createElement("button")
-	{
-		cardPayment.classList.add("cart_payment_button")
-		cardPayment.innerHTML = "Card"
-
-		//bring to payment page
-		cardPayment.onclick = () => {
-			StorageManager.setStoredValue("payment", "Card")
-			window.location.assign("../pages/order.html?type=card")
-		}
-	}
-
-	const payPalButton = document.createElement("button")
-	{
-		payPalButton.classList.add("cart_payment_button")
-		payPalButton.innerHTML = "PayPal"
-
-		//bring to payment page
-		payPalButton.onclick = () => {
-			StorageManager.setStoredValue("payment", "PayPal")
-			window.location.assign("../pages/order.html?type=paypal")
-		}
-	}
-
-	const applePayButton = document.createElement("button")
-	{
-		applePayButton.classList.add("cart_payment_button")
-		applePayButton.innerHTML = "Apple Pay"
-
-		//bring to payment page
-		applePayButton.onclick = () => {
-			StorageManager.setStoredValue("payment", "Apple Pay")
-			window.location.assign("../pages/order.html?type=applepay")
-		}
-	}
-
-	const samsungPayButton = document.createElement("button")
-	{
-		samsungPayButton.classList.add("cart_payment_button")
-		samsungPayButton.innerHTML = "Samsung Pay"
-
-		//bring to payment page
-		samsungPayButton.onclick = () => {
-			StorageManager.setStoredValue("payment", "Samsung Pay")
-			window.location.assign("../pages/order.html?type=samsungpay")
-		}
-	}
-
-	const googlePayButton = document.createElement("button")
-	{
-		googlePayButton.classList.add("cart_payment_button")
-		googlePayButton.innerHTML = "Google Pay"
-
-		//bring to payment page
-		googlePayButton.onclick = () => {
-			StorageManager.setStoredValue("payment", "Google Pay")
-			window.location.assign("../pages/order.html?type=googlepay")
-		}
-	}
-
-
-	cartTableRow.appendChild(headerItemName)
-	cartTableRow.appendChild(headerItemQuantity)
-	cartTableRow.appendChild(headerItemPrice)
-
-	cartTable.appendChild(cartTableRow)
-
-	cartTableContainer.appendChild(cartTable)
-
-	paymentSection.appendChild(cashButton)
-	paymentSection.appendChild(cardPayment)
-	paymentSection.appendChild(payPalButton)
-	paymentSection.appendChild(applePayButton)
-	paymentSection.appendChild(samsungPayButton)
-	paymentSection.appendChild(googlePayButton)
-
-	subTotalContainer.appendChild(subtotalLabel)
-	subTotalContainer.appendChild(subTotalValue)
-	taxContainer.appendChild(taxLabel)
-	taxContainer.appendChild(taxValue)
-	tipContainer.appendChild(tipLabel)
-	tipContainer.appendChild(tipValue)
-	totalContainer.appendChild(totalLabel)
-	totalContainer.appendChild(totalValue)
-
-	totalSection.appendChild(subTotalContainer)
-	totalSection.appendChild(taxContainer)
-	totalSection.appendChild(tipContainer)
-	totalSection.appendChild(totalContainer)
-
-	cartContainer.appendChild(cartCloseBtn)
-	cartContainer.appendChild(cartHeader)
-	cartContainer.appendChild(hr)
-	cartContainer.appendChild(cartTableContainer)
-	cartContainer.appendChild(totalSection)
-	cartContainer.appendChild(paymentSection)
-
-	menuContainer.appendChild(cartContainer)
 }
 
 /*
-* Adds items on the cart to an array
+*	Controls off by default mode
 */
-Menu.addToCartArray = (itemName, itemTopping, quantity) =>
+Menu.setOffByDefault = (state) =>
 {
-	const item =
-	{
-		"name": itemName,
-		"toppings": itemTopping,
-		"quantity": quantity
-	}
+	Menu.m_bOffByDefault = Helper.getBool(state, false)
+}
 
-	Menu.cart.push(item)
-	Menu.updateTotals()
+/*
+*	Adds a new item
+*/
+Menu.addItem = (item) =>
+{
+	if (!(item instanceof Menu__Item) && !(item instanceof Object))
+		throw new Error("Tried to add an invalid menu item")
+
+	if (!(item instanceof Menu__Item))
+		item = new Menu__Item(item)
+
+	Menu.m_Items.set(item, !Menu.m_bOffByDefault)
 
 	return item
 }
 
 /*
-*	Sets up the menu items and toppings
+*	Adds a new topping
 */
-Menu.setup = () =>
+Menu.addTopping = (topping) =>
 {
-	// Add toppings
-	// Vegetable options
-	Menu.addTopping("tomatoes", 0.10)
-	Menu.addTopping("lettuce", 0.10)
-	Menu.addTopping("green cabbage", 0.10)
-	Menu.addTopping("red cabbage", 0.10)
-	Menu.addTopping("red onion", 0.10)
-	Menu.addTopping("onion", 0.10)
-	Menu.addTopping("asparagus", 0.10)
-	Menu.addTopping("hummus", 0.10)
-	Menu.addTopping("red pepper", 0.10)
-	Menu.addTopping("green pepper", 0.10)
-	Menu.addTopping("orange pepper", 0.10)
-	Menu.addTopping("yellow pepper", 0.10)
-	Menu.addTopping("zucchini", 0.10)
-	Menu.addTopping("cucumber", 0.10)
-	Menu.addTopping("egg plant", 0.10)
-	Menu.addTopping("chickpeas", 0.10)
-	Menu.addTopping("spinach", 0.10)
-	Menu.addTopping("celery", 0.10)
-	Menu.addTopping("carrots", 0.10)
-	Menu.addTopping("pickle", 0.10)
-	Menu.addTopping("cauliflower", 0.10)
-	Menu.addTopping("broccoli", 0.05)
+	if (!(topping instanceof Menu__Topping) && !(topping instanceof Object))
+		throw new Error("Tried to add an invalid menu topping")
 
-	// Seed options
-	Menu.addTopping("pomegranate seeds", 0.10)
-	Menu.addTopping("pumpkin seeds", 0.10)
-	Menu.addTopping("white sesame seeds", 0.10)
-	Menu.addTopping("quinoa seeds", 0.10)
-	Menu.addTopping("chia seeds", 0.10)
+	if (!(topping instanceof Menu__Topping))
+		topping = new Menu__Topping(topping)
 
-	// Condiments
-	Menu.addTopping("lemon juice", 0.05)
-	Menu.addTopping("lemon zest", 0.05)
-	Menu.addTopping("orange zest", 0.05)
-	Menu.addTopping("ginger juice", 0.05)
-	Menu.addTopping("ginger puree", 0.10)
-	Menu.addTopping("white wine vinegar", 0.05)
-	Menu.addTopping("cider vinegar", 0.05)
-	Menu.addTopping("extra virgin olive oil", 0.05)
-	Menu.addTopping("vegetable oil", 0.05)
-	Menu.addTopping("truffle oil", 0.10)
-	Menu.addTopping("canola oil", 0.10)
-	Menu.addTopping("coconut oil", 0.10)
-	Menu.addTopping("dijon mustard", 0.05)
-	Menu.addTopping("honey", 0.05)
-	Menu.addTopping("minced garlic", 0.10)
-	Menu.addTopping("thyme", 0.10)
-	Menu.addTopping("salt", 0.05)
-	Menu.addTopping("white pepper", 0.05)
-	Menu.addTopping("black pepper", 0.05)
-	Menu.addTopping("tomato salsa", 0.10)
-	Menu.addTopping("chocolate ", 0.10)
-	Menu.addTopping("vanilla", 0.10)
-	Menu.addTopping("chicken stock", 0.30)
-	Menu.addTopping("vegetable stock", 0.20)
-	Menu.addTopping("parsely leaves", 0.10)
-	Menu.addTopping("hibiscus flowers", 0.10)
-	Menu.addTopping("mint leaves", 0.10)
-	Menu.addTopping("basil leaves", 0.10)
-	Menu.addTopping("mayonnaise", 0.05)
-	Menu.addTopping("red wine", 1.00)
-	Menu.addTopping("white wine", 1.00)
-	Menu.addTopping("chives", 0.10)
-	Menu.addTopping("cilantro", 0.10)
-	Menu.addTopping("worcestershire sauce", 0.05)
-	Menu.addTopping("paprika", 0.05)
-	Menu.addTopping("cumin", 0.05)
-	Menu.addTopping("onion powder", 0.05)
-	Menu.addTopping("garlic powder", 0.05)
-	Menu.addTopping("lime juice", 0.0567890)
-	Menu.addTopping("chiles", 0.10)
-	Menu.addTopping("chili powder", 0.10)
-	Menu.addTopping("jalapeño", 0.20)
-	Menu.addTopping("brown sugar", 0.10)
-	Menu.addTopping("white sugar", 0.10)
-	Menu.addTopping("cane sugar", 0.10)
-	Menu.addTopping("confectioners’ sugar", 0.10)
-	Menu.addTopping("powdered sugar", 0.15)
-	Menu.addTopping("icing sugar", 0.15)
-	Menu.addTopping("sweetener", 0.10)
-	Menu.addTopping("beans", 0.30)
-	Menu.addTopping("ketchup", 0.10)
-	Menu.addTopping("mustard", 0.10)
-	Menu.addTopping("cajun seasoning", 0.10)
-	Menu.addTopping("pizza sauce", 0.30)
-	Menu.addTopping("soy sauce", 0.05)
+	Menu.m_Toppings.set(topping, !Menu.m_bOffByDefault)
 
-	// Protein options
-	Menu.addTopping("salmon", 8.50)
-	Menu.addTopping("chicken", 4.00)
-	Menu.addTopping("shrimp", 5.50)
-	Menu.addTopping("beef", 5.50)
-	Menu.addTopping("pork", 3.50)
-	Menu.addTopping("eggs", 1.50)
-	Menu.addTopping("tuna", 2.50)
-	Menu.addTopping("white fish", 6.50)
-	Menu.addTopping("bacon", 1.00)
+	return topping
+}
 
-	// Fruit options
-	Menu.addTopping("ruby red grapefruit", 0.30)
-	Menu.addTopping("blood oranges", 0.30)
-	Menu.addTopping("orange", 0.30)
-	Menu.addTopping("quinoa", 0.30)
-	Menu.addTopping("apple", 0.30)
-	Menu.addTopping("banana", 0.30)
-	Menu.addTopping("mango", 0.30)
-	Menu.addTopping("avocado", 0.30)
-	Menu.addTopping("raspberries", 0.10)
-	Menu.addTopping("black berries", 0.10)
-	Menu.addTopping("blue berries", 0.10)
-	Menu.addTopping("strawberries", 0.10)
+/*
+*	Finds either an item or a topping by name
+*
+*	Returns the found object, null if not found
+*/
+Menu.find = (name, lookup) =>
+{
+	name = Helper.getString(name, null)
+	if (!name) return null
 
-	// Dairy options
-	Menu.addTopping("blue cheese crumbles", 0.15)
-	Menu.addTopping("american cheese", 0.15)
-	Menu.addTopping("cheddar cheese", 0.15)
-	Menu.addTopping("colby jack cheese", 0.15)
-	Menu.addTopping("provolone cheese", 0.15)
-	Menu.addTopping("cream cheese", 0.15)
-	Menu.addTopping("parmesan cheese", 0.15)
-	Menu.addTopping("mozzarella cheese", 0.15)
-	Menu.addTopping("sour cream", 0.15)
-	Menu.addTopping("coconut milk", 0.20)
-	Menu.addTopping("pistachio milk", 0.20)
-	Menu.addTopping("whole milk", 0.20)
-	Menu.addTopping("almond milk", 0.20)
-	Menu.addTopping("tofu", 0.20)
-	Menu.addTopping("yogurt", 0.20)
-	Menu.addTopping("unsalted butter", 0.10)
-	Menu.addTopping("salted butter", 0.10)
+	name = name.trim().toLowerCase()
 
-	// Other
-	Menu.addTopping("sourdough bread", 0.40)
-	Menu.addTopping("raisin bread", 0.40)
-	Menu.addTopping("french bread", 0.40)
-	Menu.addTopping("tortilla", 0.30)
-	Menu.addTopping("fig jam", 0.20)
-	Menu.addTopping("foie gras", 0.20)
-	Menu.addTopping("arborio rice", 0.50)
-	Menu.addTopping("white rice", 0.50)
-	Menu.addTopping("brown rice", 0.50)
-	Menu.addTopping("vegetable broth", 0.50)
-	Menu.addTopping("chicken broth", 0.50)
-	Menu.addTopping("shallot", 0.10)
-	Menu.addTopping("hamburger bun", 0.40)
-	Menu.addTopping("pine nuts", 0.30)
-	Menu.addTopping("cashew nuts", 0.30)
-	Menu.addTopping("peanuts", 0.30)
-	Menu.addTopping("pecans", 0.30)
-	Menu.addTopping("almond flour", 0.20)
-	Menu.addTopping("corn flour", 0.20)
-	Menu.addTopping("cornstarch", 0.10)
-	Menu.addTopping("red curry paste", 0.50)
-	Menu.addTopping("yellow curry paste", 0.50)
-	Menu.addTopping("sriracha", 0.10)
-	Menu.addTopping("honey", 0.20)
-	Menu.addTopping("vanilla extract", 0.10)
-	Menu.addTopping("whipped cream", 0.30)
-	Menu.addTopping("ice cream", 0.50)
-	Menu.addTopping("vanilla ice cream", 0.50)
-	Menu.addTopping("white chocolate", 0.50)
-	Menu.addTopping("dark chocolate", 0.50)
-	Menu.addTopping("milk chocolate", 0.50)
-	Menu.addTopping("pistachio paste", 0.20)
-	Menu.addTopping("vanilla bean", 0.20)
-	Menu.addTopping("ice", 0.10)
-	Menu.addTopping("maple syrup", 0.10)
-	Menu.addTopping("torani sugar-free coconut syrup", 0.10)
-	Menu.addTopping("carbonated water", 0.40)
-	Menu.addTopping("matcha powder", 0.20)
-	Menu.addTopping("toasted", 0.20)
-	Menu.addTopping("rum", 0.05)
+	if (!lookup || !(lookup instanceof Map))
+	{
+		let result = Menu.find(name, Menu.m_Items)
+		if (result) return result
 
-	// Drink options
-	Menu.addTopping("coke", 0.00)
-	Menu.addTopping("cherry coke", 0.00)
-	Menu.addTopping("pepsi", 0.00)
-	Menu.addTopping("root beer", 0.00)
-	Menu.addTopping("hi c", 0.00)
-	Menu.addTopping("sprite", 0.00)
-	Menu.addTopping("ginger ale", 0.00)
-	Menu.addTopping("grape fanta", 0.00)
-	Menu.addTopping("orange fanta", 0.00)
-	Menu.addTopping("powerade", 0.00)
-	Menu.addTopping("lemonade brisk", 0.00)
-	Menu.addTopping("7up", 0.00)
-	Menu.addTopping("dr pepper", 0.00)
-	Menu.addTopping("minute maid lemonade", 0.00)
-	Menu.addTopping("chocolate milk", 0.00)
-	Menu.addTopping("white milk", 0.00)
+		result = Menu.find(name, Menu.m_Toppings)
+		if (result) return result
+	}
+	else
+	{
+		for (const [ item, value ] of lookup.entries())
+		{
+			if (!(item instanceof Menu__Item) && !(item instanceof Menu__Topping))
+				continue
 
-	////////////////////////////////////////////////////////////////
+			if (item.getName().toLowerCase() == name)
+				return [ item, value ]
+		}
+	}
 
-	// Add items
+	return null
+}
+
+/*
+*	Finds an item by name
+*
+*	Returns the found item, null if not found
+*/
+Menu.findItem = (name) =>
+{
+	return Menu.find(name, Menu.m_Items)
+}
+
+/*
+*	Finds a topping by name
+*
+*	Returns the found topping, null if not found
+*/
+Menu.findTopping = (name) =>
+{
+	return Menu.find(name, Menu.m_Toppings)
+}
+
+/*
+*	Adds stuff to the menu
+*/
+Menu.initializeItems = () =>
+{
+	/*
+	*	Toppings
+	*/
+	const cabbage = Menu.addTopping({ name: "Cabbage", price: 0.1 })
+	const celery = Menu.addTopping({ name: "Celery", price: 0.1 })
+	const chiaSeeds = Menu.addTopping({ name: "Chia Seeds", price: 0.1 })
+	const cilantro = Menu.addTopping({ name: "Cilantro", price: 0.05 })
+	const gingerJuice = Menu.addTopping({ name: "Ginger Juice", price: 0.05 })
+	const gingerPuree = Menu.addTopping({ name: "Ginger Puree", price: 0.1 })
+	const hibiscus = Menu.addTopping({ name: "Hibiscus", price: 0.05 })
+	const honey = Menu.addTopping({ name: "Honey", price: 0.05 })
+	const lemonJuice = Menu.addTopping({ name: "Lemon Juice", price: 0.05 })
+	const lemonZest = Menu.addTopping({ name: "Lemon Zest", price: 0.05 })
+	const lettuce = Menu.addTopping({ name: "Lettuce", price: 0.1 })
+	const onion = Menu.addTopping({ name: "Onion", price: 0.1 })
+	const orangeZest = Menu.addTopping({ name: "Orange Juice", price: 0.05 })
+	const pomegranateSeeds = Menu.addTopping({ name: "Pomegranate Seeds", price: 0.1 })
+	const pumpkinSeeds = Menu.addTopping({ name: "Pumpkin Seeds", price: 0.1 })
+	const spinach = Menu.addTopping({ name: "Spinach", price: 0.1 })
+	const tomatoes = Menu.addTopping({ name: "Tomatoes", price: 0.1 })
+	const vinegar = Menu.addTopping({ name: "Vinegar", price: 0.05 })
+	const whiteWine = Menu.addTopping({ name: "White Wine", price: 0.05 })
+	Menu.setOffByDefault(true)
+		const pepperoni = Menu.addTopping({ name: "Pepperoni", price: 0.05 })
+		const jalapeno = Menu.addTopping({ name: "Jalapeño", price: 0.05 })
+	Menu.setOffByDefault(false)
+
+	Menu.setOffByDefault(true)
+		const chocolate = Menu.addTopping({ name: "Chocolate", price: 0.1, type: Menu.TOPPING_TYPE_SAUCE })
+		const ketchup = Menu.addTopping({ name: "Ketchup", price: 0.05, type: Menu.TOPPING_TYPE_SAUCE })
+		const mayonnaise = Menu.addTopping({ name: "Mayonnaise", price: 0.05, type: Menu.TOPPING_TYPE_SAUCE })
+		const mustard = Menu.addTopping({ name: "Mustard", price: 0.05, type: Menu.TOPPING_TYPE_SAUCE })
+		const salsa = Menu.addTopping({ name: "Salsa", price: 0.05, type: Menu.TOPPING_TYPE_SAUCE })
+		const soySauce = Menu.addTopping({ name: "Soy Sauce", price: 0.05, type: Menu.TOPPING_TYPE_SAUCE })
+		const vanilla = Menu.addTopping({ name: "Vanilla", price: 0.1, type: Menu.TOPPING_TYPE_SAUCE })
+		const worcestershire = Menu.addTopping({ name: "Worcestershire Sauce", price: 0.05, type: Menu.TOPPING_TYPE_SAUCE })
+	Menu.setOffByDefault(false)
+
+	const basil = Menu.addTopping({ name: "Basil", price: 0.05, type: Menu.TOPPING_TYPE_SPICE })
+	const chives = Menu.addTopping({ name: "Chives", price: 0.05, type: Menu.TOPPING_TYPE_SPICE })
+	const garlic = Menu.addTopping({ name: "Garlic", price: 0.1, type: Menu.TOPPING_TYPE_SPICE })
+	const mint = Menu.addTopping({ name: "Mint", price: 0.05, type: Menu.TOPPING_TYPE_SPICE })
+	const parsely = Menu.addTopping({ name: "Parsely", price: 0.05, type: Menu.TOPPING_TYPE_SPICE })
+	const pepper = Menu.addTopping({ name: "Pepper", price: 0.05, type: Menu.TOPPING_TYPE_SPICE })
+	const salt = Menu.addTopping({ name: "Salt", price: 0.05, type: Menu.TOPPING_TYPE_SPICE })
+	const sugar = Menu.addTopping({ name: "Sugar", price: 0.05, type: Menu.TOPPING_TYPE_SPICE })
+	const thyme = Menu.addTopping({ name: "Thyme", price: 0.1, type: Menu.TOPPING_TYPE_SPICE })
+
+	Menu.setOffByDefault(true)
+		const apples = Menu.addTopping({ name: "Apples", price: 0.3, type: Menu.TOPPING_TYPE_SIDE })
+		const asparagus = Menu.addTopping({ name: "Asparagus", price: 0.1, type: Menu.TOPPING_TYPE_SIDE })
+		const avocado = Menu.addTopping({ name: "Avocado", price: 0.3, type: Menu.TOPPING_TYPE_SIDE })
+		const banana = Menu.addTopping({ name: "Banana", price: 0.3, type: Menu.TOPPING_TYPE_SIDE })
+		const blackberries = Menu.addTopping({ name: "Blackberries", price: 0.3, type: Menu.TOPPING_TYPE_SIDE })
+		const blueberries = Menu.addTopping({ name: "Blueberries", price: 0.3, type: Menu.TOPPING_TYPE_SIDE })
+		const carrots = Menu.addTopping({ name: "Carrots", price: 0.1, type: Menu.TOPPING_TYPE_SIDE })
+		const chickpeas = Menu.addTopping({ name: "Chickpeas", price: 0.1, type: Menu.TOPPING_TYPE_SIDE })
+		const cucumber = Menu.addTopping({ name: "Cucumber", price: 0.1, type: Menu.TOPPING_TYPE_SIDE })
+		const eggplant = Menu.addTopping({ name: "Eggplant", price: 0.1, type: Menu.TOPPING_TYPE_SIDE })
+		const eggs = Menu.addTopping({ name: "Eggs", price: 0.1, type: Menu.TOPPING_TYPE_SIDE })
+		const garlicBread = Menu.addTopping({ name: "Garlic Bread", price: 0.5, type: Menu.TOPPING_TYPE_SIDE })
+		const grapefruit = Menu.addTopping({ name: "Grapefruit", price: 0.3, type: Menu.TOPPING_TYPE_SIDE })
+		const hummus = Menu.addTopping({ name: "Hummus", price: 0.1, type: Menu.TOPPING_TYPE_SIDE })
+		const iceCream = Menu.addTopping({ name: "Ice Cream", price: 0.3, type: Menu.TOPPING_TYPE_SIDE })
+		const mango = Menu.addTopping({ name: "Mango", price: 0.3, type: Menu.TOPPING_TYPE_SIDE })
+		const oranges = Menu.addTopping({ name: "Oranges", price: 0.3, type: Menu.TOPPING_TYPE_SIDE })
+		const quinoa = Menu.addTopping({ name: "Quinoa", price: 0.3, type: Menu.TOPPING_TYPE_SIDE })
+		const raspberries = Menu.addTopping({ name: "Raspberries", price: 0.3, type: Menu.TOPPING_TYPE_SIDE })
+		const strawberries = Menu.addTopping({ name: "Strawberries", price: 0.3, type: Menu.TOPPING_TYPE_SIDE })
+		const yogurt = Menu.addTopping({ name: "Yogurt", price: 0.15, type: Menu.TOPPING_TYPE_SIDE })
+		const zucchini = Menu.addTopping({ name: "Zucchini", price: 0.1, type: Menu.TOPPING_TYPE_SIDE })
+	Menu.setOffByDefault(false)
+
+	Menu.setOffByDefault(true)
+		const chocolateMilk = Menu.addTopping({ name: "Chocolate Milk", price: 0.3, type: Menu.TOPPING_TYPE_DRINK })
+		const whiteMilk = Menu.addTopping({ name: "White Milk", price: 0.3, type: Menu.TOPPING_TYPE_DRINK })
+
+		const brisk = Menu.addTopping({ name: "Brisk", price: 0.3, type: Menu.TOPPING_TYPE_DRINK })
+		const coke = Menu.addTopping({ name: "Coke", price: 0.3, type: Menu.TOPPING_TYPE_DRINK })
+		const drPepper = Menu.addTopping({ name: "Dr. Pepper", price: 0.3, type: Menu.TOPPING_TYPE_DRINK })
+		const fanta = Menu.addTopping({ name: "Fanta", price: 0.3, type: Menu.TOPPING_TYPE_DRINK })
+		const gatorade = Menu.addTopping({ name: "Gatorade", price: 0.3, type: Menu.TOPPING_TYPE_DRINK })
+		const gingerAle = Menu.addTopping({ name: "Ginger Ale", price: 0.3, type: Menu.TOPPING_TYPE_DRINK })
+		const hiC = Menu.addTopping({ name: "Hi C", price: 0.3, type: Menu.TOPPING_TYPE_DRINK })
+		const pepsi = Menu.addTopping({ name: "Pepsi", price: 0.3, type: Menu.TOPPING_TYPE_DRINK })
+		const powerade = Menu.addTopping({ name: "Powerade", price: 0.3, type: Menu.TOPPING_TYPE_DRINK })
+		const rootBeer = Menu.addTopping({ name: "Root Beer", price: 0.3, type: Menu.TOPPING_TYPE_DRINK })
+		const sevenUp = Menu.addTopping({ name: "7up", price: 0.3, type: Menu.TOPPING_TYPE_DRINK })
+		const sprite = Menu.addTopping({ name: "Sprite", price: 0.3, type: Menu.TOPPING_TYPE_DRINK })
+
+		const appleJuice = Menu.addTopping({ name: "Apple Juice", price: 0.3, type: Menu.TOPPING_TYPE_DRINK })
+		const grapeJuice = Menu.addTopping({ name: "Grape Juice", price: 0.3, type: Menu.TOPPING_TYPE_DRINK })
+		const orangeJuice = Menu.addTopping({ name: "Orange Juice", price: 0.3, type: Menu.TOPPING_TYPE_DRINK })
+	Menu.setOffByDefault(false)
+
+	/*
+	*	Items
+	*/
 
 	// Healthy Haven
-	Menu.addItem("Salmon Salad", 12.00, "Grilled Salmon Salad with Citrus Vinaigrette", {
-		"lettuce": true,
-		"red onion": true,
-		"asparagus": true,
-		"red pepper": true,
-		"green pepper": true,
-		"orange pepper": true,
-		"yellow pepper": true,
-		"zucchini": true,
-		"cucumber": false,
-		"pomegranate seeds": true,
-		"pumpkin seeds": false,
-		"white sesame seeds": false,
-		"quinoa seeds": false,
-		"salmon": true,
-		"lemon juice": true,
-		"lemon zest": true,
-		"white wine vinegar": true,
-		"extra virgin olive oil": true,
-		"dijon mustard": true,
-		"honey": true,
-		"minced garlic": true,
-		"thyme": true,
-		"salt": true,
-		"white pepper": true,
-		"black pepper": false,
-		"ruby red grapefruit": true,
-		"blood oranges": true,
-		"orange": false
-	}, "../assets/menu/food/Grilled_Salmon_Salad_with_Citrus_Vinaigrette.jpg")
+	Menu.addItem({
+		section: "Healthy Haven",
 
-	Menu.addItem("Bell Peppers", 4.00, "Quinoa and Vegetable Stuffed Bell Peppers", {
-		"quinoa": true,
-		"chicken stock": true,
-		"vegetable stock": false,
-		"red pepper": true,
-		"orange pepper": false,
-		"yellow pepper": false,
-		"black pepper": true,
-		"minced garlic": true,
-		"egg plant": true,
-		"zucchini": true,
-		"red onion": true,
-		"parsely leaves": true,
-		"mint leaves": true,
-		"tomatoes": true
-	}, "../assets/menu/food/Quinoa_and_Vegetable_Stuffed_Bell_Peppers.jpg")
+		name: "Salmon Salad",
+		description: "Grilled Salmon Salad with Citrus Vinaigrette",
 
-	Menu.addItem("Avocado Toast Trio", 4.00, "Avocado Toast Trio with Tomato Salsa", {
-		"toasted": true,
-		"tomatoes": true,
-		"lettuce": true,
-		"red onion": true,
-		"asparagus": true,
-		"red pepper": true,
-		"green pepper": false,
-		"orange pepper": false,
-		"yellow pepper": false,
-		"zucchini": true,
-		"cucumber": false,
-		"cream cheese": true,
-		"eggs": true,
-		"tuna": true,
-		"mayonnaise": true,
-		"salt": true,
-		"white pepper": true,
-		"black pepper": false,
-		"tomato salsa": true
-	}, "../assets/menu/food/Avocado_Toast_Trio_with_Tomato_Salsa.jpg")
+		price: 12,
 
-	Menu.addItem("Mediterranean Power Bowl", 4.00, "Mediterranean Power Bowl with Hummus", {
-		"hummus": true,
-		"chickpeas": true,
-		"chicken": true,
-		"beef": false,
-		"shrimp": false,
-		"pork": false,
-		"quinoa": true,
-		"tomatoes": true,
-		"cucumber": true,
-		"red onion": true,
-		"spinach": true,
-		"green pepper": false,
-		"orange pepper": true,
-		"red pepper": true,
-		"yellow pepper": true,
-		"salt": true,
-		"white pepper": true,
-		"black pepper": false,
-		"american cheese": false,
-		"cheddar cheese": true,
-		"provolone cheese": false
-	}, "../assets/menu/food/Mediterranean_Power_Bowl_with_Hummus.jpg")
+		toppingList: [
+			garlic,
+			honey,
+			lemonJuice,
+			lemonZest,
+			lettuce,
+			mustard,
+			onion,
+			pepper,
+			pomegranateSeeds,
+			pumpkinSeeds,
+			salt,
+			thyme,
+			vinegar,
+			zucchini
+		],
+
+		image: "../assets/menu/food/Grilled_Salmon_Salad_with_Citrus_Vinaigrette.jpg"
+	})
+
+	Menu.addItem({
+		section: "Healthy Haven",
+
+		name: "Bell Peppers",
+		description: "Quinoa and Vegetable Stuffed Bell Peppers",
+
+		price: 4,
+
+		toppingList: [
+			eggplant,
+			garlic,
+			mint,
+			parsely,
+			quinoa,
+			tomatoes,
+			zucchini
+		],
+
+		image: "../assets/menu/food/Quinoa_and_Vegetable_Stuffed_Bell_Peppers.jpg"
+	})
+
+	Menu.addItem({
+		section: "Healthy Haven",
+
+		name: "Avocado Toast Trio",
+		description: "Avocado Toast Trio with Tomato Salsa",
+
+		price: 4,
+
+		toppingList: [
+			eggs,
+			lettuce,
+			pepper,
+			salt,
+			tomatoes,
+			zucchini
+		],
+
+		image: "../assets/menu/food/Avocado_Toast_Trio_with_Tomato_Salsa.jpg"
+	})
+
+	Menu.addItem({
+		section: "Healthy Haven",
+
+		name: "Mediterranean Power Bowl",
+		description: "Mediterranean Power Bowl with Hummus",
+
+		price: 4,
+
+		toppingList: [
+			chickpeas,
+			cucumber,
+			pepper,
+			quinoa,
+			salt,
+			spinach,
+			tomatoes
+		],
+
+		image: "../assets/menu/food/Mediterranean_Power_Bowl_with_Hummus.jpg"
+	})
 
 	// Indulgence Oasis
-	Menu.addItem("Lobster", 15.00, "Truffle-infused Lobster Mac and Cheese", {
-		"salt": true,
-		"white pepper": false,
-		"black pepper": true,
-		"extra virgin olive oil": true,
-		"onion": false,
-		"red onion": false,
-		"minced garlic": true,
-		"carrots": false,
-		"celery": false,
-		"provolone cheese": false,
-		"american cheese": false,
-		"cheddar cheese": true
-	}, "../assets/menu/food/Truffle-infused_Lobster_Mac_and_Cheese.jpg")
+	Menu.addItem({
+		section: "Indulgence Oasis",
 
-	Menu.addItem("Filet Mignon", 8.00, "Filet Mignon with Red Wine Reduction", {
-		"beef": true,
-		"extra virgin olive oil": true,
-		"black pepper": true,
-		"white pepper": false,
-		"red wine": true
-	}, "../assets/menu/food/Filet_Mignon_with_Red_Wine_Reduction.jpg")
+		name: "Lobster Mac and Cheese",
+		description: "Truffle-infused Lobster Mac and Cheese",
 
-	Menu.addItem("Foie Gras Crostini", 5.00, "Foie Gras Crostini with Fig Jam", {
-		"orange zest": true,
-		"extra virgin olive oil": true,
-		"canola oil": false,
-		"vegetable oil": false,
-		"chives": true,
-		"salt": true,
-		"white pepper": false,
-		"black pepper": true,
-		"sourdough bread": true,
-		"raisin bread": false,
-		"fig jam": true,
-		"foie gras": true
-	}, "../assets/menu/food/Foie_Gras_Crostini_with_Fig_Jam.jpg")
+		price: 15,
 
-	Menu.addItem("Risotto", 5.00, "Black Truffle Risotto with Parmesan Crisps", {
-		"arborio rice": true,
-		"white rice": false,
-		"brown rice": false,
-		"minced garlic": true,
-		"vegetable broth": true,
-		"chicken broth": false,
-		"extra virgin olive oil": true,
-		"canola oil": true,
-		"truffle oil": true,
-		"white wine": true,
-		"red wine": false,
-		"parmesan cheese": true,
-		"cheddar cheese": false,
-		"provolone cheese": false,
-		"colby jack cheese": false,
-		"american cheese": false,
-		"salt": true,
-		"white pepper": true,
-		"black pepper": false,
-		"chives": true
-	}, "../assets/menu/food/Black_Truffle_Risotto_with_Parmesan_Crisps.jpg")
+		toppingList: [
+			carrots,
+			celery,
+			garlic,
+			onion,
+			pepper,
+			salt
+		],
+
+		image: "../assets/menu/food/Truffle-infused_Lobster_Mac_and_Cheese.jpg"
+	})
+
+	Menu.addItem({
+		section: "Indulgence Oasis",
+
+		name: "Filet Mignon",
+		description: "Filet Mignon with Red Wine Reduction",
+
+		price: 8,
+
+		toppingList: [
+			pepper,
+			whiteWine
+		],
+
+		image: "../assets/menu/food/Filet_Mignon_with_Red_Wine_Reduction.jpg"
+	})
+
+	Menu.addItem({
+		section: "Indulgence Oasis",
+
+		name: "Foie Gras Crostini",
+		description: "Foie Gras Crostini with Fig Jam",
+
+		price: 5,
+
+		toppingList: [
+			chives,
+			orangeZest,
+			pepper,
+			salt
+		],
+
+		image: "../assets/menu/food/Foie_Gras_Crostini_with_Fig_Jam.jpg"
+	})
+
+	Menu.addItem({
+		section: "Indulgence Oasis",
+
+		name: "Risotto",
+		description: "Black Truffle Risotto with Parmesan Crisps",
+
+		price: 5,
+
+		toppingList: [
+			chives,
+			orangeZest,
+			pepper,
+			salt,
+			whiteWine
+		],
+
+		image: "../assets/menu/food/Black_Truffle_Risotto_with_Parmesan_Crisps.jpg"
+	})
 
 	// Fast Fusion Corner
-	Menu.addItem("Burger", 6.00, "Gourmet Beef Burger with Chipotle Aioli", {
-		"cilantro": true,
-		"minced garlic": true,
-		"worcestershire sauce": true,
-		"eggs": false,
-		"paprika": true,
-		"cumin": true,
-		"onion powder": true,
-		"garlic powder": false,
-		"salt": true,
-		"white pepper": false,
-		"black pepper": true,
-		"beef": true,
-		"chicken": false,
-		"pork": false,
-		"mayonnaise": false,
-		"lime juice": false,
-		"lemon juice": false,
-		"chiles": false,
-		"hamburger bun": true,
-		"colby jack cheese": false,
-		"american cheese": true,
-		"cheddar cheese": false,
-		"provolone cheese": false,
-		"red onion": false,
-		"jalapeño": false,
-		"pickle": false,
-		"lettuce": true,
-		"tomatoes": true
-	}, "../assets/menu/food/Gourmet_Beef_Burger_with_Chipotle_Aioli.jpg")
+	Menu.addItem({
+		section: "Fast Fusion Corner",
 
-	Menu.addItem("Pesto Chicken Panini", 6.00, "Pesto Chicken Panini with Sundried Tomatoes", {
-		"basil leaves": true,
-		"pine nuts": true,
-		"cashew nuts": false,
-		"peanuts": false,
-		"parmesan cheese": true,
-		"extra virgin olive oil": true,
-		"minced garlic": true,
-		"salt": true,
-		"white pepper": false,
-		"black pepper": true,
-		"chicken": true,
-		"beef": false,
-		"pork": false,
-		"mozzarella cheese": true,
-		"tomatoes": true,
-		"sourdough bread": true,
-		"raisin bread": false,
-		"french bread": false
-	}, "../assets/menu/food/Pesto_Chicken_Panini_with_Sundried_Tomatoes.jpg")
+		name: "Burger",
+		description: "Gourmet Beef Burger with Chipotle Aioli",
 
-	Menu.addItem("Tacos", 3.00, "Street-Style Tacos with Mango Salsa", {
-		"mango": true,
-		"lime juice": true,
-		"red pepper": true,
-		"yellow pepper": true,
-		"orange pepper": false,
-		"green pepper": true,
-		"red onion": true,
-		"jalapeño": false,
-		"cilantro": true,
-		"avocado": true,
-		"sour cream": false,
-		"garlic powder": true,
-		"salt": true,
-		"brown sugar": true,
-		"white sugar": false,
-		"cane sugar": false,
-		"white fish": false,
-		"pork": true,
-		"beef": false,
-		"chili powder": false,
-		"beans": false,
-		"tortilla": true,
-		"sourdough bread": false
-	}, "../assets/menu/food/Street-Style_Tacos_with_Mango_Salsa.jpg")
+		price: 6,
 
-	Menu.addItem("BBQ Pulled Pork Sliders", 8.00, "BBQ Pulled Pork Sliders with Coleslaw", {
-		"ketchup": false,
-		"mustard": false,
-		"mayonnaise": false,
-		"brown sugar": true,
-		"white sugar": false,
-		"cane sugar": false,
-		"salt": true,
-		"black pepper": true,
-		"white pepper": false,
-		"minced garlic": true,
-		"white wine vinegar": true,
-		"cider vinegar": true,
-		"worcestershire sauce": true,
-		"cajun seasoning": false,
-		"red onion": true,
-		"onion": false,
-		"chicken stock": true,
-		"red cabbage": false,
-		"green cabbage": true,
-		"carrots": false,
-		"hamburger bun": true,
-		"sourdough bread": false,
-		"french bread": false
-	}, "../assets/menu/food/BBQ_Pulled_Pork_Sliders_with_Coleslaw.jpg")
+		toppingList: [
+			cilantro,
+			garlic,
+			lettuce,
+			onion,
+			tomatoes
+		],
+
+		image: "../assets/menu/food/Gourmet_Beef_Burger_with_Chipotle_Aioli.jpg"
+	})
+
+	Menu.addItem({
+		section: "Fast Fusion Corner",
+
+		name: "Pesto Chicken Panini",
+		description: "Pesto Chicken Panini with Sundried Tomatoes",
+
+		price: 6,
+
+		toppingList: [
+			basil,
+			garlic,
+			pepper,
+			salt,
+			tomatoes
+		],
+
+		image: "../assets/menu/food/Pesto_Chicken_Panini_with_Sundried_Tomatoes.jpg"
+	})
+
+	Menu.addItem({
+		section: "Fast Fusion Corner",
+
+		name: "Tacos",
+		description: "Street-Style Tacos with Mango Salsa",
+
+		price: 3,
+
+		toppingList: [
+			avocado,
+			cabbage,
+			cilantro,
+			pepper,
+			salsa,
+			salt
+		],
+
+		image: "../assets/menu/food/Street-Style_Tacos_with_Mango_Salsa.jpg"
+	}),
+
+	Menu.addItem({
+		section: "Fast Fusion Corner",
+
+		name: "BBQ Pulled Pork Sliders",
+		description: "BBQ Pulled Pork Sliders with Coleslaw",
+
+		price: 8,
+
+		toppingList: [
+			garlic,
+			pepper,
+			salt,
+			sugar,
+			worcestershire
+		],
+
+		image: "../assets/menu/food/BBQ_Pulled_Pork_Sliders_with_Coleslaw.jpg"
+	})
 
 	// Guilt-Free Delights
-	Menu.addItem("Pizza", 5.00, "Cauliflower Crust Margherita Pizza", {
-		"cauliflower": true,
-		"parmesan cheese": true,
-		"mozzarella cheese": false,
-		"provolone cheese": false,
-		"cheddar cheese": false,
-		"american cheese": false,
-		"almond flour": true,
-		"corn flour": false,
-		"eggs": true,
-		"garlic powder": true,
-		"pizza sauce": true,
-		"tomatoes": true,
-		"basil leaves": true
-	}, "../assets/menu/food/Cauliflower_Crust_Margherita_Pizza.jpg")
+	Menu.addItem({
+		section: "Guilt-Free Delights",
 
-	Menu.addItem("Zucchini Noodles", 2.00, "Zucchini Noodles with Basil Pesto", {
-		"zucchini": true,
-		"basil leaves": true,
-		"minced garlic": true,
-		"extra virgin olive oil": true,
-		"lemon juice": true,
-		"parmesan cheese": true,
-		"american cheese": false,
-		"cheddar cheese": false,
-		"provolone cheese": false,
-		"colby jack cheese": false,
-		"mozzarella cheese": false,
-		"black pepper": true,
-		"white pepper": false,
-		"tomatoes": false
-	}, "../assets/menu/food/Zucchini_Noodles_with_Basil_Pesto.jpg")
+		name: "Pizza",
+		description: "Cauliflower Crust Margherita Pizza",
 
-	Menu.addItem("Vegan Thai Coconut Curry", 5.00, "Vegan Thai Coconut Curry with Tofu", {
-		"tofu": true,
-		"coconut milk": true,
-		"red curry paste": true,
-		"salt": true,
-		"white pepper": true,
-		"black pepper": false,
-		"cornstarch": true,
-		"coconut oil": true,
-		"red onion": false,
-		"onion": false,
-		"minced garlic": true,
-		"broccoli": true,
-		"red pepper": true,
-		"green pepper": true,
-		"yellow pepper": true,
-		"orange pepper": true,
-		"carrots": true,
-		"white sugar": true,
-		"brown sugar": false,
-		"soy sauce": true,
-		"lime juice": true,
-		"basil leaves": true,
-		"sriracha": true
-	}, "../assets/menu/food/Vegan_Thai_Coconut_Curry_with_Tofu.jpg")
+		price: 5,
 
-	Menu.addItem("Pudding Parfait", 4.00, "Chia Seed Pudding Parfait with Mixed Berries", {
-		"yogurt": true,
-		"chia seeds": true,
-		"honey": true,
-		"vanilla extract": true,
-		"strawberries": true,
-		"raspberries": true,
-		"black berries": true,
-		"blue berries": true
-	}, "../assets/menu/food/Chia_Seed_Pudding_Parfait_with_Mixed_Berries.jpg")
+		toppingList: [
+			jalapeno,
+			pepperoni
+		],
+
+		image: "../assets/menu/food/Cauliflower_Crust_Margherita_Pizza.jpg"
+	})
+
+	Menu.addItem({
+		section: "Guilt-Free Delights",
+
+		name: "Zucchini Noodles",
+		description: "Zucchini Noodles with Basil Pesto",
+
+		price: 2,
+
+		toppingList: [
+			basil,
+			lemonJuice,
+			pepper,
+			zucchini
+		],
+
+		image: "../assets/menu/food/Zucchini_Noodles_with_Basil_Pesto.jpg"
+	})
+
+	Menu.addItem({
+		section: "Guilt-Free Delights",
+
+		name: "Vegan Thai Coconut Curry",
+		description: "Vegan Thai Coconut Curry with Tofu",
+
+		price: 5,
+
+		toppingList: [
+			basil,
+			garlic,
+			pepper,
+			salt
+		],
+
+		image: "../assets/menu/food/Vegan_Thai_Coconut_Curry_with_Tofu.jpg"
+	})
+
+	Menu.addItem({
+		section: "Guilt-Free Delights",
+
+		name: "Pudding Parfait",
+		description: "Chia Seed Pudding Parfait with Mixed Berries",
+
+		price: 4,
+
+		toppingList: [
+			blackberries,
+			blueberries,
+			honey,
+			raspberries,
+			strawberries,
+			yogurt
+		],
+
+		image: "../assets/menu/food/Chia_Seed_Pudding_Parfait_with_Mixed_Berries.jpg"
+	})
 
 	// Decadent Dessert Haven
-	Menu.addItem("Lava Cake", 3.00, "Molten Chocolate/Vanilla Lava Cake", {
-		"milk chocolate": true,
-		"vanilla": false,
-		"unsalted butter": true,
-		"salted butter": false,
-		"salt": true,
-		"vanilla extract": true,
-		"eggs": true,
-		"confectioners’ sugar": true,
-		"brown sugar": false,
-		"white sugar": false,
-		"cane sugar": false,
-		"whipped cream": true,
-		"ice cream": true,
-		"raspberries": true,
-		"blue berries": false,
-		"strawberries": false,
-		"black berries": false
-	}, "../assets/menu/food/Molten_Chocolate_Lava_Cake_with_Raspberry_Coulis.jpg")
+	Menu.addItem({
+		section: "Decadent Dessert Haven",
 
-	Menu.addItem("Sundae", 3.00, "Sundae Caramelized Banana Foster", {
-		"salted butter": false,
-		"unsalted butter": true,
-		"brown sugar": true,
-		"white sugar": false,
-		"cane sugar": false,
-		"banana": true,
-		"rum": true,
-		"vanilla ice cream": true,
-		"whipped cream": true,
-		"pecans": true,
-		"cashew nuts": false,
-		"peanuts": false
-	}, "../assets/menu/food/Sundae_Caramelized_Banana_Foster.jpg")
+		name: "Lava Cake",
+		description: "Molten Chocolate Lava Cake",
 
-	Menu.addItem("Mousse", 3.00, "Pistachio White Chocolate Mousse", {
-		"white chocolate": true,
-		"dark chocolate": false,
-		"milk chocolate": false,
-		"pistachio milk": true,
-		"whipped cream": true,
-		"cream cheese": true,
-		"powdered sugar": true,
-		"white sugar": false,
-		"brown sugar": false,
-		"cane sugar": false,
-		"confectioners’ sugar": false,
-		"pistachio paste": true
-	}, "../assets/menu/food/Pistachio_White_Chocolate_Mousse.jpg")
+		price: 3,
 
-	Menu.addItem("Tart", 3.00, "Raspberry Almond Tart with Vanilla Bean Cream", {
-		"white sugar": true,
-		"brown sugar": false,
-		"cane sugar": false,
-		"confectioners’ sugar": false,
-		"powdered sugar": false,
-		"salt": true,
-		"unsalted butter": true,
-		"salted butter": false,
-		"eggs": true,
-		"cornstarch": true,
-		"whole milk": true,
-		"coconut milk": false,
-		"almond milk": false,
-		"pistachio milk": false,
-		"vanilla bean": true,
-		"vanilla": true,
-		"raspberries": true,
-		"blue berries": false,
-		"strawberries": false,
-		"black berries": false,
-		"icing sugar": true
-	}, "../assets/menu/food/Raspberry_Almond_Tart_with_Vanilla_Bean_Cream.jpg")
+		toppingList: [
+			chocolate,
+			raspberries,
+			sugar,
+			vanilla
+		],
+
+		image: "../assets/menu/food/Molten_Chocolate_Lava_Cake_with_Raspberry_Coulis.jpg"
+	})
+
+	Menu.addItem({
+		section: "Decadent Dessert Haven",
+
+		name: "Sundae",
+		description: "Sundae Caramelized Banana Foster",
+
+		price: 3,
+
+		toppingList: [
+			banana,
+			iceCream,
+			sugar
+		],
+
+		image: "../assets/menu/food/Sundae_Caramelized_Banana_Foster.jpg"
+	})
+
+	Menu.addItem({
+		section: "Decadent Dessert Haven",
+
+		name: "Mouesse",
+		description: "Pistachio White Chocolate Mousse",
+
+		price: 3,
+
+		toppingList: [
+			chocolate,
+			sugar,
+			vanilla
+		],
+
+		image: "../assets/menu/food/Pistachio_White_Chocolate_Mousse.jpg"
+	})
+
+	Menu.addItem({
+		section: "Decadent Dessert Haven",
+
+		name: "Tart",
+		description: "Raspberry Almond Tart with Vanilla Bean Cream",
+
+		price: 3,
+
+		toppingList: [
+			raspberries,
+			sugar,
+			vanilla
+		],
+
+		image: "../assets/menu/food/Raspberry_Almond_Tart_with_Vanilla_Bean_Cream.jpg"
+	})
 
 	// Exotic Elixirs Bar
-	Menu.addItem("Detox Water", 1.00, "Hibiscus Infused Detox Water", {
-		"hibiscus flowers": true,
-		"sweetener": true,
-		"ice": true
-	}, "../assets/menu/drinks/Hibiscus_Infused_Detox_Water.jpg")
+	Menu.addItem({
+		section: "Exotic Elixirs Bar",
 
-	Menu.addItem("Smoothie", 2.00, "Mango Tango Smoothie with Chia Seeds", {
-		"banana": true,
-		"mango": true,
-		"spinach": true,
-		"ginger juice": true,
-		"ginger puree": true,
-		"chia seeds": true,
-		"ice": true
-	}, "../assets/menu/drinks/Mango_Tango_Smoothie_with_Chia_Seeds.jpg")
+		name: "Detox Water",
+		description: "Hibiscus Infused Detox Water",
 
-	Menu.addItem("Sparkler", 1.00, "Basil Lemonade Sparkler", {
-		"lemon juice": true,
-		"basil leaves": true,
-		"carbonated water": true,
-		"maple syrup": false,
-		"ice": true
-	}, "../assets/menu/drinks/Basil_Lemonade_Sparkler.jpg")
+		price: 1,
 
-	Menu.addItem("Matcha Latte", 2.00, "Matcha Latte with Almond Milk", {
-		"matcha powder": true,
-		"almond milk": true,
-		"coconut milk": false,
-		"torani sugar-free coconut syrup": true
-	}, "../assets/menu/drinks/Matcha_Latte_with_Almond_Milk.jpg")
+		toppingList: [
+			hibiscus
+		],
+
+		image: "../assets/menu/drinks/Hibiscus_Infused_Detox_Water.jpg"
+	})
+
+	Menu.addItem({
+		section: "Exotic Elixirs Bar",
+
+		name: "Smoothie",
+		description: "Mango Tango Smoothie with Chia Seeds",
+
+		price: 2,
+
+		toppingList: [
+			chiaSeeds,
+			gingerJuice,
+			gingerPuree,
+			mango
+		],
+
+		image: "../assets/menu/drinks/Mango_Tango_Smoothie_with_Chia_Seeds.jpg"
+	})
+
+	Menu.addItem({
+		section: "Exotic Elixirs Bar",
+
+		name: "Lemonade",
+		description: "Basil Lemonade Sparkler",
+
+		price: 1,
+
+		toppingList: [
+			basil,
+			lemonJuice
+		],
+
+		image: "../assets/menu/drinks/Basil_Lemonade_Sparkler.jpg"
+	})
+
+	Menu.addItem({
+		section: "Exotic Elixirs Bar",
+
+		name: "Matcha Latte",
+		description: "Matcha Latte with Almond Milk",
+
+		price: 2,
+
+		toppingList: [
+			sugar
+		],
+
+		image: "../assets/menu/drinks/Matcha_Latte_with_Almond_Milk.jpg"
+	})
 
 	// Drinks
-	Menu.addItem("Water", 0.50, "Water", {}, "../assets/menu/drinks/Water.jpg")
+	Menu.addItem({
+		section: "⁣Drinks",
 
-	Menu.addItem("Milk", 0.50, "Milk", {
-		"chocolate milk": false,
-		"white milk": true,
-		"whole milk": false,
-		"coconut milk": false,
-		"almond milk": false,
-		"pistachio milk": false
-	}, "../assets/menu/drinks/Milk.jpg")
+		name: "Water",
+		description: "",
 
-	Menu.addItem("Fountain Drink", 0.50, "Coke/Pepsi product", {
-		"coke": true,
-		"cherry coke": false,
-		"pepsi": false,
-		"root beer": false,
-		"hi c": false,
-		"sprite": false,
-		"ginger ale": false,
-		"grape fanta": false,
-		"orange fanta": false,
-		"powerade": false,
-		"lemonade brisk": false,
-		"7up": false,
-		"dr pepper": false,
-		"minute maid lemonade": false
-	}, "../assets/menu/drinks/Fountain_Drink.jpg")
+		price: 0.5,
+
+		toppingList: [],
+
+		image: "../assets/menu/drinks/Water.jpg"
+	})
+
+	Menu.addItem({
+		section: "⁣Drinks",
+
+		name: "Milk",
+		description: "Fat-free Milk",
+
+		price: 0.5,
+
+		toppingList: [
+			chocolateMilk,
+			whiteMilk
+		],
+
+		image: "../assets/menu/drinks/Milk.jpg"
+	})
+
+	Menu.addItem({
+		section: "⁣Drinks",
+
+		name: "Fountain Drink",
+		description: "",
+
+		price: 0.5,
+
+		toppingList: [
+			brisk,
+			coke,
+			drPepper,
+			fanta,
+			gatorade,
+			gingerAle,
+			hiC,
+			pepsi,
+			powerade,
+			rootBeer,
+			sevenUp,
+			sprite
+		],
+
+		image: "../assets/menu/drinks/Fountain_Drink.jpg"
+	})
+
+	Menu.addItem({
+		section: "⁣Drinks",
+
+		name: "Juice",
+		description: "",
+
+		price: 0.5,
+
+		toppingList: [
+			appleJuice,
+			grapeJuice,
+			orangeJuice
+		],
+
+		image: "../assets/menu/drinks/Juice.jpg"
+	})
+
+	////////////////////////////
+	Menu.g_bInitialized = true
+}
+
+/*
+*	Closes all open popups
+*/
+Menu.closePopups = () =>
+{
+	const popups = Array.from(document.querySelectorAll(".menu_popup"))
+	for (const popup of popups)
+		popup.remove()
+}
+
+/*
+*	Creates a popup
+*/
+Menu.createPopup = (title) =>
+{
+	Menu.closePopups()
+
+	const popup = document.createElement("div")
+	popup.classList.add("menu_popup")
+	popup.classList.add("glass_morphism")
+	popup.classList.add("pop")
+	{
+		const closeBit = document.createElement("div")
+		closeBit.classList.add("menu_item_container_bit")
+		{
+			const closeButton = document.createElement("button")
+			closeButton.classList.add("close_btn")
+			closeButton.classList.add("float_right")
+			{
+				closeButton.innerHTML = "X"
+				closeButton.onclick = Menu.closePopups
+			}
+
+			closeBit.appendChild(closeButton)
+		}
+
+		const titleBit = document.createElement("div")
+		titleBit.classList.add("menu_item_container_bit")
+		titleBit.classList.add("flexbox")
+		{
+			const titleHeader = document.createElement("h1")
+			titleHeader.innerHTML = title
+			titleHeader.classList.add("blockbox")
+
+			titleBit.appendChild(titleHeader)
+		}
+
+		const container = document.createElement("div")
+		container.classList.add("menu_popup_container")
+		container.classList.add("glass_morphism_weak")
+
+		popup.appendChild(closeBit)
+		popup.appendChild(titleBit)
+		popup.appendChild(container)
+
+		popup.m_CloseBit = closeBit
+		popup.m_TitleBit = titleBit
+		popup.m_Container = container
+	}
+
+	return popup
+}
+
+/*
+*	Triggers when the checkbox in the topping selector is clicked
+*/
+Menu.toppingSelectorOnClick = (event) =>
+{
+	if (!event) return
+
+	const checkbox = event.target
+	if (!checkbox) return
+
+	const providedItem = checkbox.m_Item
+	const providedTopping = checkbox.m_Topping
+	if (!providedItem || !providedTopping) return
+
+	const itemToppings = providedItem.getToppings()
+
+	for (const [ topping, _ ] of itemToppings.entries())
+	{
+		if (topping != providedTopping) continue
+
+		itemToppings.set(topping, checkbox.checked)
+		break
+	}
+}
+
+/*
+*	Opens the topping selector for the specified item
+*/
+Menu.openToppingSelector = (item, active) =>
+{
+	const selector = Menu.createPopup(`Toppings for ${item.getName()}`)
+	{
+		if (active)
+		{
+			const closeBit = selector.m_CloseBit
+			{
+				closeBit.innerHTML = ""
+
+				const backButton = document.createElement("button")
+				backButton.classList.add("back_btn")
+				backButton.classList.add("float_right")
+				{
+					backButton.innerHTML = "<-"
+					backButton.onclick = Menu.openCart
+				}
+
+				closeBit.appendChild(backButton)
+			}
+		}
+
+		const container = selector.m_Container
+		{
+			for (const [ topping, value ] of item.getToppings())
+			{
+				const available = topping.getAvailable()
+
+				const toppingBlock = document.createElement("div")
+				toppingBlock.classList.add("menu_item_topping_choice")
+				toppingBlock.classList.add("inline_blockbox")
+				toppingBlock.classList.add("glass_morphism_weak")
+				{
+					toppingBlock.setAttribute("available", available)
+
+					const name = document.createElement("h3")
+					name.innerHTML = topping.getName()
+
+					const price = document.createElement("p")
+					price.innerHTML = Helper.priceify(topping.getPrice())
+					price.classList.add("float_right")
+
+					const selected = document.createElement("input")
+					selected.setAttribute("type", "checkbox")
+					selected.classList.add("float_right")
+					selected.checked = value
+
+					if (active && available)
+					{
+						selected.m_Item = item
+						selected.m_Topping = topping
+
+						selected.onclick = Menu.toppingSelectorOnClick
+					}
+					else
+						selected.disabled = true
+
+					toppingBlock.appendChild(name)
+					toppingBlock.appendChild(price)
+					toppingBlock.appendChild(selected)
+				}
+
+				container.appendChild(toppingBlock)
+			}
+		}
+	}
+
+	Menu.m_Container.appendChild(selector)
+}
+
+/*
+*	Creates a payment button
+*/
+Menu.paymentButtonOnClick = (event) =>
+{
+	if (!event) return
+
+	const button = event.target
+	if (!button) return
+	if (!button.m_strParameter) return
+
+	window.location.assign(`../pages/order.html?type=${button.m_strParameter}`)
+}
+
+Menu.createPaymentButton = (type) =>
+{
+	const translated = Order.translateType(type)
+
+	const button = document.createElement("button")
+	button.innerHTML = translated
+	button.m_strParameter = translated.toLowerCase()
+	button.m_iType = type
+	button.onclick = Menu.paymentButtonOnClick
+
+	return button
+}
+
+/*
+*	Opens up the cart screen
+*/
+Menu.openCart = () =>
+{
+	const cart = Menu.createPopup("Cart")
+	{
+		const container = cart.m_Container
+		container.id = "menu_cart_container"
+		{
+			const table = document.createElement("table")
+			table.id = "menu_cart_table"
+			{
+				const thead = document.createElement("thead")
+				{
+					const tr = document.createElement("tr")
+					{
+						const th1 = document.createElement("th")
+						th1.innerHTML = "Item"
+
+						const th2 = document.createElement("th")
+						th2.innerHTML = "Toppings"
+
+						const th3 = document.createElement("th")
+						th3.innerHTML = "Finalize"
+
+						tr.appendChild(th1)
+						tr.appendChild(th2)
+						tr.appendChild(th3)
+					}
+
+					thead.appendChild(tr)
+				}
+
+				const tbody = document.createElement("tbody")
+				tbody.id = "menu_cart_body"
+				{
+					Menu.updateCartDisplay(tbody)
+				}
+
+				table.appendChild(thead)
+				table.appendChild(tbody)
+			}
+
+			container.appendChild(table)
+		}
+
+		const paymentContainer = document.createElement("div")
+		paymentContainer.id = "menu_cart_payment_container"
+		paymentContainer.classList.add("menu_popup_container")
+		paymentContainer.classList.add("glass_morphism_weak")
+		{
+			const cash = Menu.createPaymentButton(Order.PAYMENT_TYPE_CASH)
+			const card = Menu.createPaymentButton(Order.PAYMENT_TYPE_CARD)
+			const paypal = Menu.createPaymentButton(Order.PAYMENT_TYPE_PAYPAL)
+			const apple = Menu.createPaymentButton(Order.PAYMENT_TYPE_APPLE)
+			const samsung = Menu.createPaymentButton(Order.PAYMENT_TYPE_SAMSUNG)
+			const google = Menu.createPaymentButton(Order.PAYMENT_TYPE_GOOGLE)
+
+			paymentContainer.appendChild(cash)
+			paymentContainer.appendChild(card)
+			paymentContainer.appendChild(paypal)
+			paymentContainer.appendChild(apple)
+			paymentContainer.appendChild(samsung)
+			paymentContainer.appendChild(google)
+		}
+
+		cart.appendChild(paymentContainer)
+	}
+
+	Menu.m_Container.appendChild(cart)
+}
+
+/*
+*	Quantity input on change event
+*/
+Menu.quantityInputOnChange = (event) =>
+{
+	if (!event) return
+
+	const quantityInput = event.target
+	if (!quantityInput) return
+	if (!quantityInput.m_Item) return
+
+	const item = quantityInput.m_Item
+	let found = Menu.m_Cart.get(item)
+	if (!found) return
+
+	found = Helper.clamp(Helper.getNumber(quantityInput.value), Menu.MIN_CART_ITEM_QUANTITY, Menu.MAX_CART_ITEM_QUANTITY)
+	Menu.m_Cart.set(item, found)
+
+	Menu.updateCartDisplay()
+}
+
+/*
+*	Updates the cart table display
+*/
+Menu.updateCartDisplay = (tbody) =>
+{
+	Menu.storeCart() // updateCartDisplay runs when the cart is modified in any way, so we can store here too
+
+	if (!tbody)
+	{
+		tbody = document.getElementById("menu_cart_body")
+		if (!tbody) return
+	}
+
+	tbody.innerHTML = ""
+
+	for (const [ item, quantity ] of Menu.m_Cart.entries())
+	{
+		const tr = document.createElement("tr")
+		{
+			const name = document.createElement("td")
+			name.innerHTML = item.getName()
+
+			const toppings = document.createElement("td")
+			{
+				const button = Menu.createItemButton(item, Menu.ITEM_BUTTON_TOPPINGS, true)
+
+				toppings.appendChild(button)
+			}
+
+			const finalize = document.createElement("td")
+			finalize.classList.add("flexbox")
+			{
+				const quantityInput = document.createElement("input")
+				quantityInput.setAttribute("type", "number")
+				quantityInput.setAttribute("min", Menu.MIN_CART_ITEM_QUANTITY)
+				quantityInput.setAttribute("max", Menu.MAX_CART_ITEM_QUANTITY)
+				{
+					quantityInput.value = Helper.clamp(quantity, Menu.MIN_CART_ITEM_QUANTITY, Menu.MAX_CART_ITEM_QUANTITY)
+
+					quantityInput.m_Item = item
+					quantityInput.onchange = Menu.quantityInputOnChange
+				}
+
+				const priceDisplay = document.createElement("p")
+				{
+					let itemPrice = item.getPrice() * quantity
+					let toppingPrice = 0
+
+					for (const [ topping, value ] of item.getToppings().entries())
+					{
+						if (!value) continue
+						toppingPrice += topping.getPrice() * quantity
+					}
+
+					const finalPrice = itemPrice + toppingPrice
+					priceDisplay.innerHTML = Helper.priceify(finalPrice)
+				}
+
+				finalize.appendChild(quantityInput)
+				finalize.appendChild(priceDisplay)
+			}
+
+			tr.appendChild(name)
+			tr.appendChild(toppings)
+			tr.appendChild(finalize)
+		}
+
+		tbody.appendChild(tr)
+	}
+}
+
+/*
+*	Stores the cart
+*/
+Menu.storeCart = () =>
+{
+	const parsed = Helper.json(Object.fromEntries(Menu.m_Cart))
+	StorageManager.setStoredValue("storedCart", parsed)
+}
+
+/*
+*	Loads the stored cart
+*/
+Menu.restoreCart = (stored) =>
+{
+	const first = Helper.parse(stored)
+
+	const keys = Object.getOwnPropertyNames(first)
+	for (const key of keys)
+	{
+		const baseItem = Helper.parse(key)
+		const baseToppings = Helper.parse(baseItem.m_Toppings)
+
+		// Fix toppings
+		const toppingArray = []
+
+		for (const [ key, value ] of baseToppings.entries())
+		{
+			const convertedTopping = Helper.parse(key)
+
+			// Make a thing for the constructor
+			const toppingThing = {}
+
+			toppingThing.name = convertedTopping.m_strName
+
+			toppingThing.price = convertedTopping.m_flPrice
+
+			toppingThing.type = convertedTopping.m_iType
+
+			// Yay
+			toppingArray.push(new Menu__Topping(toppingThing))
+		}
+
+		// Fix item
+		const itemThing = {}
+
+		itemThing.section = baseItem.m_strSection
+
+		itemThing.name = baseItem.m_strName
+		itemThing.description = baseItem.m_strDescription
+
+		itemThing.price = baseItem.m_flPrice
+
+		itemThing.toppingList = toppingArray
+
+		itemThing.image = baseItem.m_strImagePath
+
+		itemThing.available = baseItem.m_bAvailable
+
+		// Yay!!!
+		const fixedItem = new Menu__Item(itemThing)
+		Menu.m_Cart.set(fixedItem, first[key])
+	}
+}
+
+/*
+*	Adds an item to the cart
+*/
+Menu.addToCart = (item) =>
+{
+	const found = Menu.find(item.getName(), Menu.m_Cart)
+	if (found)
+	{
+		Menu.m_Cart.set(found[0], Helper.clamp(found[1] + 1, Menu.MIN_CART_ITEM_QUANTITY, Menu.MAX_CART_ITEM_QUANTITY))
+	}
+	else
+	{
+		const newItem = new Menu__Item(item)
+		Menu.m_Cart.set(newItem, 1)
+	}
+
+	Menu.updateCartDisplay()
+}
+
+/*
+*	Creates an item button
+*/
+
+// onclick for View Toppings buttons
+Menu.itemButtonClick_Topping = (event) =>
+{
+	if (!event) return
+
+	const button = event.target
+	if (!button) return
+	if (!button.m_Item) return
+
+	Menu.openToppingSelector(button.m_Item, Helper.getBool(button.m_bActive, false))
+}
+
+// onclick for Add to Cart buttons
+Menu.itemButtonClick_Cart = (event) =>
+{
+	if (!event) return
+
+	const button = event.target
+	if (!button) return
+	if (!button.m_Item) return
+
+	Menu.addToCart(button.m_Item)
+}
+
+Menu.createItemButton = (item, type, active) =>
+{
+	active = Helper.getBool(active, false)
+
+	let title = ""
+	let onclick = null
+
+	const button = document.createElement("button")
+	button.classList.add("menu_item_container_button")
+	button.m_bActive = active
+	{
+		switch (type)
+		{
+			default:
+			case Menu.ITEM_BUTTON_TOPPINGS:
+			{
+				title = "View Toppings"
+				onclick = Menu.itemButtonClick_Topping
+
+				if (Array.from(item.getToppings().keys()).length < 1)
+					button.disabled = true
+
+				break
+			}
+
+			case Menu.ITEM_BUTTON_CART:
+			{
+				title = "Add to Cart"
+				onclick = Menu.itemButtonClick_Cart
+				break
+			}
+		}
+
+		button.innerHTML = title
+		button.onclick = onclick
+
+		button.m_Item = item
+	}
+
+	return button
+}
+
+/*
+*	Sets up the menu page
+*/
+
+// Section sorter
+Menu.sectionItemSort = (a, b) =>
+{
+	return a.getName() > b.getName() ? 1 : -1
+}
+
+Menu.setupPage = (container) =>
+{
+	// Organize section items in abc order
+	const sectionsObject = {}
+	{
+		for (const [ item, value ] of Menu.m_Items.entries())
+		{
+			const section = item.getSectionName()
+			let sectionList = sectionsObject[section]
+
+			if (!sectionList)
+			{
+				sectionsObject[section] = []
+				sectionList = sectionsObject[section]
+			}
+
+			sectionList.push(item)
+			sectionList.sort(Menu.sectionItemSort)
+		}
+	}
+
+	// Organize sections in abc order
+	const sectionsArray = []
+	{
+		const properties = Object.getOwnPropertyNames(sectionsObject)
+		properties.sort()
+
+		for (const property of properties)
+		{
+			const sectionArray = sectionsObject[property]
+			sectionArray.unshift(property)
+
+			sectionsArray.push(sectionArray)
+		}
+	}
+
+	// Menu item sections
+	for (const section of sectionsArray)
+	{
+		const sectionName = section[0]
+
+		const itemSection = document.createElement("div")
+		itemSection.classList.add("menu_item_section")
+		itemSection.classList.add("glass_morphism_weak")
+		itemSection.classList.add("pop")
+		{
+			const header = document.createElement("div")
+			header.classList.add("menu_item_section_header")
+			header.classList.add("glass_morphism_weak")
+			header.classList.add("pop")
+			{
+				const title = document.createElement("h1")
+				title.innerHTML = section[0]
+
+				header.appendChild(title)
+			}
+
+			const body = document.createElement("div")
+			body.classList.add("menu_item_section_body")
+			{
+				for (let i = 1; i < section.length; i++)
+				{
+					const item = section[i]
+
+					const itemContainer = document.createElement("div")
+					itemContainer.classList.add("menu_item_container")
+					itemContainer.classList.add("glass_morphism_weak")
+					itemContainer.classList.add("pop")
+					{
+						const nameBit = document.createElement("div")
+						nameBit.classList.add("menu_item_container_bit")
+						nameBit.classList.add("flexbox")
+						{
+							const name = document.createElement("h3")
+							name.innerHTML = item.getName()
+
+							nameBit.appendChild(name)
+						}
+
+						const priceBit = document.createElement("div")
+						priceBit.classList.add("menu_item_container_bit")
+						priceBit.classList.add("flexbox")
+						{
+							const price = document.createElement("h4")
+							price.innerHTML = Helper.priceify(item.getPrice())
+
+							priceBit.appendChild(price)
+						}
+
+						const imageBit = document.createElement("div")
+						imageBit.classList.add("menu_item_container_bit")
+						imageBit.classList.add("flexbox")
+						{
+							const image = document.createElement("img")
+							image.classList.add("menu_item_container_image")
+							image.classList.add("pop")
+							image.setAttribute("src", item.getImagePath())
+
+							imageBit.appendChild(image)
+						}
+
+						const descriptionBit = document.createElement("div")
+						descriptionBit.classList.add("menu_item_container_bit")
+						descriptionBit.classList.add("flexbox")
+						{
+							const description = document.createElement("p")
+							description.innerHTML = item.getDescription()
+
+							descriptionBit.appendChild(description)
+						}
+
+						const buttonsBit = document.createElement("div")
+						buttonsBit.classList.add("menu_item_container_bit")
+						buttonsBit.classList.add("menu_item_container_buttons")
+						buttonsBit.classList.add("flexbox")
+						{
+							const toppings = Menu.createItemButton(item, Menu.ITEM_BUTTON_TOPPINGS, false)
+							const cart = Menu.createItemButton(item, Menu.ITEM_BUTTON_CART)
+
+							buttonsBit.appendChild(toppings)
+							buttonsBit.appendChild(cart)
+						}
+
+						itemContainer.appendChild(nameBit)
+						itemContainer.appendChild(priceBit)
+						itemContainer.appendChild(imageBit)
+						itemContainer.appendChild(descriptionBit)
+						itemContainer.appendChild(buttonsBit)
+					}
+
+					body.appendChild(itemContainer)
+				}
+			}
+
+			itemSection.appendChild(header)
+			itemSection.appendChild(body)
+		}
+
+		container.appendChild(itemSection)
+	}
+
+	// Cart
+	const cartButton = document.createElement("button")
+	cartButton.id = "menu_cart_button"
+	{
+		cartButton.onclick = Menu.openCart
+
+		const icon = document.createElement("ion-icon")
+		icon.setAttribute("name", "cart-outline")
+
+		cartButton.appendChild(icon)
+	}
+
+	container.appendChild(cartButton)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 Helper.hookEvent(window, "load", false, () =>
 {
-	Menu.setup() //setting up the menu items and toppings
+	Menu.initializeItems()
 
-	////////////////////////////////////////////////////////////////
+	// Load the stored cart
+	const stored = StorageManager.getStoredString("storedCart")
+	if (stored.length > 0)
+		Menu.restoreCart(stored)
 
-	if (!Helper.isOnPage("menu.html")) return
+	if (!Helper.isOnPage("menu")) return
 
-	const storedCart = StorageManager.getStoredString("cartItems")
-	if (storedCart.length > 0)
+	const container = document.createElement("div")
+	container.id = "menu_container"
+	container.classList.add("page_container")
 	{
-		Menu.cart = Helper.parse(storedCart)
+		Menu.m_Container = container
+		Menu.setupPage(container)
 	}
 
-	const menuContainer = document.createElement("div")
-	menuContainer.id = "menu_container"
+	document.body.appendChild(container)
 
-	////////////////////////////////////////////////////////////////
-
-	Menu.createCartDisplay(menuContainer) //creating the cart display
-
-	// const cartTable = menuContainer.querySelector("#cart_table")
-	// console.log(cartTable)
-
-	////////////////////////////////////////////////////////////////
-	//creating button for viewing cart
-	const viewCartButton = document.createElement("button")
-	viewCartButton.id = "view_cart_button"
-	viewCartButton.innerHTML = "Cart"
-	viewCartButton.onclick = () => {
-		const cartContainer = document.querySelector("#cart_container")
-
-		const isShown = Helper.getBool(cartContainer.getAttribute("isShown"))
-
-		cartContainer.setAttribute("isShown", !isShown )
-	}
-
-	////////////////////////////////////////////////////////////////
-
-	const menuArray = Array.from(Menu.items.keys()) //converts the map of items into array form
-
-	for(const itemName of menuArray)
-		Menu.createItemDisplay(itemName, Menu.items.get(itemName), menuContainer)
-
-	////////////////////////////////////////////////////////////////
-
-	document.body.appendChild(viewCartButton)
-	document.body.appendChild(menuContainer)
+	Menu.updateCartDisplay()
 })

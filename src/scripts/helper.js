@@ -38,10 +38,6 @@ Helper.isBool = (value) =>
 *
 *	https://gist.github.com/iperelivskiy/4110988
 */
-
-/*
-*	Class to help tell if a string is hashed or not
-*/
 Helper.hash = (string) =>
 {
 	if (!Helper.isString(string))
@@ -135,10 +131,13 @@ Helper.parse = (data) =>
 /*
 *	Safely access a string
 */
-Helper.getString = (data) =>
+Helper.getString = (data, fallback = "") =>
 {
+	if (data === null || data === undefined)
+		return fallback
+
 	if (!Helper.isString(data))
-		return String(data)
+		data = String(data)
 
 	return data
 }
@@ -361,7 +360,12 @@ Helper.compareObjects = (object1, object2) =>
 */
 Helper.getPageName = () =>
 {
-	return location.href.substring(location.href.lastIndexOf('/') + 1)
+	let base = location.href.substring(location.href.lastIndexOf('/') + 1).trim().toLowerCase()
+
+	const index = base.lastIndexOf(".html")
+	if (index == -1) return base
+
+	return base.substring(0, index)
 }
 
 /*
@@ -371,6 +375,15 @@ Helper.isOnPage = (page) =>
 {
 	page = Helper.getString(page).toLowerCase()
 	return Helper.getPageName() === page
+}
+
+/*
+*	Returns the search parameters, if any
+*/
+Helper.getSearchParameters = () =>
+{
+	const query = Helper.getString(window.location.search)
+	return new URLSearchParams(query)
 }
 
 /*

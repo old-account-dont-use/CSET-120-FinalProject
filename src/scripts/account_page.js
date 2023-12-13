@@ -248,6 +248,7 @@ AccountPage.createEntryPanel = (mode) =>
 {
 	const container = document.createElement("div")
 	container.id = "account_entry_container"
+	container.classList.add("page_container")
 	{
 		const panel = document.createElement("div")
 		panel.id = "account_entry"
@@ -391,6 +392,7 @@ AccountPage.setupAccountPage = (SIDEBAR_PROPERTIES) =>
 
 	const container = document.createElement("div")
 	container.id = "account_page_container"
+	container.classList.add("page_container")
 
 	AccountPage.setupAccountSidebar(container, SIDEBAR_PROPERTIES)
 

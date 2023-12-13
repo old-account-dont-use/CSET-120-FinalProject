@@ -10,6 +10,11 @@
 		<title>Eclectic Eats Haven</title>
 
 		<link rel="icon" type="image/x-icon" href="../assets/favicon.ico">
+
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Kalam&family=Pacifico&display=swap" rel="stylesheet">
+
 		<link rel="stylesheet" href="style.css">
 		<script src="../scripts/helper.js"></script>
 		<script src="../scripts/navigation_manager.js"></script>
@@ -23,7 +28,7 @@
 			{
 				"Tabs":
 				{
-					"Home": "home.html#home_header",
+					"Home": "home.html",
 					"About": "home.html#home_about",
 					"Menu": "menu.html",
 					"Contact": "home.html#home_contact"
@@ -66,73 +71,44 @@
 			}
 		</script>
 
-		<div id="home_header">
-
-		</div>
-
-		<div id="home_header_title">
-			<div class="home_header_title_row">
-				<div>W</div>
-				<div>e</div>
-				<div>l</div>
-				<div>c</div>
-				<div>o</div>
-				<div>m</div>
-				<div>e</div>
-				<div>&nbsp;</div>
-				<div>t</div>
-				<div>o</div>
+		<div id="home_container" class="page_container">
+			<div id="home_header" class="pop">
+				<div id="home_header_title">
+					<div class="home_header_title_row">
+						Welcome to
+						<br />
+						Eclectic Eats Haven
+					</div>
+				</div>
 			</div>
 
-			<div class="home_header_title_row">
-				<div>E</div>
-				<div>c</div>
-				<div>l</div>
-				<div>e</div>
-				<div>c</div>
-				<div>t</div>
-				<div>i</div>
-				<div>c</div>
-				<div>&nbsp;</div>
-				<div>E</div>
-				<div>a</div>
-				<div>t</div>
-				<div>s</div>
-				<div>&nbsp;</div>
-				<div>H</div>
-				<div>a</div>
-				<div>v</div>
-				<div>e</div>
-				<div>n</div>
-			</div>
-		</div>
+			<div class="home_section" id="home_about">
+				<div id="home_about_content" class="section_box glass_morphism_weak">
+					<h1 class="center_text">About Us!</h1>
+					<p class="center_text">
+						Proudly serving customers for over two weeks! We offer a variety of healthy food options.
+						<br /><br />
+						"Eclectic Eats Haven" offers a diverse range of 27 unique menu items, catering to various tastes and preferences.
+						<br /><br />
+						Whether you're in the mood for a healthy bowl, a gourmet burger, or an indulgent dessert, the restaurant provides a haven for food enthusiasts seeking a mix of wholesome, luxurious, and quick bites.
+					</p>
+				</div>
 
-		<div class="home_section" id="home_about">
-			<div id="home_about_content" class="glass_morphism_weak">
-				<h1 class="center_text">About Us!</h1>
-				<p class="center_text">
-					Proudly serving customers for over two weeks! We offer a variety of healthy food options.
-				</p>
-
-				<p class="center_text">
-					"Eclectic Eats Haven" offers a diverse range of 24 unique menu items, catering to various tastes and preferences. Whether you're in the mood for a healthy bowl, a gourmet burger, or an indulgent dessert, the restaurant provides a haven for food enthusiasts seeking a mix of wholesome, luxurious, and quick bites.
-				</p>
 			</div>
 
-		</div>
+			<div class="home_section" id="home_contact">
+				<div id="home_contact_box" class="section_box glass_morphism_weak">
+					<h1 id="home_contact_box_header" class="center_text">Contact Us!</h1>
+					<form onsubmit="alert('Thank you for your message'); document.querySelector('#home_contact_box form').reset(); return false;">
+						<label for="email">Email Address</label>
+						<input type="text" id="email" class="text_box glass_morphism_weak" placeholder="Enter your email address" required>
 
-		<div class="home_section" id="home_contact">
-			<div id="home_contact_box" class="glass_morphism_weak">
-				<h1 class="center_text">Contact Us!</h1>
-				<form onsubmit="alert('Thank you for your message'); document.querySelector('#home_contact_box form').reset(); return false;">
-					<label for="email">Email Address</label>
-					<input type="text" id="email" class="glass_morphism_weak" placeholder="Enter your email address" required>
+						<label for="message">Message</label>
+						<textarea name="" id="message" class="text_box glass_morphism_weak" cols="30" rows="10" placeholder="Type your message" required></textarea>
 
-					<label for="message">Message</label>
-					<textarea name="" id="message" class="glass_morphism_weak" cols="30" rows="10" placeholder="Type your message" required></textarea>
-
-					<input class="glass_morphism_weak" type="submit" value="Send Message">
-				</form>
+						<input class="text_box glass_morphism_weak" type="submit" value="Send Message">
+					</form>
+				</div>
 			</div>
 		</div>
 	</body>

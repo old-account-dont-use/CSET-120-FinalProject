@@ -250,6 +250,6 @@ Helper.hookEvent(window, "load", false, () =>
 {
 	Manager.m_ModifiedItems = Manager.getModifiedItemsList()
 
-	if (Helper.isOnPage("manager.html"))
+	if (Helper.isOnPage("manager"))
 		Manager.createManagerPage()
 })

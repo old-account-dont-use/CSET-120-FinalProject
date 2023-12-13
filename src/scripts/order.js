@@ -11,6 +11,36 @@ Order.totalQuantity = 0
 Order.subTotal = 0
 
 /*
+*	Translate an order type to string
+*/
+Order.translateType = (type) =>
+{
+	switch (type)
+	{
+		default:
+			return "UNKNOWN"
+
+		case Order.PAYMENT_TYPE_CASH:
+			return "Cash"
+
+		case Order.PAYMENT_TYPE_CARD:
+			return "Card"
+
+		case Order.PAYMENT_TYPE_PAYPAL:
+			return "PayPal"
+
+		case Order.PAYMENT_TYPE_APPLE:
+			return "ApplePay"
+
+		case Order.PAYMENT_TYPE_SAMSUNG:
+			return "SamsungPay"
+
+		case Order.PAYMENT_TYPE_GOOGLE:
+			return "GooglePay"
+	}
+}
+
+/*
 *	Sets up a payment page
 */
 Order.createPaymentPage = (paymentType) =>
@@ -19,7 +49,6 @@ Order.createPaymentPage = (paymentType) =>
 		const paymentContainer =  document.createElement("div")
 		paymentContainer.id = "payment_container"
 		paymentContainer.classList.add("flexbox_column")
-		paymentContainer.classList.add("glass_morphism")
 
 	//payment heading
 		const paymentHeading = document.createElement("h1")
@@ -482,33 +511,59 @@ Order.createCustomerInfo = (name, email, infoContainer) =>
 ///////////////////////////////////////////////////////////////////////
 Helper.hookEvent(window, "load", false, () =>
 {
-
-
-	if (Helper.isOnPage("receipt.html"))
+	if (Helper.isOnPage("receipt"))
+	{
 		Order.createReceipt()
+		return
+	}
+	if (!Helper.isOnPage("order")) return
 
-	//creates the payment page according to the payment method selected
-	else if (Helper.isOnPage("order.html?type=cash"))
-		Order.createPaymentPage(Order.PAYMENT_TYPE_CASH)
+	const searchParemeters = Helper.getSearchParameters()
+	const searchType = Helper.getString(searchParemeters.get("type")).toLowerCase()
 
-	else if (Helper.isOnPage("order.html?type=card"))
-		Order.createPaymentPage(Order.PAYMENT_TYPE_CARD)
+	let type = Order.PAYMENT_TYPE_CASH
 
-	else if (Helper.isOnPage("order.html?type=paypal"))
-		Order.createPaymentPage(Order.PAYMENT_TYPE_PAYPAL)
+	switch (searchType)
+	{
+		default:
+		case "cash":
+		{
+			type = Order.PAYMENT_TYPE_CASH
+			break
+		}
 
-	else if (Helper.isOnPage("order.html?type=applepay"))
-		Order.createPaymentPage(Order.PAYMENT_TYPE_APPLE)
+		case "card":
+		{
+			type = Order.PAYMENT_TYPE_CARD
+			break
+		}
 
-	else if (Helper.isOnPage("order.html?type=samsungpay"))
-		Order.createPaymentPage(Order.PAYMENT_TYPE_SAMSUNG)
+		case "paypal":
+		{
+			type = Order.PAYMENT_TYPE_PAYPAL
+			break
+		}
 
-	else if (Helper.isOnPage("order.html?type=googelpay"))
-		Order.createPaymentPage(Order.PAYMENT_TYPE_GOOGLE)
+		case "applepay":
+		{
+			type = Order.PAYMENT_TYPE_APPLE
+			break
+		}
 
-	else return
+		case "samsungpay":
+		{
+			type = Order.PAYMENT_TYPE_SAMSUNG
+			break
+		}
 
+		case "googlepay":
+		{
+			type = Order.PAYMENT_TYPE_GOOGLE
+			break
+		}
+	}
 
+	Order.createPaymentPage(type)
 })
 //card tester
 // 4032035268344108
