@@ -1342,6 +1342,13 @@ input[type=number]
 	justify-content: space-between;
 
 }
+@media only screen and (max-device-width: 480px)
+{
+	#payment_content_form
+	{
+		width: 95vw;
+	}
+}
 .payment_form_sub_container
 {
 	width: 95%;
@@ -1353,6 +1360,14 @@ input[type=number]
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
+}
+@media only screen and (max-device-width: 480px)
+{
+	.payment_form_sub_container {
+		width: 100%;
+
+		background-color: rgba(204, 229, 255, 1);
+	}
 }
 
 #payment_form_submit_container
@@ -1369,6 +1384,14 @@ input[type=number]
 
 	border-radius: 15px;
 	border: none;
+}
+
+@media only screen and (max-device-width: 480px)
+{
+	#payment_content_form input
+	{
+		font-size: 1.2rem;
+	}
 }
 
 #payment_content_form input:not([type=submit])
